@@ -1,2 +1,10 @@
 # PIE-SAF
-oui
+
+
+
+TODO
+
+
+- déterminer la structure du code
+- construire le MVP
+- win
