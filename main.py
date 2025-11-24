@@ -1,4 +1,4 @@
-from etapes import _1_biomasse as biomasse
+from etapes import _1_amont_biomasse as biomasse
 from etapes import _2_transport as transport
 from etapes import _3_FT as ft
 from etapes import _4_electrolyseur as elec
@@ -22,6 +22,9 @@ def __main__():
     print(f" - Fischer-Tropsch : {ft.emissions_FT(ft.param_FT)} gCO 2e/MJ")
     print(f" - Électrolyseur : {elec.emissions_electrolyseur(elec.param_electrolyseur)} gCO2e/MJ")
     print(f" - Gazeification : {gaz.emissions_gazeification(gaz.param_gazeification)} gCO2e/MJ")
-    
+
+
+
+
 if __name__ == "__main__":
     __main__()
