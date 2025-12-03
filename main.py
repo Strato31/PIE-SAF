@@ -9,13 +9,9 @@ def __main__():
     
     emissions_totales = 0
 
-    emissions_totales += biomasse.total_emissions_biomasse(biomasse.param_biomasse)
-    emissions_totales += transport.emissions_transport(transport.param_transport)
-    emissions_totales += ft.emissions_FT(ft.param_FT)
-    emissions_totales += elec.emissions_electrolyseur(elec.param_electrolyseur)
-    emissions_totales += gaz.emissions_gazeification(gaz.param_gazeification)
-    
-    
+    elec_biomasse, chaleur_biomasse, biomasse_seche = biomasse.traitement_biomasse()
+    elec_gaz, chaleur_gaz = gaz.emissions_gazeification(biomasse_seche)
+    elec = [elec_biomasse, elec_gaz, ...]
     print(f"Émissions totales du processus PIE-SAF : {emissions_totales} gCO2e/MJ")
     print('Emissions détaillées par étapes :')
     print(f" - Biomasse : {biomasse.total_emissions_biomasse(biomasse.param_biomasse)} gCO2e/MJ")
