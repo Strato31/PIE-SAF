@@ -9,7 +9,9 @@ Facteurs importants :
 - effets changement climatique (à différentes échelles temporelles)
 - émissions liées à la culture, au transport, à la transformation
 
-
+TODO CET APREM :    implémenter estimations conso élec avec % PCI = f(H)
+                    implémenter émissions transport
+                    regarder émissions/séquestration culture et récolte biomasse
 """
 
 ###############################################################
@@ -18,16 +20,15 @@ Facteurs importants :
 
 param_biomasse = {
 
-    # Temporaire, à remplacer par des fonctions de calcul
+    # /Temporaire, à remplacer par des fonctions de calcul\
     "émissions_culture": 50,     # Émissions liées à la culture (gCO2e/MJ)
     "émissions_transport": 10,    # Émissions liées au transport (gCO2e/MJ)
-    "émissions_transformation": 30,  # Émissions liées à la transformation (gCO2e/MJ)
 
-
+    # --> servira a l'étape de différencier entre types de biomasse
     "source_biomasse": "ligneuse_sèche",  # Source de la biomasse parmi ['ligneuse_sèche', "biomasse_vive" , "bois_secondaire", ...]
 
     # source : fonction à sourcer PCI = f(Humidité)
-    "PCI_biomasse": 5.05, # PCI de la biomasse (MWh/t)
+    "PCI_biomasse": 5.05, # (MWh/t) PCI de la biomasse 
 
     "rendement_biomasse": 0.85,  # Rendement de conversion
 
@@ -35,7 +36,7 @@ param_biomasse = {
     "capacite_calorifique_biomasse": 2.301,  # Capacité calorifique spécifique utilisée pour la biomasse (kJ/kg.K)
 
     # référence broyeur trouvée en ligne : https://www.biopelletmachine.com/french/produit/machine-a-fabriquer-de-la-sciure-de-bois/broyeur-de-bois-electrique-html
-    "consommation_broyage": 0.162,  # Consommation énergétique pour le broyage (MJ/kg) 45kWh/t --> 0.162 MJ/kg
+    "consommation_broyage": 11.25,  # (kWh/t) Consommation énergétique pour le broyage (= 45 kW / 4t/h)
 }
 
 
@@ -45,9 +46,9 @@ param_biomasse = {
 
 """Etapes de calcul des émissions liées au carbone
 1. Bio-safs : cas carbone venant de la biomasse (le plus complexe) : entrée biomasse, sortie biomasse sèche
-    a. Émissions liées à la culture de la biomasse
-    b. Émissions liées au transport de la biomasse
-    c. Émissions liées à la torréfaction de la biomasse
+    a. Émissions liées à la culture de la biomasse      - TODO
+    b. Émissions liées au transport de la biomasse      - TODO
+    c. Consos liées au traitement de la biomasse - OK
 2. e-safs : carbone venant de ccs ou dac (à faire plus tard)
 
 
@@ -57,7 +58,9 @@ Hypothèses pouvant être détaillées :
 """
 
 def masse_seche_sortie(biomasse):
-    """Calcul de la masse sèche sortie de la biomasse après torréfaction"""
+    """Calcule la masse totale de biomasse sèche après torréfaction.
+    Pour l'instant, ne prend pas en compte type de biomasse."""
+    biomasse_seche = 0
     for biom in biomasse:
         masse = biom['masse']
         humidite = biom['humidité']
@@ -66,7 +69,15 @@ def masse_seche_sortie(biomasse):
 
 
 
-def energie_traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
+def emissions_transport_biomasse(param_biomasse):
+    ...
+
+
+
+
+
+
+def traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
     """
     ARGUMENTS
 
@@ -74,7 +85,7 @@ def energie_traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
 
     SORTIE
 
-    Retourne l'énergie totale consommée (MJ), et la quantité de chaleur récupérable (MJ)
+    Retourne l'énergie totale consommée (kWh), la quantité de chaleur consommée (MJ), et la masse totale de biomasse sèche
     """
 
     capacite_calorifique = param_biomasse["capacite_calorifique_biomasse"]  # kJ/kg.K
@@ -84,7 +95,7 @@ def energie_traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
     #     {"type" : "agricole", "masse": 2.0, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
     # ]
 
-    # calcul énergie thermique nécessaire pour la torréfaction
+    # 1. calcul énergie thermique nécessaire pour la torréfaction
     for entree in biomasse_entree:
         masse = entree["masse"]
         humidité = entree["humidité"]
@@ -99,14 +110,25 @@ def energie_traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
         energie_torrefaction = energie_vaporisation + energie_chauffage
 
 
-    # Calcul consommation d'énergie pour le broyage de la biomasse
-    energie_broyage = 0
+    # 2. Calcul consommation d'énergie pour le broyage de la biomasse
+    elec_broyage = 0
     if BROYAGE :
         conso_broyage = param_biomasse["consommation_broyage"]
-        energie_broyage = conso_broyage * sum(entree["masse"] for entree in biomasse_entree)  # MJ
-
-    # on renvoie l'électricité consommée (broyage), l'énergie thermique consommée (torrefaction), et la masse de biomasse sèche sortie
-    return energie_broyage, energie_torrefaction, masse_seche_sortie(biomasse_entree)
+        elec_broyage = conso_broyage * sum(entree["masse"] for entree in biomasse_entree)  # kWh
 
 
+    # 3. on renvoie l'électricité consommée (broyage, kWh), l'énergie thermique consommée (torrefaction, MJ), et la masse de biomasse sèche sortie
+    return elec_broyage, energie_torrefaction, masse_seche_sortie(biomasse_entree)
 
+
+
+# fonctions test
+# test traitement biomasse
+biomasse_exemple = [
+    {"type" : "ligneuse_sèche", "masse": 1.0, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+    {"type" : "agricole", "masse": 2.0, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
+]
+elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exemple)
+print(f"Électricité consommée pour le broyage : {elec} kWh")
+print(f"Chaleur consommée pour la torréfaction : {chaleur} MJ")
+print(f"Masse de biomasse sèche sortie : {masse_seche} t")
