@@ -20,16 +20,15 @@ TODO CET APREM :    implémenter estimations conso élec avec % PCI = f(H)
 
 param_biomasse = {
 
-    # Temporaire, à remplacer par des fonctions de calcul
+    # /Temporaire, à remplacer par des fonctions de calcul\
     "émissions_culture": 50,     # Émissions liées à la culture (gCO2e/MJ)
     "émissions_transport": 10,    # Émissions liées au transport (gCO2e/MJ)
-    "émissions_transformation": 30,  # Émissions liées à la transformation (gCO2e/MJ)
 
-
+    # --> servira a l'étape de différencier entre types de biomasse
     "source_biomasse": "ligneuse_sèche",  # Source de la biomasse parmi ['ligneuse_sèche', "biomasse_vive" , "bois_secondaire", ...]
 
     # source : fonction à sourcer PCI = f(Humidité)
-    "PCI_biomasse": 5.05, # PCI de la biomasse (MWh/t)
+    "PCI_biomasse": 5.05, # (MWh/t) PCI de la biomasse 
 
     "rendement_biomasse": 0.85,  # Rendement de conversion
 
@@ -37,7 +36,7 @@ param_biomasse = {
     "capacite_calorifique_biomasse": 2.301,  # Capacité calorifique spécifique utilisée pour la biomasse (kJ/kg.K)
 
     # référence broyeur trouvée en ligne : https://www.biopelletmachine.com/french/produit/machine-a-fabriquer-de-la-sciure-de-bois/broyeur-de-bois-electrique-html
-    "consommation_broyage": 11.25,  # Consommation énergétique pour le broyage (kWh/t) (= 45 kW / 4t/h)
+    "consommation_broyage": 11.25,  # (kWh/t) Consommation énergétique pour le broyage (= 45 kW / 4t/h)
 }
 
 
@@ -71,6 +70,7 @@ def masse_seche_sortie(biomasse):
 
 
 def emissions_transport_biomasse(param_biomasse):
+    ...
 
 
 
@@ -122,3 +122,13 @@ def traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
 
 
 
+# fonctions test
+# test traitement biomasse
+biomasse_exemple = [
+    {"type" : "ligneuse_sèche", "masse": 1.0, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+    {"type" : "agricole", "masse": 2.0, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
+]
+elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exemple)
+print(f"Électricité consommée pour le broyage : {elec} kWh")
+print(f"Chaleur consommée pour la torréfaction : {chaleur} MJ")
+print(f"Masse de biomasse sèche sortie : {masse_seche} t")
