@@ -9,7 +9,9 @@ Facteurs importants :
 - effets changement climatique (à différentes échelles temporelles)
 - émissions liées à la culture, au transport, à la transformation
 
-
+TODO CET APREM :    implémenter estimations conso élec avec % PCI = f(H)
+                    implémenter émissions transport
+                    regarder émissions/séquestration culture et récolte biomasse
 """
 
 ###############################################################
@@ -69,7 +71,7 @@ def masse_seche_sortie(biomasse):
 
 
 def emissions_transport_biomasse(param_biomasse):
-    
+
 
 
 
