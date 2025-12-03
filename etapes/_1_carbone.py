@@ -100,6 +100,9 @@ def energie_traitement_biomasse(param_biomasse, biomasse, BROYAGE=True):
     # on renvoie l'électricité consommée (broyage), et l'énergie thermique consommée (torrefaction)
     return energie_broyage, energie_torrefaction
 
+def masse_seche_sortie():
+
+
 
 
 def total_emissions_biomasse(param_biomasse):
