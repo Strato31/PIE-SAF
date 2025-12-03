@@ -30,6 +30,7 @@ facteur_emission = {
     "hydraulique" : 6, 
     "biomasse" : 230,  # Electricity Maps
 }
+
 ##############################################################
 # Fonctions de calcul des émissions
 ##############################################################
@@ -56,4 +57,19 @@ def emissions_energie_totale(consos_energies):
     emissions.append(emissions_tot)
     return emissions
 
+# Calcul des émissions liées à la production de chaleur (en gCO2eq) pour une consomation thermique (en MJ) d'un processus
+'''
+hypothèse : on considère que la chaleur résiduelle générée par le procédé Fischer-Tropsch est réinjectée dans la phase de torréfaction et est suffisante pour l'assurer 							
+Source de cette chaleur : injection d'eau dans le réacteur Fischer-Tropsch pour refroidir le catalyseur et le conserver dans la bonne plage de température							
+d’où génération de vapeur d'eau (680 kt/an) dont la chaleur va être utilisée pour apporter des calories aux phases de torréfaction et de création de syngaz							
+'''
+def verif_hypothèse(consos_thermiques):
+    # on vérifie que la consommation thermique totale est inférieure à la chaleur récupérable
+    conso_therm_totale = 0
 
+    for conso_therm in consos_thermiques :
+        conso_therm_totale += conso_therm # La consommation thermique est positive pour les étapes qui consomment de l'énergie et négative si elle en produit.
+    if conso_therm_totale <= 0:
+        return True
+    else:
+        return False
