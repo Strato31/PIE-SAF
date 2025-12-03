@@ -9,15 +9,13 @@ Facteurs importants :
 - effets changement climatique (à différentes échelles temporelles)
 - émissions liées à la culture, au transport, à la transformation
 
-TODO CET APREM :    implémenter estimations conso élec avec % PCI = f(H)
-                    implémenter émissions transport
-                    regarder émissions/séquestration culture et récolte biomasse
+TODO CET APREM : regarder émissions/séquestration culture et récolte biomasse
 """
 
 ###############################################################
 # Stockage des paramètres avec les hypothèses sourcées
 ###############################################################
-
+# --> à réorganiser/scinder pour rendre plus lisible ?
 param_biomasse = {
 
     # /Temporaire, à remplacer par des fonctions de calcul\
@@ -25,7 +23,7 @@ param_biomasse = {
     "émissions_transport": 10,    # Émissions liées au transport (gCO2e/MJ)
 
     # --> servira a l'étape de différencier entre types de biomasse
-    "source_biomasse": "ligneuse_sèche",  # Source de la biomasse parmi ['ligneuse_sèche', "biomasse_vive" , "bois_secondaire", ...]
+    "source_biomasse": "ligneuse",  # Source de la biomasse parmi ['ligneuse', "biomasse_vive" , "bois_secondaire", ...]
 
     # source : fonction à sourcer PCI = f(Humidité)
     "PCI_biomasse": 5.05, # (MWh/t) PCI de la biomasse 
@@ -37,11 +35,18 @@ param_biomasse = {
 
     # référence broyeur trouvée en ligne : https://www.biopelletmachine.com/french/produit/machine-a-fabriquer-de-la-sciure-de-bois/broyeur-de-bois-electrique-html
     "consommation_broyage": 11.25,  # (kWh/t) Consommation énergétique pour le broyage (= 45 kW / 4t/h)
+
+    ## TRANSPORT ##
+    # source émissions camion : https://www.webfleet.com/fr_fr/webfleet/blog/emission-co2-camion-km/
+    "emissions_transport_biomasse": 0.096,  # (kgCO2e/t.km) Émissions liées au transport de la biomasse
+
+    # Hypothèse distance moyenne de transport
+    "distance_transport_biomasse": 100,  # (km) Distance moyenne de transport de la biomasse (choix arbitraire)
 }
 
 
 ##############################################################
-# Fonctions de calcul des émissions
+# Fonctions de calcul des émissions                          #
 ##############################################################
 
 """Etapes de calcul des émissions liées au carbone
@@ -59,7 +64,7 @@ Hypothèses pouvant être détaillées :
 
 def masse_seche_sortie(biomasse):
     """Calcule la masse totale de biomasse sèche après torréfaction.
-    Pour l'instant, ne prend pas en compte type de biomasse."""
+    !! Pour l'instant, ne prend pas en compte type de biomasse."""
     biomasse_seche = 0
     for biom in biomasse:
         masse = biom['masse']
@@ -69,9 +74,39 @@ def masse_seche_sortie(biomasse):
 
 
 
-def emissions_transport_biomasse(param_biomasse):
-    ...
+def emissions_culture_biomasse(param_biomasse, biomasse):
+    """TEMPORAIRE
+    Calcule émissions dues à la culture de la biomasse.
+    Hypothèse : émissions fixes par MJ de biomasse entrante.
 
+    """
+    emissions_totales_culture = 0
+
+    #1. Calcul des émissions liées aux changements d'affectation des sols (CAS)
+    # TODO
+
+    #2. Calcul des émissions dues au carbone relâché lors de la coupe/récolte
+    # TODO
+
+    #3. Calcul du carbone séquestré lors de la croissance de la biomasse ?
+    # TODO
+
+
+    return emissions_totales_culture
+
+
+def emissions_transport_biomasse(param_biomasse, biomasse):
+    """Calcule émissions dues au transport de la biomasse.
+    Hypothèse : émissions fixes par t de biomasse entrante.
+
+    """
+    emissions_transport = param_biomasse["emissions_transport_biomasse"]  # kgCO2e/t.km
+    distance_transport = param_biomasse["distance_transport_biomasse"]  # km
+
+    # Calcul des émissions totales liées au transport de la biomasse (en kgCO2e)
+    emissions_totales_transport = emissions_transport * distance_transport * sum(biom['masse'] for biom in biomasse)
+
+    return emissions_totales_transport
 
 
 
@@ -91,7 +126,7 @@ def traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
     capacite_calorifique = param_biomasse["capacite_calorifique_biomasse"]  # kJ/kg.K
 
     # exemple = [
-    #     {"type" : "ligneuse_sèche", "masse": 1.0, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+    #     {"type" : "ligneuse", "masse": 1.0, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
     #     {"type" : "agricole", "masse": 2.0, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
     # ]
 
@@ -125,10 +160,11 @@ def traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
 # fonctions test
 # test traitement biomasse
 biomasse_exemple = [
-    {"type" : "ligneuse_sèche", "masse": 1.0, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
-    {"type" : "agricole", "masse": 2.0, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
+    {"type" : "ligneuse", "masse": 10000, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+    {"type" : "agricole", "masse": 200000, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
 ]
 elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exemple)
 print(f"Électricité consommée pour le broyage : {elec} kWh")
 print(f"Chaleur consommée pour la torréfaction : {chaleur} MJ")
 print(f"Masse de biomasse sèche sortie : {masse_seche} t")
+print(f"Émissions liées au transport de la biomasse : {emissions_transport_biomasse(param_biomasse, biomasse_exemple)} kgCO2e")
