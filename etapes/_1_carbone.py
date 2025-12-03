@@ -79,10 +79,10 @@ def energie_traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
 
     capacite_calorifique = param_biomasse["capacite_calorifique_biomasse"]  # kJ/kg.K
 
-    entrees_test = [
-        {"type" : "ligneuse_sèche", "masse": 1.0, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
-        {"type" : "agricole", "masse": 2.0, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
-    ]
+    # exemple = [
+    #     {"type" : "ligneuse_sèche", "masse": 1.0, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+    #     {"type" : "agricole", "masse": 2.0, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
+    # ]
 
     # calcul énergie thermique nécessaire pour la torréfaction
     for entree in biomasse_entree:
@@ -110,12 +110,3 @@ def energie_traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
 
 
 
-
-
-def total_emissions_biomasse(param_biomasse):
-    # Calcul des émissions totales pour la biomasse (A FAIRE)
-    émissions += param_biomasse["émissions_culture"]
-    émissions += param_biomasse["émissions_transport"]
-
-    consommation = energie_traitement_biomasse(...)
-    return émissions
