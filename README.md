@@ -1,31 +1,31 @@
 # PIE-SAF
 ________________________________________
 --BIOMASSE--
-Entrées : type/masse/humidité des biomasses utilisées
-Sorties : élec, chaleur, masse_biomasse_seche
+- Entrées : type/masse/humidité des biomasses utilisées
+- Sorties : élec, chaleur, masse_biomasse_seche
 
 --GASIFICATION--
-Entrées : masse_biomasse_seche, oxygene
-Sorties : élec, chaleur, CO2, quantités CO et H2 dans le syngas, déchets
+- Entrées : masse_biomasse_seche, oxygene
+- Sorties : élec, chaleur, CO2, quantités CO et H2 dans le syngas, déchets
 
 --FT--
-Entrées : quantités CO et H2 dans le syngas
-Sorties :  élec, chaleur, H2 à produire par électrolyseur, kérosène produit, autres produits liquides
+- Entrées : quantités CO et H2 dans le syngas
+- Sorties :  élec, chaleur, H2 à produire par électrolyseur, kérosène produit, autres produits liquides
 
 --ELECTROLYSE--
-Entrées : eau, quantité H2 à produire
-Sorties : élec
+- Entrées : eau, quantité H2 à produire
+- Sorties : élec
 
 --ENERGIES--
-Entrées : consommations chaleur et élec
-Sortie : émissions
+- Entrées : consommations chaleur et élec
+- Sortie : émissions
 ________________________________________
 
 UNITES : 
-masse : en tonnes
-électricité : kWh
-énergie : MJ
---> Conversion : 1 kWh = 3.6 MJ
+- masse : en tonnes
+- électricité : kWh
+- énergie : MJ
+- --> Conversion : 1 kWh = 3.6 MJ
 
 ________________________________________
 
