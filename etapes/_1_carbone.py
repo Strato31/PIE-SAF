@@ -31,11 +31,13 @@ param_biomasse = {
 
     "rendement_biomasse": 0.85,  # Rendement de conversion
 
-    "procede_transformation": "gazeification",  # Procédé de transformation utilisé parmi ['pyrolyse', 'gazeification', ...]
-
     # capacité calorifique du cyprès selon https://www.thermoconcept-sarl.com/base-de-donnees-chaleur-specifique-ou-capacite-thermique/
-    "capacite_calorifique_biomasse": 2.301,  # Capacité calorifique spécifique de la biomasse (kJ/kg.K)
+    "capacite_calorifique_biomasse": 2.301,  # Capacité calorifique spécifique utilisée pour la biomasse (kJ/kg.K)
+
+    # référence broyeur trouvée en ligne : https://www.biopelletmachine.com/french/produit/machine-a-fabriquer-de-la-sciure-de-bois/broyeur-de-bois-electrique-html
+    "consommation_broyage": 0.162,  # Consommation énergétique pour le broyage (MJ/kg) 45kWh/t --> 0.162 MJ/kg
 }
+
 
 ##############################################################
 # Fonctions de calcul des émissions
@@ -46,7 +48,7 @@ param_biomasse = {
     a. Émissions liées à la culture de la biomasse
     b. Émissions liées au transport de la biomasse
     c. Émissions liées à la torréfaction de la biomasse
-2. e-safs : carbone venant de ccs ou de l'air (à faire plus tard)
+2. e-safs : carbone venant de ccs ou dac (à faire plus tard)
 
 
 Hypothèses pouvant être détaillées :
@@ -56,7 +58,7 @@ Hypothèses pouvant être détaillées :
 
 
 
-def energie_traitement_biomasse(param_biomasse, BROYAGE=True):
+def energie_traitement_biomasse(param_biomasse, biomasse, BROYAGE=True):
     """
     ARGUMENTS
 
@@ -64,8 +66,9 @@ def energie_traitement_biomasse(param_biomasse, BROYAGE=True):
 
     SORTIE
 
-    Retourne l'énergie totale consommée, et la quantité de chaleur récupérable (MJ)
+    Retourne l'énergie totale consommée (MJ), et la quantité de chaleur récupérable (MJ)
     """
+
     capacite_calorifique = param_biomasse["capacite_calorifique_biomasse"]  # kJ/kg.K
 
     entrees_test = [
@@ -74,27 +77,28 @@ def energie_traitement_biomasse(param_biomasse, BROYAGE=True):
     ]
     emissions_torrefaction = 0
 
-    # calcul énergie nécessaire pour la torréfaction (hypothèses à vérifier/sourcer)
+    # calcul énergie thermique nécessaire pour la torréfaction
     for entree in entrees_test:
         masse = entree["masse"]
         humidité = entree["humidité"]
 
-        # Hypothèse : énergie nécessaire pour évaporer l'eau + énergie pour chauffer la biomasse sèche
-        energie_evaporation = masse * humidité * 2.26476  # MJ (chaleur latente de vaporisation de l'eau)
-
         # Hypothèse : on chauffe à 200°C depuis 25°C
         energie_chauffage = masse * capacite_calorifique * (200 - 25) / 1000  # MJ (capacité calorifique spécifique de la biomasse sèche ~1.5 kJ/kg.K)
 
+        # Energie nécessaire pour vaporiser l'eau de la biomasse
+        energie_vaporisation = masse * humidité * 2.26476  # en MJ (on utilise la chaleur latente de vaporisation de l'eau)
 
-        energie_chaleur = energie_evaporation + energie_chauffage
+        # énergie totale nécessaire au procédé de torréfaction
+        energie_torrefaction = energie_vaporisation + energie_chauffage
 
-
+    # Calcul consommation d'énergie pour le broyage de la biomasse
     energie_broyage = 0
     if BROYAGE :
-        # Hypothèse : énergie de broyage TODO, quelle hypothèses faire ?
-        energie_broyage = 0.1 * sum(entree["masse"] for entree in entrees_test)  # MJ
+        conso_broyage = param_biomasse["consommation_broyage"]
+        energie_broyage = conso_broyage * sum(entree["masse"] for entree in entrees_test)  # MJ
 
-    return energie_broyage+energie_chaleur, energie_chaleur
+    # on renvoie l'électricité consommée (broyage), et l'énergie thermique consommée (torrefaction)
+    return energie_broyage, energie_torrefaction
 
 
 
