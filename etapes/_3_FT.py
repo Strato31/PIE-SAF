@@ -1,23 +1,37 @@
-"""
-Paramètres et hypothèses sourcées pour FT, puis fonctions de calcul des émissions."""
-
 ###############################################################
 # Stockage des paramètres avec les hypothèses sourcées
 ###############################################################
 
+
 param_FT = {
-    "efficacité_FT": 0.9,            # Efficacité du processus FT
-    "émissions_FT": 40,              # Émissions liées au processus FT (gCO2e/MJ)
-    "consommation_hydrogène": 0.05  # Consommation d'hydrogène (MJ/MJ de carburant)
+    # paramètres globaux
+    # sortie  e-kerosene BioTJet (t/an)
+    "production_BioTJet": 87000,
+
+    # PCI e-kerosene (kWh/kg)
+    "PCI_kerosene": 11.974,
+
+    # Besoin total en CO2 (tCO2/an)
+    "besoin_total_CO2": 461871,
+
+    # rendement entre Kerosene et naphta Calculé par E.Lombard
+    "rendement_kerosene_naphta": 0.79,    
 }
+
 
 ##############################################################
 # Fonctions de calcul des émissions
 ##############################################################
 
 def emissions_FT(param_FT):
-    # Calcul des émissions totales pour le processus FT
-    émissions = (param_FT["émissions_FT"] + 
-                 param_FT["consommation_hydrogène"] * 10) / param_FT["efficacité_FT"]
-    return émissions
+    # Calcul de consommatoin relative CO2 (Mt/Twh)
+    conso_realtive_CO2 = param_FT['besoin_total_CO2'] / (param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] )  
 
+    # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableu de l'ADEME
+    consommation_électrique = 3.3 + (conso_realtive_CO2 - 0.43)*(3.2-2.4)/(0.43-0.36)
+
+    # Consommation totale pour prod E-CHO (GWh/an)
+    consommation_totale_FT = param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] * (consommation_électrique)/1000
+    return consommation_totale_FT
+
+print(emissions_FT(param_FT))
