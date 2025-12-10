@@ -1,4 +1,4 @@
-from etapes import _1_carbone as biomasse
+from etapes import _1_biomasse as biomasse
 from etapes import _2_transport as transport
 from etapes import _3_FT as ft
 from etapes import _4_electrolyseur as elec

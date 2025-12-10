@@ -1,14 +1,7 @@
 """
 Paramètres et hypothèses sourcées pour la biomasse, puis fonctions de calcul des émissions.
 
-Facteurs importants :
-- Source de la biomasse (ligneuse sèche, herbacee, résiduelle, etc.)
-- PCI de la biomasse (MWh/t)
-- densité
-- humidité
-- effets changement climatique (à différentes échelles temporelles)
-- émissions liées à la culture, au transport, à la transformation
-
+Source de la biomasse (ligneuse sèche, herbacee, résiduelle, etc.)
 """
 
 ###############################################################
@@ -18,8 +11,8 @@ Facteurs importants :
 param_biomasse = {
 
 
-    # --> servira a l'étape de différencier entre types de biomasse
-    "source_biomasse": "ligneuse",  # Source de la biomasse parmi ['ligneuse', "biomasse_vive" , "bois_secondaire", ...]
+    # TODO l'utiliser pour vérifier que les types de biomasse renseignés sont corrects
+    "sources_biomasse": ["ligneuse_seche", "bois_vert", "agricole", "herbacee", "résiduelle" ,...],
 
     # source : TODO
     "PCI_biomasse": 5050, # (kWh/t) PCI de la biomasse ligneuse sèche
@@ -47,8 +40,8 @@ param_biomasse = {
 
 """Etapes de calcul des émissions liées au carbone
 1. Bio-safs : cas carbone venant de la biomasse (le plus complexe) : entrée biomasse, sortie biomasse sèche
-    a. Émissions liées à la culture de la biomasse      - TODO
-    b. Émissions liées au transport de la biomasse      - TODO
+    a. Émissions liées à la culture de la biomasse      - WIP
+    b. Émissions liées au transport de la biomasse - OK
     c. Consos liées au traitement de la biomasse - OK
 2. e-safs : carbone venant de ccs ou dac (à faire plus tard)
 
@@ -76,17 +69,22 @@ def emissions_culture_biomasse(param_biomasse, biomasse):
     Hypothèse : émissions fixes par MJ de biomasse entrante.
 
     """
-    emissions_totales_culture = 0
+    
 
     #1. Calcul des émissions liées aux changements d'affectation des sols (CAS)
     # TODO
 
-    #2. Calcul des émissions dues au carbone relâché lors de la coupe/récolte
-    # TODO
+    #2. Calcul des émissions dues au carbone relâché lors de la coupe/récolte, net à horizon 20 ans
+    # masse/4 la masse de carbone (C) dans le bois (en tonnes)
+    # * (44/12) le stock de CO2 émis à l'abbattage
+    # * (1 + 0.5) qui prend en compte déstockage sol
+    # * (1 - 0.25) hypothèse taux de substitution de 25% sur 20 ans (mélange de bois d'abattage feuillus et résineux)
+    masse_bois_vert = sum(biom['masse'] for biom in biomasse if biom['type'] == "bois_vert")  # en tonnes
+    emissions_recolte = 1000 * masse_bois_vert / 4 * (44/12) * (1 + 0.5) * (1 - 0.25)  # en kgCO2e
 
-    #3. Calcul du carbone séquestré lors de la croissance de la biomasse ?
-    # TODO
 
+
+    emissions_totales_culture = emissions_recolte #+ ...
 
     return emissions_totales_culture
 
@@ -158,11 +156,12 @@ def traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
 # fonctions test
 # test traitement biomasse
 biomasse_exemple = [
-    {"type" : "ligneuse", "masse": 10000, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
-    {"type" : "agricole", "masse": 200000, "humidité": 0.20},  # 2 tonnes de biomasse agricole à 20% d'humidité
+    {"type" : "bois_vert", "masse": 10000, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+    {"type" : "agricole", "masse": 200000, "humidité": 0.0},  # 2 tonnes de biomasse agricole à 20% d'humidité
 ]
 elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exemple)
 print(f"Électricité consommée pour le broyage : {elec} kWh")
 print(f"Chaleur consommée pour la torréfaction : {chaleur} MJ")
 print(f"Masse de biomasse sèche sortie : {masse_seche} t")
 print(f"Émissions liées au transport de la biomasse : {emissions_transport_biomasse(param_biomasse, biomasse_exemple)} kgCO2e")
+print(f"Émissions liées à la culture de la biomasse : {emissions_culture_biomasse(param_biomasse, biomasse_exemple)} kgCO2e")
