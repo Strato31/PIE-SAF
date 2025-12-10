@@ -30,7 +30,7 @@ param_biomasse = {
     "emissions_transport_biomasse": 0.096,  # (kgCO2e/t.km) Émissions liées au transport de la biomasse
 
     # Hypothèse distance moyenne de transport
-    "distance_transport_biomasse": 100,  # (km) Distance moyenne de transport de la biomasse (choix arbitraire)
+    "distance_transport_biomasse": 500,  # (km) Distance moyenne de transport de la biomasse (choix arbitraire)
 }
 
 
@@ -40,7 +40,7 @@ param_biomasse = {
 
 """Etapes de calcul des émissions liées au carbone
 1. Bio-safs : cas carbone venant de la biomasse (le plus complexe) : entrée biomasse, sortie biomasse sèche
-    a. Émissions liées à la culture de la biomasse      - WIP
+    a. Émissions liées à la culture de la biomasse - OK
     b. Émissions liées au transport de la biomasse - OK
     c. Consos liées au traitement de la biomasse - OK
 2. e-safs : carbone venant de ccs ou dac (à faire plus tard)
@@ -48,6 +48,7 @@ param_biomasse = {
 
 Hypothèses pouvant être détaillées :
 - capacité calorifique propre à chaque type de biomasse / chaque espèce d'arbre éventuellement
+- emissions différentes selon type de biomasse (ligneuse, agricole, résiduelle, etc.)
 
 """
 
@@ -69,22 +70,17 @@ def emissions_culture_biomasse(param_biomasse, biomasse):
     Hypothèse : émissions fixes par MJ de biomasse entrante.
 
     """
-    
-
-    #1. Calcul des émissions liées aux changements d'affectation des sols (CAS)
-    # TODO
-
-    #2. Calcul des émissions dues au carbone relâché lors de la coupe/récolte, net à horizon 20 ans
+    # Calcul des émissions dues au carbone relâché lors de la coupe/récolte, net à horizon 20 ans
     # masse/4 la masse de carbone (C) dans le bois (en tonnes)
     # * (44/12) le stock de CO2 émis à l'abbattage
     # * (1 + 0.5) qui prend en compte déstockage sol
-    # * (1 - 0.25) hypothèse taux de substitution de 25% sur 20 ans (mélange de bois d'abattage feuillus et résineux)
+    # * (1 - 0.25*(20-1)/(2*20)) moyenne pondérée sur l'horizon, hypothèse taux de substitution de 25% sur 20 ans (mélange de bois d'abattage feuillus et résineux)
     masse_bois_vert = sum(biom['masse'] for biom in biomasse if biom['type'] == "bois_vert")  # en tonnes
-    emissions_recolte = 1000 * masse_bois_vert / 4 * (44/12) * (1 + 0.5) * (1 - 0.25)  # en kgCO2e
+    emissions_recolte = 1000 * masse_bois_vert / 4 * (44/12) * (1 + 0.5) * (1 - 0.25*(20-1)/(2*20))  # en kgCO2e
 
 
-
-    emissions_totales_culture = emissions_recolte #+ ...
+    # à terme, y ajouter émissions pour d'autres types de biomasse (agricole, résiduelle, etc.)
+    emissions_totales_culture = emissions_recolte 
 
     return emissions_totales_culture
 
@@ -156,8 +152,8 @@ def traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
 # fonctions test
 # test traitement biomasse
 biomasse_exemple = [
-    {"type" : "bois_vert", "masse": 10000, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
-    {"type" : "agricole", "masse": 200000, "humidité": 0.0},  # 2 tonnes de biomasse agricole à 20% d'humidité
+    {"type" : "bois_vert", "masse": 600000, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+    #{"type" : "agricole", "masse": 200000, "humidité": 0.0},  # 2 tonnes de biomasse agricole à 20% d'humidité
 ]
 elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exemple)
 print(f"Électricité consommée pour le broyage : {elec} kWh")
