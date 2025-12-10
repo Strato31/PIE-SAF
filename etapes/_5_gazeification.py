@@ -66,22 +66,3 @@ def emissions_gazeification(param_gazeification):
     émissions = 0
     return émissions
 
-
-
-###############################################################
-# Stockage des paramètres avec les hypothèses sourcées : Calcul conso énergétique du processus
-###############################################################
-cara_pysico_chimique_methane = { #Source ?
-    T : 298.15,  # Température (K)
-    P : 1,        # Pression (bar)
-    PCI : 803.3,   # Pouvoir Calorifique Inférieur (kJ/mol)
-    PCS : 890.8,   # Pouvoir Calorifique Supérieur (kJ/mol)
-    # PCI : 50.07,   # Pouvoir Calorifique Inférieur (MJ/kg)
-    # PCS : 55.53,   # Pouvoir Calorifique Supérieur (MJ/kg)
-    # densite : , # Densité (kg/m3) à 298.15 K et 1 bar source ?
-    densite : 0.6709, # Densité (kg/m3) à 288.15 K et 1 bar 
-}
-
-##############################################################
-# Fonctions de calcul des émissions : Calcul conso énergétique du processus
-##############################################################
