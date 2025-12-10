@@ -54,5 +54,10 @@ Etapes a inclure :
         - transfert de vapeur vers l'extérieur
 - electrolyseur (très long oscour) (H2)
 
---> à grouper pour certaines, réfléchir comment organiser les données qui servent sur plusieurs étapes
 
+
+LA SUITE :
+- permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
+- créer format dictionnaire de données par projet
+- rendre globale les variables qui le sont
+- ...
