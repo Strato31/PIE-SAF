@@ -13,8 +13,8 @@ ________________________________________
 - Sorties :  élec, chaleur, H2 à produire par électrolyseur, kérosène produit, autres produits liquides
 
 --ELECTROLYSE--
-- Entrées : eau, quantité H2 à produire
-- Sorties : élec
+- Entrées : quantité H2 à produire
+- Sorties : élec, conso eau, oxygène
 
 --ENERGIES--
 - Entrées : consommations chaleur et élec
@@ -45,6 +45,4 @@ Etapes a inclure :
     - fonctionnement pompes à eau
         - transfert de vapeur vers l'extérieur
 - electrolyseur (très long oscour) (H2)
-
---> à grouper pour certaines, réfléchir comment organiser les données qui servent sur plusieurs étapes
 
