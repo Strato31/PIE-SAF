@@ -16,15 +16,6 @@ param_FT = {
 
     # rendement entre Kerosene et naphta Calculé par E.Lombard
     "rendement_kerosene_naphta": 0.79,    
-
-    # Entrée carbone par biomasse (t)
-    "masse_carbone_initiale": 150000,
-
-    # Masse de C dans le kerosene en sortie (t)
-    "masse_carbone_kerosene":  78880,
-
-    # Masse de C dans du CO2 utilisé pour EM-Lacq
-    "masse_carbone_CO2_EMLacq":  33600
 }
 
 
@@ -33,10 +24,10 @@ param_FT = {
 ##############################################################
 
 def emissions_FT(param_FT):
-    # Calcul de consommation relative CO2 (Mt/Twh)
+    # Calcul de consommatoin relative CO2 (Mt/Twh)
     conso_realtive_CO2 = param_FT['besoin_total_CO2'] / (param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] )  
 
-    # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableau de l'ADEME
+    # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableu de l'ADEME
     consommation_électrique = 3.3 + (conso_realtive_CO2 - 0.43)*(3.2-2.4)/(0.43-0.36)
 
     # Consommation totale pour prod E-CHO (GWh/an)
