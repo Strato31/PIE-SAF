@@ -45,8 +45,8 @@ France (le solaire et surtout la biomasse sont moins décarbonées. Donc pas d�
 
 '''
 facteur_emission_2023 = {
-    "cosommation" : 34.3, # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
-    "production" : 32.4 # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
+    cosommation : 34.3, # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
+    production : 32.4 # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
 }
 
 '''Valeur 2023 tirée du rapport « bilan électrique RTE 2023 ». Valeur un peu élevée intégrant les 
