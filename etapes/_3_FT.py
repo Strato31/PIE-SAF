@@ -16,6 +16,15 @@ param_FT = {
 
     # rendement entre Kerosene et naphta Calculé par E.Lombard
     "rendement_kerosene_naphta": 0.79,    
+
+    # Entrée carbone par biomasse (t)
+    "masse_carbone_initiale": 150000,
+
+    # Masse de C dans le kerosene en sortie (t)
+    "masse_carbone_kerosene":  78880,
+
+    # Masse de C dans du CO2 utilisé pour EM-Lacq
+    "masse_carbone_CO2_EMLacq":  33600
 }
 
 
@@ -32,6 +41,13 @@ def emissions_FT(param_FT):
 
     # Consommation totale pour prod E-CHO (GWh/an)
     consommation_totale_FT = param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] * (consommation_électrique)/1000
-    return consommation_totale_FT
+
+    # Calcul des émissions liées au rendement carbone
+    emmissions_rendement_carbone = (param_FT['masse_carbone_initiale'] 
+    - (param_FT['masse_carbone_kerosene']/ param_FT['rendement_kerosene_naphta'])
+    - param_FT['masse_carbone_CO2_EMLacq'])* (44/12) # Conversion C en CO2
+    # le résultat est légèrement différent du excel car la masse de naphta est calculée via le rendement et non donnée directement
+
+    return consommation_totale_FT, emmissions_rendement_carbone
 
 print(emissions_FT(param_FT))
