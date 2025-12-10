@@ -354,6 +354,7 @@ def emissions_gazeification(param_gazeification):
     émissions = 0
     return émissions
 
+<<<<<<< HEAD
 
 
 ###############################################################
@@ -373,3 +374,5 @@ cara_pysico_chimique_methane = { #Source ?
 ##############################################################
 # Fonctions de calcul des émissions : Calcul conso énergétique du processus
 ##############################################################
+=======
+>>>>>>> 11174a8 (compression)
