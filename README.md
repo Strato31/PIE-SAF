@@ -32,7 +32,7 @@ ________________________________________
 UNITES : 
 - masse : en tonnes
 - électricité : kWh
-- énergie : MJ
+- énergie : MJ (positive si consommée, négative si produite)
 - --> Conversion : 1 kWh = 3.6 MJ
 
 ________________________________________
