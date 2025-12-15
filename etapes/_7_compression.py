@@ -93,8 +93,8 @@ Hypothèses :
 def param_temp_variable(T):
     """Renvoie les paramètres physico-chimiques, Cp et gamma, du méthane en fonction de la température T (K)."""
     Cp_mol = 34.942-0.039957*T+0.00019184*T**2-0.00000015303*T**3+3,9321E-11*T**4 # source ? en J/mol.K
-    Cp_g = Cp_mol / carac_pysico_chimique["methane"]["masse_molaire"] # conversion en kJ/kg.K
-    Rs = R / (carac_pysico_chimique["methane"]["masse_molaire"]) # constante spécifique des gaz parfait en kJ/kg.K
+    Cp_g = Cp_mol / carac_pysico_chimiques["methane"]["masse_molaire"] # conversion en kJ/kg.K
+    Rs = R / (carac_pysico_chimiques["methane"]["masse_molaire"]) # constante spécifique des gaz parfait en kJ/kg.K
     gamma = Cp_g / (Cp_g - Rs) # calcul de gamma
     return Cp_g, gamma
 
