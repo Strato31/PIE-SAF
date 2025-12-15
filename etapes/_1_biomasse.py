@@ -14,10 +14,8 @@ param_biomasse = {
     # TODO l'utiliser pour vérifier que les types de biomasse renseignés sont corrects
     "sources_biomasse": ["ligneuse_seche", "bois_vert", "agricole", "herbacee", "résiduelle" ,...],
 
-    # source : TODO
-    "PCI_biomasse": 5050, # (kWh/t) PCI de la biomasse ligneuse sèche
-
-    "rendement_biomasse": 0.85,  # Rendement de conversion
+    # source : https://www.bois-de-chauffage-ecologique.fr/actualite/post/32-le-pouvoir-calorifique-du-bois-de-chauffage
+    "PCI_biomasse": 5050, # (kWh/t) PCI du bois de chauffage
 
     # capacité calorifique du cyprès selon https://www.thermoconcept-sarl.com/base-de-donnees-chaleur-specifique-ou-capacite-thermique/
     "capacite_calorifique_biomasse": 2.301,  # Capacité calorifique spécifique utilisée pour la biomasse (kJ/kg.K)
@@ -26,8 +24,8 @@ param_biomasse = {
     "consommation_broyage": 0.02,  # en part de l'énergie contenue dans la biomasse
 
     ## TRANSPORT ##
-    # source émissions camion : https://www.webfleet.com/fr_fr/webfleet/blog/emission-co2-camion-km/
-    "emissions_transport_biomasse": 0.096,  # (kgCO2e/t.km) Émissions liées au transport de la biomasse
+    # Ensemble articulé 40 tonnes PTRA – Grand volume (source : https://www.webfleet.com/fr_fr/webfleet/blog/emission-co2-camion-km/) 
+    "emissions_transport_biomasse": 0.096,  # (kgCO2e/t.km) Émissions liées au transport de la biomasse par camion
 
     # Hypothèse distance moyenne de transport
     "distance_transport_biomasse": 500,  # (km) Distance moyenne de transport de la biomasse (choix arbitraire)
@@ -38,17 +36,11 @@ param_biomasse = {
 # Fonctions de calcul des émissions                          #
 ##############################################################
 
-"""Etapes de calcul des émissions liées au carbone
-1. Bio-safs : cas carbone venant de la biomasse (le plus complexe) : entrée biomasse, sortie biomasse sèche
-    a. Émissions liées à la culture de la biomasse - OK
-    b. Émissions liées au transport de la biomasse - OK
-    c. Consos liées au traitement de la biomasse - OK
-2. e-safs : carbone venant de ccs ou dac (à faire plus tard)
-
-
+"""
 Hypothèses pouvant être détaillées :
 - capacité calorifique propre à chaque type de biomasse / chaque espèce d'arbre éventuellement
 - emissions différentes selon type de biomasse (ligneuse, agricole, résiduelle, etc.)
+- éventuellement : ajouter procédés e-safs et bio-safs
 
 """
 
@@ -76,7 +68,7 @@ def emissions_culture_biomasse(param_biomasse, biomasse):
     # * (1 + 0.5) qui prend en compte déstockage sol
     # * (1 - 0.25*(20-1)/(2*20)) moyenne pondérée sur l'horizon, hypothèse taux de substitution de 25% sur 20 ans (mélange de bois d'abattage feuillus et résineux)
     masse_bois_vert = sum(biom['masse'] for biom in biomasse if biom['type'] == "bois_vert")  # en tonnes
-    emissions_recolte = 1000 * masse_bois_vert / 4 * (44/12) * (1 + 0.5) * (1 - 0.25*(20-1)/(2*20))  # en kgCO2e
+    emissions_recolte = masse_bois_vert / 4 * (44/12) * (1 + 0.5) * (1 - 0.25*(20-1)/(2*20))  # en tCO2e
 
 
     # à terme, y ajouter émissions pour d'autres types de biomasse (agricole, résiduelle, etc.)
@@ -90,10 +82,10 @@ def emissions_transport_biomasse(param_biomasse, biomasse):
     Hypothèse : émissions fixes par tonne de biomasse entrante.
 
     """
-    emissions_transport = param_biomasse["emissions_transport_biomasse"]  # kgCO2e/t.km
+    emissions_transport = param_biomasse["emissions_transport_biomasse"]/1000  # tCO2e/t.km
     distance_transport = param_biomasse["distance_transport_biomasse"]  # km
 
-    # Calcul des émissions totales liées au transport de la biomasse (en kgCO2e)
+    # Calcul des émissions totales liées au transport de la biomasse (en tCO2e)
     emissions_totales_transport = emissions_transport * distance_transport * sum(biom['masse'] for biom in biomasse)
 
     return emissions_totales_transport
@@ -159,5 +151,5 @@ elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exempl
 print(f"Électricité consommée pour le broyage : {elec} kWh")
 print(f"Chaleur consommée pour la torréfaction : {chaleur} MJ")
 print(f"Masse de biomasse sèche sortie : {masse_seche} t")
-print(f"Émissions liées au transport de la biomasse : {emissions_transport_biomasse(param_biomasse, biomasse_exemple)} kgCO2e")
-print(f"Émissions liées à la culture de la biomasse : {emissions_culture_biomasse(param_biomasse, biomasse_exemple)} kgCO2e")
+print(f"Émissions liées au transport de la biomasse : {emissions_transport_biomasse(param_biomasse, biomasse_exemple)} tCO2e")
+print(f"Émissions liées à la culture de la biomasse : {emissions_culture_biomasse(param_biomasse, biomasse_exemple)} tCO2e")

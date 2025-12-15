@@ -30,6 +30,7 @@ Les entrées/sorties peuvent être résumées comme suit :
 ________________________________________
 
 UNITES : 
+- emissions carbone : tCO2e
 - masse : en tonnes
 - électricité : kWh
 - énergie : MJ (positive si consommée, négative si produite)
