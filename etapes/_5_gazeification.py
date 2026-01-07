@@ -21,7 +21,7 @@ gaz_params = {
 
     #Masses moalires utiles pour la partie gazeification
     "masseMolaireC" : 12 , 
-    "masseMolaire0" : 16 ,
+    "masseMolaireO" : 16 ,
     "masseMolaireH" : 1 ,
 
     # Conditions standards pour le syngas
@@ -47,7 +47,7 @@ caract_syngas = {
     "CH4":  {"fraction": 0.01,  "nC": 1,  "nH": 4, "nO": 0,  "M": 16.0},
     "C2H2": {"fraction": 0.005,  "nC": 2,  "nH": 2, "nO": 0,  "M": 26.0},
     "C3H6": {"fraction": 0.005,  "nC": 3,  "nH": 6, "nO": 0,  "M": 42.0},
-    "C20":  {"fraction": 0.001,  "nC": 20, "nH": 0, "nO": 0,  "M": 54.0},
+    "C20":  {"fraction": 0.001,  "nC": 1, "nH": 42, "nO": 0,  "M": 54.0}, #bizarre, résultats à pas prendre en compte : déchet 
     "H2":   {"fraction": 0.13, "nC": 0,  "nH": 2, "nO": 0,  "M": 2.0}
 }
 
@@ -84,7 +84,6 @@ def conversionMasseMolaire(Mcomposé,gaz_params):
     T = gaz_params["T"]
     P = gaz_params["P"]
     volume_molaire = 1000*(R * T) / P  # en m3/mol  
-    print(volume_molaire)
     masse_molaire = Mcomposé / volume_molaire # en kg/m3
     
     return masse_molaire
@@ -136,31 +135,25 @@ def gazeificationV1(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params):
 
     return masseCO_sortie, masseH2_sortie, masseCO2_sortie
 
-def gazeificationV2(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params, caract_syngas):
+def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
 
     """
-    Bilan des masses du procédé de gazéification
-    
-    :param biomasseEntree_kg: Valeur de sortie par l'étape Biomasse
-    :param masseEntree_O2: Valeur de sortie par l'étape Electrolyse
-    :param masseEntree_H2: Valeur de sortie par l'étape Electrolyse
+    Bilan complet de masse et de moles pour la gazeification avec bilans atomiques C, H, O
+    :param biomasseEntree: Valeur de sortie par l'étape Biomasse
     :param gaz_params: Paramètres de la gazéification
-    :param pourcentages_syngas: Pourcentages en masse des différents composants du syngas (ESTIMÉS !)
+    :param caract_syngas: Caractéristiques du syngas
+    :return: masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire
 
-
-    Réaction non équilibrée de la gazéification :
-    C + O2 + H2  → CO + H2 + CO2 + (CH4 + C2H2 + C3H6 + C2O) 
-    NB: les déchets entre parenthèses sont des pertes carbones à prendre compiler à al fin du processus total)
+    NB : La somme des fractions volumiques des gaz doit être égale à 1
+    80% de CO + H2 dans le syngas pour être conforme (source : ?) :
 
     """
 
-    #Pramètres d'entrée
+    # ------------------------------
+    # Paramètres d'entrée
+    # ------------------------------
+
     masse_C = biomasseEntree * gaz_params["taux_carbone"]
-    masseEntree_H2reelle = masseEntree_H2*gaz_params["fractionH2"]
-
-    masse_tot_entree = masse_C + masseEntree_O2 + masseEntree_H2reelle
-
-    #Gazéification
 
     # Normalisation des fractions 
     total_fraction = sum(gas["fraction"] for gas in caract_syngas.values())
@@ -173,166 +166,108 @@ def gazeificationV2(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params, c
         for gas_name, gas_data in caract_syngas.items()
     }
 
+    # Vérification de la condition CO + H2 > 80 % (fraction volumique)
+    if caract_syngas_normalized["CO"]["fraction"] + caract_syngas_normalized["H2"]["fraction"] < 0.80:
+        raise ValueError("Syngas non conforme : fraction volumique CO + H2 < 80 %")
 
-    masses_vol_ponderees = [conversionMasseMolaire(caract_syngas[k]["M"], gaz_params) *caract_syngas_normalized[k]["fraction"] for k in caract_syngas]
-    
-    pourcentages_massiques = [0 for _ in range(len(masses_vol_ponderees))]
-    for h in range(len(masses_vol_ponderees)):
-        pourcentages_massiques [h]= masses_vol_ponderees[h]/sum(masses_vol_ponderees)
+    # ------------------------------
+    # Conversion fractions volumiques -> massiques
+    # ------------------------------
 
-        
-    # Séparer gaz carbonés et H2 
+    masses_vol_ponderees = {
+        gas: conversionMasseMolaire(caract_syngas[gas]["M"], gaz_params) *
+             caract_syngas_normalized[gas]["fraction"]
+        for gas in caract_syngas
+    }    
+
+    somme_masses_vol = sum(masses_vol_ponderees.values())
+    pourcentages_massiques = {
+        gas: masses_vol_ponderees[gas] / somme_masses_vol
+        for gas in caract_syngas
+    }
+
+    # ------------------------------
+    # Séparation gaz carbonés
+    # ------------------------------
+
     carbon_gases = [k for k, v in caract_syngas_normalized.items() if v["nC"] > 0]
 
+    # Masses de carbone et hors carbone
+    masses_carbone = {}
+    masses_hors_carbone = {}
+    masses_totales_composes = {}
 
+    #Version de l'excel qui parait fausse 
+    # for i, compo in enumerate(carbon_gases):
+    #      masses_carbone[compo] = pourcentages_massiques[compo] * masse_C
+    #      if caract_syngas[compo]["nO"] == 0:
+    #          masses_hors_carbone[compo] = masses_carbone[compo] * gaz_params["masseMolaireH"] / gaz_params["masseMolaireC"]
+    #      else:
+    #          masses_hors_carbone[compo] = masses_carbone[compo] * gaz_params["masseMolaireO"] / gaz_params["masseMolaireC"]
+    #      masses_totales_composes[compo] = masses_carbone[compo] + masses_hors_carbone[compo]
 
-    # Calcul des moles des gaz carbonés 
-    for k in carbon_gases:
-        caract_syngas[k]["moles"] = (masse_C * caract_syngas[k]["fraction"] * caract_syngas[k]["nC"]) / (factor * gaz_params["masseMolaireC"])
-
-    # Masse des gaz carbonés
-    for k in carbon_gases:
-        caract_syngas[k]["mass"] = caract_syngas[k]["moles"] * caract_syngas[k]["M"]
-
-    # Calcul de H2 
-    x_total_carbon = sum(caract_syngas[k]["fraction"] for k in carbon_gases)
-    n_total = sum(caract_syngas[k]["moles"] for k in carbon_gases) / x_total_carbon
-
-    caract_syngas["H2"]["moles"] = n_total * caract_syngas["H2"]["fraction"]
-    caract_syngas["H2"]["mass"] = caract_syngas["H2"]["moles"] * caract_syngas["H2"]["M"]
-
-    print(f"{'Gaz':<6} {'Fraction':<10} {'Moles':<12} {'Masse (t/an)':<12}")
-    for k, v in caract_syngas.items():
-        print(f"{k:<6} {v['fraction']:<10.4f} {v['moles']:<12.4f} {v['mass']:<12.2f}")
     
-    return caract_syngas
+    # Calcul des masses hors carbone et masses totales de chaque composé
+    for compo in carbon_gases:
+         # Masse hors carbone = masseC * (nH*MH + nO*MO) / (nC*MC)
+         masses_carbone[compo] = pourcentages_massiques[compo] * masse_C
+         masses_hors_carbone[compo] = masses_carbone[compo] * (
+             caract_syngas[compo]["nH"] * gaz_params["masseMolaireH"] +
+             caract_syngas[compo]["nO"] * gaz_params["masseMolaireO"]
+         ) / (caract_syngas[compo]["nC"] * gaz_params["masseMolaireC"])
 
-gazeificationV2(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,
-                     gaz_params=gaz_params, caract_syngas=caract_syngas)
-
-
-def gazeificationV3(biomasseEntree, masseEntree_O2, masseEntree_H2, gaz_params, caract_syngas):
-
-    """
-    Bilan complet de masse et de moles pour la gazeification avec bilans atomiques C, H, O
-    """
-
-    print("\n========== GAZÉIFICATION BtJ – BILAN COMPLET ==========")
-
-    # ----------- CONSTANTES ------------ #
-    M_C = gaz_params["masseMolaireC"]
-    M_O = gaz_params["masseMolaire0"]
-    M_H = gaz_params["masseMolaireH"]
-
-    # ----------- ENTRÉES ------------ #
-    masse_C = biomasseEntree * gaz_params["taux_carbone"]
-    masse_H2 = masseEntree_H2 * gaz_params["fractionH2"]
-    masse_O2 = masseEntree_O2
-
-    nC_entree = masse_C / M_C
-    nH2_entree = masse_H2 / (2 * M_H)
-    nO2_entree = masse_O2 / (2 * M_O)
-
-    print(f"Masse carbone biomasse : {masse_C:.2f} t/an")
-    print(f"Masse H2 injectée      : {masse_H2:.2f} t/an")
-    print(f"Masse O2 injectée      : {masse_O2:.2f} t/an")
-
-    # ------------ NORMALISATION DES FRACTIONS ------------ #
-    #total_fraction = sum(g["fraction"] for g in caract_syngas.values())
-    #for g in caract_syngas.values():
-    #    g["fraction"] /= total_fraction
-
-    # ------------ GAZ CARBONÉS ------------ #
-    carbon_gases = [k for k, v in caract_syngas.items() if v["nC"] > 0]
-
-    # ------------ DISTRIBUTION DU CARBONE ------------ #
-    total_C_units = sum(caract_syngas[k]["fraction"] * caract_syngas[k]["nC"] for k in carbon_gases)
-
-    for k in carbon_gases:
-        frac = caract_syngas[k]["fraction"]
-        nC = caract_syngas[k]["nC"]
-
-        # moles gaz imposés par bilan C
-        caract_syngas[k]["moles"] = nC_entree * frac * nC / total_C_units
-        caract_syngas[k]["mass"] = caract_syngas[k]["moles"] * caract_syngas[k]["M"]
-
-    # ------------ CALCUL DU H2 SELON LES FRACTIONS ------------ #
-    xC = sum(caract_syngas[k]["fraction"] for k in carbon_gases)
-    n_total_syngas = sum(caract_syngas[k]["moles"] for k in carbon_gases) / xC
-
-    caract_syngas["H2"]["moles"] = n_total_syngas * caract_syngas["H2"]["fraction"]
-    caract_syngas["H2"]["mass"] = caract_syngas["H2"]["moles"] * caract_syngas["H2"]["M"]
-
-    # ------------ BILANS ATOMIQUES ------------ #
-    C_out = sum(v["moles"] * v["nC"] for v in caract_syngas.values() if v["nC"] > 0)
-    H_out = (
-        caract_syngas["H2"]["moles"] * 2
-        + caract_syngas["CH4"]["moles"] * 4
-        + caract_syngas["C2H2"]["moles"] * 2
-        + caract_syngas["C3H6"]["moles"] * 6
-    )
-
-    O_out = (
-        caract_syngas["CO"]["moles"] * 1
-        + caract_syngas["CO2"]["moles"] * 2
-    )
-
-    print("\n====== BILANS ATOMIQUES ======")
-    print(f"Carbone  IN = {nC_entree:.2f} mol | OUT = {C_out:.2f} mol")
-    print(f"Hydrogène IN = {nH2_entree*2:.2f} mol | OUT = {H_out:.2f} mol")
-    print(f"Oxygène   IN = {nO2_entree*2:.2f} mol | OUT = {O_out:.2f} mol")
-
-    # ------------ REACTIFS LIMITANTS ------------ #
-
-    print("\n====== RÉACTIF LIMITANT ======")
-
-    # Besoin théorique en O et H pour former le syngaz
-    O_needed = (
-        caract_syngas["CO"]["moles"] * 1 +
-        caract_syngas["CO2"]["moles"] * 2
-    )
-
-    H_needed = (
-        caract_syngas["H2"]["moles"] * 2 +
-        caract_syngas["CH4"]["moles"] * 4 +
-        caract_syngas["C2H2"]["moles"] * 2 +
-        caract_syngas["C3H6"]["moles"] * 6
-    )
-
-    # Disponibilités réelles
-    O_available = nO2_entree * 2
-    H_available = nH2_entree * 2
-
-    ratio_O = O_available / O_needed if O_needed > 0 else 999
-    ratio_H = H_available / H_needed if H_needed > 0 else 999
-
-    print(f"O nécessaire = {O_needed:.2f} mol | O disponible = {O_available:.2f} mol")
-    print(f"H nécessaire = {H_needed:.2f} mol | H disponible = {H_available:.2f} mol")
-
-    scaling = min(1.0, ratio_O, ratio_H)
-
-    # Application du facteur limitant
-    for k in caract_syngas:
-        caract_syngas[k]["moles"] *= scaling
-        caract_syngas[k]["mass"] *= scaling
-
-    if scaling < 1:
-        print(f"⚠️ Syngaz limité par réactif : facteur = {scaling:.3f}")
-    else:
-        print("✅ Aucun réactif limitant : conditions satisfaites")
+         # Masse totale du composé = masse de carbone + masse hors carbone
+         masses_totales_composes[compo] = masses_carbone[compo] + masses_hors_carbone[compo]
 
 
-    # ------------ TABLEAU DE SORTIE ------------ #
+    # ------------------------------
+    # Calcul H2 à injecter et nécessaire
+    # ------------------------------
 
-    print("\n========= COMPOSITION SYNGAS =========")
-    print(f"{'Gaz':<6} {'Frac':<8} {'Moles':<12} {'Masse (t/an)':<12}")
-    for k, v in caract_syngas.items():
-        print(f"{k:<6} {v['fraction']:<8.4f} {v['moles']:<12.2f} {v['mass']:<12.2f}")
+    #Calcul de H2 faux dans l'excel
+    #masseH2_syngaz = masse_C - sum(masses_carbone.values()) # H2 à injecter dans le syngaz
+    #masseH2_necessaire = masseH2_syngaz / gaz_params["fractionH2"] #H2 à produire pour le syngaz (seulement 75% de H2 injecté dans le syngaz)
 
-    return caract_syngas
+    # Calcul de la masse de H2 dans le syngaz version corrigée
+    masseH2_syngaz = 0
+    for compo in carbon_gases:
+        nH = caract_syngas[compo]["nH"]
+        if nH > 0:
+            masseH2_syngaz += masses_totales_composes[compo] * (nH * gaz_params["masseMolaireH"] / caract_syngas[compo]["M"])
 
+    masseH2_necessaire = masseH2_syngaz / gaz_params["fractionH2"]
 
-#gazeificationV3(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,gaz_params=gaz_params, caract_syngas=caract_syngas)
+    # ------------------------------
+    # Calcul O2 nécessaire
+    # ------------------------------
+    masseO_dans_syngaz = 0
+    for compo in carbon_gases:
+        nO = caract_syngas[compo]["nO"]
+        if nO > 0:
+            masseO_dans_syngaz += masses_totales_composes[compo] * (nO * gaz_params["masseMolaireO"] / caract_syngas[compo]["M"])
+    masseO2_necessaire = masseO_dans_syngaz * 2
+
+    # ------------------------------
+    # Récupération CO et CO2
+    # ------------------------------
+    masseCO_sortie = masses_totales_composes.get("CO", 0)
+    masseCO2_sortie = masses_totales_composes.get("CO2", 0)
+    
+    print("\n========== RÉSULTATS GAZÉIFICATION V2 ==========")
+    print(f"Biomasse sèche en entrée      : {biomasseEntree} tonnes/an")
+    print(f"Carbone dans la biomasse      : {masse_C} tonnes/an")
+    print("------------------------------------------------")
+    print(f"CO produit                    : {masseCO_sortie} tonnes/an")
+    print(f"CO₂ produit                   : {masseCO2_sortie} tonnes/an")
+    print(f"H₂ dans syngaz                : {masseH2_syngaz} tonnes/an")
+    print(f"H₂ nécessaire                 : {masseH2_necessaire} tonnes/an")
+    print(f"O₂ nécessaire                 : {masseO2_necessaire} tonnes/an")
+    print("================================================\n")
+
+    return masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire
+
+gazeificationV2(biomasseEntree=300000, gaz_params=gaz_params, caract_syngas=caract_syngas)
+
 
 def bilan_chaleur_gazeification():
 
