@@ -252,6 +252,12 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     # ------------------------------
     masseCO_sortie = masses_totales_composes.get("CO", 0)
     masseCO2_sortie = masses_totales_composes.get("CO2", 0)
+
+    # ------------------------------
+    # Récupération masses déchets (méthane, autres hydrocarbures)
+    # ------------------------------
+
+    masse_dechets = masses_totales_composes.get("CH4", 0) + masses_totales_composes.get("C2H2", 0) + masses_totales_composes.get("C3H6", 0) + masses_totales_composes.get("C20", 0)
     
     print("\n========== RÉSULTATS GAZÉIFICATION V2 ==========")
     print(f"Biomasse sèche en entrée      : {biomasseEntree} tonnes/an")
@@ -262,9 +268,10 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     print(f"H₂ dans syngaz                : {masseH2_syngaz} tonnes/an")
     print(f"H₂ nécessaire                 : {masseH2_necessaire} tonnes/an")
     print(f"O₂ nécessaire                 : {masseO2_necessaire} tonnes/an")
+    print(f"Masse déchets (CH4, autres)  : {masse_dechets} tonnes/an")
     print("================================================\n")
 
-    return masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire
+    return masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire,masse_dechets
 
 gazeificationV2(biomasseEntree=300000, gaz_params=gaz_params, caract_syngas=caract_syngas)
 
