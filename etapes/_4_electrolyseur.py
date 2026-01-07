@@ -127,18 +127,17 @@ SORTIES :
 
 """
 
-def consommation_electrolyseur(param_electrolyseur, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif):
-    # Calcul du besoin total en H2 de l'électrolyseur
-    besoin_H2 = besoin_H2_FT + besoin_H2_gazif 
+def consommation_electrolyseur(param_electrolyseur, besoin_O2_gazif, besoin_H2_gazif):
+
 
     # Vérification de la cohérence des besoins en H2 et O2
-    coherence_electrolyse(besoin_H2, besoin_O2_gazif)
+    coherence_electrolyse(besoin_H2_gazif, besoin_O2_gazif)
 
     # Calcul de la consommation électrique stackée de l'électroyseur
     conso_elec_stack = consom_elec_stack(param_electrolyseur_alcalin, param_electrolyseur)
 
     # Calcul de la consommation électrique de l'électrolyseur
-    consommation_electricite = besoin_H2 * conso_elec_stack  # en kWh
+    consommation_electricite = besoin_H2_gazif * conso_elec_stack  # en kWh
     
     return consommation_electricite
 
