@@ -15,7 +15,9 @@ et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce mo
 # Emissions en kgCO2eq/an
 # Chaleur en MJ
 ###
-"""Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
+
+"""
+Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
 
 ⚠⚠⚠⚠
 La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
@@ -93,7 +95,8 @@ def consom_elec_stack(param_electrolyseur_ref, param_electrolyseur_cible):
 """
 La réaction d'électrolyse de l'eau est la suivante :
 2 H2O(l) (+ élec) → 2 H2(g) + O2(g)
-On doit alors s'assurer que la production d'oxygène est bien la moitié de la production d'hydrogène (environ).
+On doit alors s'assurer que la production d'oxygène est bien la moitié de la production d'hydrogène 
+(environ).
 
 """
 
@@ -147,9 +150,9 @@ def consommation_electrolyseur(param_electrolyseur, besoin_H2_FT, besoin_O2_gazi
 
 if __name__ == "__main__":
     # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
-    besoin_H2_FT = 800  # tonnes
-    besoin_O2_gazif = 500  # tonnes
-    besoin_H2_gazif = 200  # tonnes
+    besoin_H2_FT = 80  # tonnes
+    besoin_O2_gazif = 50  # tonnes
+    besoin_H2_gazif = 20  # tonnes
 
-#     consommation_elec = emissions_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
-#     print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")
+    consommation_elec = consommation_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
+    print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")
