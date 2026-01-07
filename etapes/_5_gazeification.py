@@ -2,7 +2,7 @@
 Paramètres et hypothèses sourcées pour la gazeification, puis fonctions de calcul des émissions."""
 
 ###############################################################
-# Stockage des paramètres avec les hypothèses sourcées
+# Stockage des paramètres avec les hypothèses sourcées : Calcul de la quantité de syngas en sortie 
 ###############################################################
 
 param_gazeification = {
@@ -31,7 +31,7 @@ gaz_params = {
 
 
 ##############################################################
-# Fonctions de calcul des émissions
+# Fonctions de calcul des émissions : Calcul de la quantité de syngas en sortie 
 ##############################################################
 def gazeification(biomasse_kg,params):
 
@@ -65,3 +65,4 @@ def emissions_gazeification(param_gazeification):
     # Calcul des émissions totales pour le processus de gazeification
     émissions = 0
     return émissions
+
