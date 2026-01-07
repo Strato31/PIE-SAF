@@ -63,6 +63,10 @@ carac_pysico_chimiques = { #Source ? Nasa Glem coef ?
     "masse_molaire" : 31.9988, # Masse molaire (g/mol)
     "Cp" : 0.9165, # Capacité calorifique à pression contante (kJ/kg.K) à 288.15 K
     "Cv" : 0.6567, # Capacité calorifique à volume constant (kJ/kg.K) à 288.15 K
+    "Cp1" : 0.934, # Capacité calorifique à pression contante (kJ/kg.K) à 350 K
+    "Cp2" : 0.928, # Capacité calorifique à pression contante (kJ/kg.K) à 375 K
+    "T1" : 350,  # Température (K)
+    "T2" : 375,  # Température (K)
     },
 
     "vapeur_d_eau" : { #Source ?
