@@ -2,7 +2,7 @@
 Paramètres et hypothèses sourcées pour la gazeification, puis fonctions de calcul des émissions."""
 
 ###############################################################
-# Stockage des paramètres avec les hypothèses sourcées
+# Stockage des paramètres avec les hypothèses sourcées : Calcul de la quantité de syngas en sortie 
 ###############################################################
 
 
@@ -53,7 +53,7 @@ caract_syngas = {
 
 
 ##############################################################
-# Fonctions de calcul des émissions
+# Fonctions de calcul des émissions : Calcul de la quantité de syngas en sortie 
 ##############################################################
 
 #Fonction de conversion en masse de CO2 en Carbone
