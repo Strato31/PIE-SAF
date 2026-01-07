@@ -34,6 +34,8 @@ def __main__():
     print("---------------------------------------------------------------")
     print("Étape 4 : Électrolyseur")
     conso_elec_elec = elec.consommation_electrolyseur(elec.param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
+    # Prise en compte des pertes en lgne sur le réseau de distribution haute tension (valeur de RTE)
+    conso_elec_elec *= (1/0.979)
     consos_energies.append(conso_elec_elec)
     print("---------------------------------------------------------------")
     print("Étape 5 : Compression")
