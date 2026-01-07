@@ -13,14 +13,14 @@ Facteurs importants :
 """
 # Exemple de paramètre de contexte
 contexte = {
-    "mix_énergétique": "éolien_majoritaire",  # Mix énergétique du pays de production
-    "infrastructures": "modernes",            # Infrastructures disponibles
-    "réglementations": "strictes",            # Réglementations environnementales
-    "pratiques_agricoles": "durables",        # Pratiques agricoles et forestières
-    "conditions_climatiques": "tempérées",     # Conditions climatiques locales
-    "distance_marchés": 500,                  # Distance aux marchés principaux (km)
-    "technologies_conversion": "FT_modernes", # Technologies de conversion utilisées
-    "échelle_production": "grande",          # Échelle de production (petite, moyenne, grande)
-    "durabilité_sources": "certifiées",       # Durabilité des sources de biomasse
-    "impacts_indirects": "minimisés"               # Impacts indirects (changement d'affectation des sols, biodiversité, etc.)
+    "mix_énergétique": "éolien_majoritaire",    # Mix énergétique du pays de production
+    "infrastructures": "modernes",              # Infrastructures disponibles
+    "réglementations": "strictes",              # Réglementations environnementales
+    "pratiques_agricoles": "durables",          # Pratiques agricoles et forestières
+    "conditions_climatiques": "tempérées",      # Conditions climatiques locales
+    "distance_marchés": 500,                    # Distance aux marchés principaux (km)
+    "technologies_conversion": "FT_modernes",   # Technologies de conversion utilisées
+    "échelle_production": "grande",             # Échelle de production (petite, moyenne, grande)
+    "durabilité_sources": "certifiées",         # Durabilité des sources de biomasse
+    "impacts_indirects": "minimisés"            # Impacts indirects (changement d'affectation des sols, biodiversité, etc.)
 }   

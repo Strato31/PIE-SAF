@@ -15,6 +15,22 @@ et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce mo
 # Emissions en kgCO2eq/an
 # Chaleur en MJ
 ###
+"""Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
+
+⚠⚠⚠⚠
+La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
+avec des  technologies de 2020 et  supposées être disponibles en 2030.
+
+Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
+et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
+"""
+
+### Coordination sur les unités utilisées :
+# Energie en kWh
+# Masse en Tonnes
+# Emissions en kgCO2eq/an
+# Chaleur en MJ
+###
 
 ###############################################################
 # Stockage des paramètres avec les hypothèses sourcées
@@ -123,11 +139,11 @@ def emissions_electrolyseur(param_electrolyseur, besoin_H2_FT, besoin_O2_gazif, 
 # Fonction de test
 ##############
 
-if __name__ == "__main__":
-    # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
-    besoin_H2_FT = 800  # kg
-    besoin_O2_gazif = 500  # kg
-    besoin_H2_gazif = 200  # kg
+# if __name__ == "__main__":
+#     # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
+#     besoin_H2_FT = 800  # kg
+#     besoin_O2_gazif = 500  # kg
+#     besoin_H2_gazif = 200  # kg
 
-    consommation_elec = emissions_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
-    print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")
+#     consommation_elec = emissions_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
+#     print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")

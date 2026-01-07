@@ -288,3 +288,4 @@ def conso_elec_gazeification():
     energie_gazeification = 0
 
     return energie_gazeification
+
