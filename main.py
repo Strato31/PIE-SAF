@@ -32,7 +32,7 @@ def __main__():
     emissions_co2.append(emissions_FT)
     print("---------------------------------------------------------------")
     print("Étape 4 : Électrolyseur")
-    conso_elec_elec = elec.emissions_electrolyseur(elec.param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
+    conso_elec_elec = elec.consommation_electrolyseur(elec.param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
     consos_energies.append(conso_elec_elec)
     print("---------------------------------------------------------------")
     print("Étape 5 : Compression")
