@@ -111,17 +111,17 @@ Hypothèses :
 def param_temp_variable(T, gaz):
     """Renvoie les paramètres physico-chimiques, Cp et gamma en fonction de la température T (K)."""
     if gaz == "CH4":
-        Cp_mol = 34.942-0.039957*T+0.00019184*T**2-0.00000015303*T**3+3,9321E-11*T**4 # source ? en J/mol.K
+        Cp_mol = 34.942-0.039957*T+0.00019184*T**2-0.00000015303*T**3+3.9321e-11*T**4 # source ? en J/mol.K
     elif gaz == "H2":
         Cp_mol = 33.066178-11.363417*(T/1000)+11.432816*(T/1000)**2-2.772874*(T/1000)**3-0.1585581*(T/1000)**4 # source ? en J/mol.K
     elif gaz == "CO2":
         Cp_mol =27.437+0.042315*T-0.000019555*T**2+0.0000000039968*T**3-2.9872e-12*T**4 # source ? en J/mol.K
 
     elif gaz == "CO":
-        Cp_mol =29.556-0.0065807*T+0.00002013*T**2-0.000000012227*T**3+2.2617*e-12*T**4 # source ? en J/mol.K
+        Cp_mol =29.556-0.0065807*T+0.00002013*T**2-0.000000012227*T**3+2.2617e-12*T**4 # source ? en J/mol.K
 
     elif gaz == "air":
-        Cp_g = 1.93271*1e-13*T**4-7.9999*1e-10*T**3+1.1407*1e-6*T**2-4.489*1e-4*T**1+1.0575 # source ? en kJ/kg.K
+        Cp_g = 1.93271e-13*T**4-7.9999e-10*T**3+1.1407e-6*T**2-4.489e-4*T+1.0575 # source ? en kJ/kg.K
     
     elif gaz == "O2":
         Cp_mol = (carac_pysico_chimiques[gaz]["Cp2"] - carac_pysico_chimiques[gaz]["Cp1"])/(carac_pysico_chimiques[gaz]["T2"] - carac_pysico_chimiques[gaz]["T1"])*(T - carac_pysico_chimiques[gaz]["T1"]) + carac_pysico_chimiques[gaz]["Cp1"] # source ? en kJ/kg.K
@@ -266,17 +266,17 @@ Hypothèses :
 def param_temp_variable(T, gaz):
     """Renvoie les paramètres physico-chimiques, Cp et gamma en fonction de la température T (K)."""
     if gaz == "CH4":
-        Cp_mol = 34.942-0.039957*T+0.00019184*T**2-0.00000015303*T**3+3,9321E-11*T**4 # source ? en J/mol.K
+        Cp_mol = 34.942-0.039957*T+0.00019184*T**2-0.00000015303*T**3+3.9321e-11*T**4 # source ? en J/mol.K
     
     elif gaz == "H2":
         Cp_mol = 33.066178-11.363417*(T/1000)+11.432816*(T/1000)**2-2.772874*(T/1000)**3-0.1585581*(T/1000)**4 # source ? en J/mol.K
     
     elif gaz == "CO2":
-        Cp_mol =27.437+0.042315*T-0.000019555*T**2+0.0000000039968*T**3-2.9872*1E(-12)*T**4 # source ? en J/mol.K
+        Cp_mol =27.437+0.042315*T-0.000019555*T**2+0.0000000039968*T**3-2.9872e-12*T**4 # source ? en J/mol.K
     elif gaz == "CO":
-        Cp_mol =29.556-0.0065807*T+0.00002013*T**2-0.000000012227*T**3+2.2617*1E(-12)*T**4 # source ? en J/mol.K
+        Cp_mol =29.556-0.0065807*T+0.00002013*T**2-0.000000012227*T**3+2.2617e-12*T**4 # source ? en J/mol.K
     elif gaz == "air":
-        Cp_g = 1.93271*1E(-13)*T**4-7.9999*1E(-10)*T**3+1.1407*1E(-6)*T**2-4.489*1E(-4)*T**1+1.0575 # source ? en kJ/kg.K
+        Cp_g = 1.93271e-13*T**4-7.9999e-10*T**3+1.1407e-6*T**2-4.489e-4*T+1.0575 # source ? en kJ/kg.K
     # A voir si besoin de coder pour N2, eau liquide et vapeur d'eau si nécessaire même modèle que l'02 ?
     elif gaz == "O2":
         Cp_mol = (carac_pysico_chimiques[gaz]["Cp2"] - carac_pysico_chimiques[gaz]["Cp1"])/(carac_pysico_chimiques[gaz]["T2"] - carac_pysico_chimiques[gaz]["T1"])*(T - carac_pysico_chimiques[gaz]["T1"]) + carac_pysico_chimiques[gaz]["Cp1"] # source ? en kJ/kg.K

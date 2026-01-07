@@ -36,8 +36,17 @@ def __main__():
     consos_energies.append(conso_elec_elec)
     print("---------------------------------------------------------------")
     print("Étape 5 : Compression")
-    conso_elec_compression = comp.conso_compression(comp.param_temp_variable, ...)
+    masse_CO_kg, masse_H2_kg, masse_CO2_kg, masse_O2_kg = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)[0:4]*1000
+
+    "Calcul de la consommation électrique de compression de l'O2 entre l'électrolyseur et FT"
+    conso_compression_O2 = comp.conso_compression(masse_O2_kg, "O2", 0.8, 1, 20, 288.15)
+    "Calcul de la consommation électrique de compression du CO2 capté sortie du réactuer BioTJet et amené à EM-Lacq"
+    conso_compression_CO2 = comp.conso_compression(masse_CO2_kg, "CO2", 0.8, 1, 20, 288.15)
+    "Calcul de la consommation électrique de compression du syngas entre la gazéification et FT"
+    conso_compression_syngas = comp.conso_compression_syngaz(masse_CO2_kg, masse_H2_kg, masse_CO_kg, 0.85, 1, 1.12, 323.15) #hypothèse flux total de gaz à ventiler
+    conso_elec_compression = conso_compression_O2 + conso_compression_syngas + conso_compression_CO2
     consos_energies.append(conso_elec_compression)
+
     print("---------------------------------------------------------------")
     print("Étape 6 : Calcul des émissions totales et consommations énergétiques")
     emissions_2050, emissions_2023 = energie.emissions_energie_totale(consos_energies)
