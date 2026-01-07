@@ -123,11 +123,11 @@ def emissions_electrolyseur(param_electrolyseur, besoin_H2_FT, besoin_O2_gazif, 
 # Fonction de test
 ##############
 
-if __name__ == "__main__":
-    # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
-    besoin_H2_FT = 800  # kg
-    besoin_O2_gazif = 500  # kg
-    besoin_H2_gazif = 200  # kg
+# if __name__ == "__main__":
+#     # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
+#     besoin_H2_FT = 800  # kg
+#     besoin_O2_gazif = 500  # kg
+#     besoin_H2_gazif = 200  # kg
 
-    consommation_elec = emissions_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
-    print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")
+#     consommation_elec = emissions_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
+#     print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")

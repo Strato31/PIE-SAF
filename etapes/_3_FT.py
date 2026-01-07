@@ -50,4 +50,15 @@ def emissions_FT(param_FT):
 
     return consommation_totale_FT, emmissions_rendement_carbone
 
-print(emissions_FT(param_FT))
+# print(emissions_FT(param_FT))
+
+def main_FT():
+    """
+    Arguments :
+       - composition et quantité du syngas
+    
+    Sorties :
+       - besoin en H2 pour FT (t)
+       - émissions CO2 liées à l'étape FT (tCO2e)
+       - masse de kérosène produite (t)"""
+    return

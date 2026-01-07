@@ -196,7 +196,7 @@ def gazeificationV2(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params, c
 
     # Calcul des moles des gaz carbonés 
     for k in carbon_gases:
-        caract_syngas[k]["moles"] = (masse_C * caract_syngas[k]["fraction"] * caract_syngas[k]["nC"]) / (factor * gaz_params["masseMolaireC"])
+        caract_syngas[k]["moles"] = (masse_C * caract_syngas[k]["fraction"] * caract_syngas[k]["nC"]) / (1 * gaz_params["masseMolaireC"])
 
     # Masse des gaz carbonés
     for k in carbon_gases:
@@ -215,8 +215,8 @@ def gazeificationV2(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params, c
     
     return caract_syngas
 
-gazeificationV2(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,
-                     gaz_params=gaz_params, caract_syngas=caract_syngas)
+# gazeificationV2(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,
+                    #  gaz_params=gaz_params, caract_syngas=caract_syngas)
 
 
 def gazeificationV3(biomasseEntree, masseEntree_O2, masseEntree_H2, gaz_params, caract_syngas):

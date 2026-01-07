@@ -10,7 +10,6 @@ Source de la biomasse (ligneuse sèche, herbacee, résiduelle, etc.)
 # --> à réorganiser/scinder pour rendre plus lisible ?
 param_biomasse = {
 
-
     # TODO l'utiliser pour vérifier que les types de biomasse renseignés sont corrects
     "sources_biomasse": ["ligneuse_seche", "bois_vert", "agricole", "herbacee", "résiduelle" ,...],
 
@@ -31,6 +30,10 @@ param_biomasse = {
     "distance_transport_biomasse": 500,  # (km) Distance moyenne de transport de la biomasse (choix arbitraire)
 }
 
+biomasse_entree = [
+    {"type" : "bois_vert", "masse": 600000, "humidité": 0.10},  # 600 000 tonnes de biomasse ligneuse à 10% d'humidité
+    {"type" : "bois_vert", "masse": 400000, "humidité": 0.30},  # 400 000 tonnes de biomasse ligneuse à 30% d'humidité
+]
 
 ##############################################################
 # Fonctions de calcul des émissions                          #
@@ -140,16 +143,31 @@ def traitement_biomasse(param_biomasse, biomasse_entree, BROYAGE=True):
     return elec_broyage, energie_torrefaction, masse_seche_sortie(biomasse_entree)
 
 
+def main_biomasse(param_biomasse, biomasse_entree):
+    """Calcule les émissions totales liées à la biomasse, ainsi que les consommations énergétiques."""
+    emissions_culture = emissions_culture_biomasse(param_biomasse, biomasse_entree)
+    emissions_transport = emissions_transport_biomasse(param_biomasse, biomasse_entree)
+    conso_elec, conso_chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_entree)
+    total_emissions = emissions_culture + emissions_transport
+
+    print(f" - Masse de biomasse sèche sortie : {masse_seche} t")
+    print(f" - Émissions liées à la culture de la biomasse : {emissions_culture} tCO2e")
+    print(f" - Émissions liées au transport de la biomasse : {emissions_transport} tCO2e")
+    print(f" - Consommation électrique pour le broyage et convoyage : {conso_elec} kWh")
+    print(f" - Consommation thermique pour la torréfaction : {conso_chaleur} MJ")
+    print(f" - Émissions totales liées à la biomasse : {total_emissions} tCO2e\n")
+
+    return conso_elec, conso_chaleur, total_emissions, masse_seche
 
 # fonctions test
 # test traitement biomasse
-biomasse_exemple = [
-    {"type" : "bois_vert", "masse": 600000, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
-    #{"type" : "agricole", "masse": 200000, "humidité": 0.0},  # 2 tonnes de biomasse agricole à 20% d'humidité
-]
-elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exemple)
-print(f"Électricité consommée pour le broyage : {elec} kWh")
-print(f"Chaleur consommée pour la torréfaction : {chaleur} MJ")
-print(f"Masse de biomasse sèche sortie : {masse_seche} t")
-print(f"Émissions liées au transport de la biomasse : {emissions_transport_biomasse(param_biomasse, biomasse_exemple)} tCO2e")
-print(f"Émissions liées à la culture de la biomasse : {emissions_culture_biomasse(param_biomasse, biomasse_exemple)} tCO2e")
+# biomasse_exemple = [
+#     {"type" : "bois_vert", "masse": 600000, "humidité": 0.10},  # 1 tonne de biomasse ligneuse à 10% d'humidité
+#     #{"type" : "agricole", "masse": 200000, "humidité": 0.0},  # 2 tonnes de biomasse agricole à 20% d'humidité
+# ]
+# elec, chaleur, masse_seche = traitement_biomasse(param_biomasse, biomasse_exemple)
+# print(f"Électricité consommée pour le broyage : {elec} kWh")
+# print(f"Chaleur consommée pour la torréfaction : {chaleur} MJ")
+# print(f"Masse de biomasse sèche sortie : {masse_seche} t")
+# print(f"Émissions liées au transport de la biomasse : {emissions_transport_biomasse(param_biomasse, biomasse_exemple)} tCO2e")
+# print(f"Émissions liées à la culture de la biomasse : {emissions_culture_biomasse(param_biomasse, biomasse_exemple)} tCO2e")
