@@ -47,7 +47,7 @@ caract_syngas = {
     "CH4":  {"fraction": 0.01,  "nC": 1,  "nH": 4, "nO": 0,  "M": 16.0},
     "C2H2": {"fraction": 0.005,  "nC": 2,  "nH": 2, "nO": 0,  "M": 26.0},
     "C3H6": {"fraction": 0.005,  "nC": 3,  "nH": 6, "nO": 0,  "M": 42.0},
-    "C20":  {"fraction": 0.001,  "nC": 20, "nH": 0, "nO": 0,  "M": 240.0},
+    "C20":  {"fraction": 0.001,  "nC": 20, "nH": 0, "nO": 0,  "M": 54.0},
     "H2":   {"fraction": 0.13, "nC": 0,  "nH": 2, "nO": 0,  "M": 2.0}
 }
 
@@ -70,21 +70,22 @@ def conversionMasseC_masseC02(masse_C):
     masse_CO2 = masse_C * ((gaz_params["masseMolaireC"]+2*gaz_params["masseMolaireO"])/gaz_params["masseMolaireC"]) # masse_C * (44/12)
     return masse_CO2
 
-def conversionMasseMolaire(Mcomposé,caract_syngas):
+def conversionMasseMolaire(Mcomposé,gaz_params):
     """
-    Conversion de la masse molaire(g/mol) d'un composé gazeux en masse volumique (kg/m3)  
+    Conversion de la masse molaire(g/mol) d'un composé gazeux en masse volumique (kg/m3)  (1kg/m3 = 1 g/L)
     :param Mcomposé: Masse molaire du composé (g/mol)
     :param gaz_params: Paramètres physiques du gaz
     :return: Masse volumique du composé (kg/m3)
 
-    NB = 22.4 L/mol à 0°C et 1 atm dans l'excel 
+    NB = 22.4 L/mol à 0°C et 1 atm dans l'excel (volume molaire d'un gaz parfait)
 
     """
-    R = caract_syngas["R"]
-    T = caract_syngas["T"]
-    P = caract_syngas["P"]
-    volume_molaire = (R * T) / P  # en m3/mol  
-    masse_molaire = Mcomposé / volume_molaire  # en kg/m3
+    R = gaz_params["R"]
+    T = gaz_params["T"]
+    P = gaz_params["P"]
+    volume_molaire = 1000*(R * T) / P  # en m3/mol  
+    print(volume_molaire)
+    masse_molaire = Mcomposé / volume_molaire # en kg/m3
     
     return masse_molaire
 
@@ -163,14 +164,27 @@ def gazeificationV2(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params, c
 
     # Normalisation des fractions 
     total_fraction = sum(gas["fraction"] for gas in caract_syngas.values())
-    for gas in caract_syngas.values():
-        gas["fraction"] /= total_fraction  # maintenant la somme = 1
 
+    caract_syngas_normalized = {
+        gas_name: {
+            **gas_data,
+            "fraction": gas_data["fraction"] / total_fraction
+        }
+        for gas_name, gas_data in caract_syngas.items()
+    }
+
+
+    masses_vol_ponderees = [conversionMasseMolaire(caract_syngas[k]["M"], gaz_params) *caract_syngas_normalized[k]["fraction"] for k in caract_syngas]
+    
+    pourcentages_massiques = [0 for _ in range(len(masses_vol_ponderees))]
+    for h in range(len(masses_vol_ponderees)):
+        pourcentages_massiques [h]= masses_vol_ponderees[h]/sum(masses_vol_ponderees)
+
+        
     # Séparer gaz carbonés et H2 
-    carbon_gases = [k for k, v in caract_syngas.items() if v["nC"] > 0]
+    carbon_gases = [k for k, v in caract_syngas_normalized.items() if v["nC"] > 0]
 
-    # Calcul du facteur de normalisation par carbone 
-    factor = sum(caract_syngas[k]["fraction"] * caract_syngas[k]["nC"] for k in carbon_gases)
+
 
     # Calcul des moles des gaz carbonés 
     for k in carbon_gases:
@@ -318,8 +332,7 @@ def gazeificationV3(biomasseEntree, masseEntree_O2, masseEntree_H2, gaz_params, 
     return caract_syngas
 
 
-#gazeificationV3(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,
-                     gaz_params=gaz_params, caract_syngas=caract_syngas)
+#gazeificationV3(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,gaz_params=gaz_params, caract_syngas=caract_syngas)
 
 def bilan_chaleur_gazeification():
 
