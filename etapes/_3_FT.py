@@ -42,8 +42,8 @@ def Fischer_Tropsch(param_FT, MasseCO_gazif): # Utilise la masse de CO issue de 
     # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableu de l'ADEME
     consommation_électrique = 3.3 + (conso_realtive_CO2 - 0.43)*(3.2-2.4)/(0.43-0.36)
 
-    # Consommation totale pour prod E-CHO (GWh/an)
-    consommation_totale_FT = param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] * (consommation_électrique)/1000
+    # Consommation totale pour prod E-CHO (MWh/an)
+    consommation_totale_FT = param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] * (consommation_électrique)
 
     # Calcul des émissions liées au rendement carbone
     emmissions_rendement_carbone = (param_FT['masse_carbone_initiale'] 
@@ -52,14 +52,13 @@ def Fischer_Tropsch(param_FT, MasseCO_gazif): # Utilise la masse de CO issue de 
     # le résultat est légèrement différent du excel car la masse de naphta est calculée via le rendement et non donnée directement
 
     # on calcul avec le ration des masses de CO
-    consommation_totale_FT, emmissions_rendement_carbone = consommation_totale_FT * (MasseCO_gazif / param_FT['MasseCO_gazif_init']), 
-    emmissions_rendement_carbone * (MasseCO_gazif / param_FT['MasseCO_gazif_init'])
+    consommation_totale_FT, emmissions_rendement_carbone = consommation_totale_FT * (MasseCO_gazif / param_FT['MasseCO_gazif_init']), emmissions_rendement_carbone * (MasseCO_gazif / param_FT['MasseCO_gazif_init'])
 
     # on calcul la masse de kérosène produite
     masse_kerosene_produite = param_FT['production_BioTJet'] * (MasseCO_gazif / param_FT['MasseCO_gazif_init'])
 
     print("\n================ Résultats Fischer-Tropsch ================")
-    print(f"Consommation totale FT : {consommation_totale_FT:,.2f} GWh/an")
+    print(f"Consommation totale FT : {consommation_totale_FT:,.2f} MWh/an")
     print(f"Émissions liées au rendement carbone : {emmissions_rendement_carbone:,.2f} tCO2/an")
     print(f"Masse de kérosène produite : {masse_kerosene_produite:,.2f} tonnes/an")
     print("==========================================================\n")
