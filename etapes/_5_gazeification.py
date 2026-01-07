@@ -47,15 +47,7 @@ caract_syngas = {
     "CH4":  {"fraction": 0.01,  "nC": 1,  "nH": 4, "nO": 0,  "M": 16.0},
     "C2H2": {"fraction": 0.005,  "nC": 2,  "nH": 2, "nO": 0,  "M": 26.0},
     "C3H6": {"fraction": 0.005,  "nC": 3,  "nH": 6, "nO": 0,  "M": 42.0},
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "C20":  {"fraction": 0.001,  "nC": 20, "nH": 0, "nO": 0,  "M": 54.0},
-=======
     "C20":  {"fraction": 0.001,  "nC": 20, "nH": 0, "nO": 0,  "M": 240.0},
->>>>>>> 7205b38 (Algo V1)
-=======
-    "C20":  {"fraction": 0.001,  "nC": 20, "nH": 0, "nO": 0,  "M": 54.0},
->>>>>>> fa9ca5b (Algo V2)
     "H2":   {"fraction": 0.13, "nC": 0,  "nH": 2, "nO": 0,  "M": 2.0}
 }
 
@@ -196,7 +188,7 @@ def gazeificationV2(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params, c
 
     # Calcul des moles des gaz carbonés 
     for k in carbon_gases:
-        caract_syngas[k]["moles"] = (masse_C * caract_syngas[k]["fraction"] * caract_syngas[k]["nC"]) / (1 * gaz_params["masseMolaireC"])
+        caract_syngas[k]["moles"] = (masse_C * caract_syngas[k]["fraction"] * caract_syngas[k]["nC"]) / (factor * gaz_params["masseMolaireC"])
 
     # Masse des gaz carbonés
     for k in carbon_gases:
@@ -340,16 +332,10 @@ def gazeificationV3(biomasseEntree, masseEntree_O2, masseEntree_H2, gaz_params, 
     return caract_syngas
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-#gazeificationV3(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,gaz_params=gaz_params, caract_syngas=caract_syngas)
-=======
 #gazeificationV3(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,
                      gaz_params=gaz_params, caract_syngas=caract_syngas)
->>>>>>> 7205b38 (Algo V1)
-=======
-#gazeificationV3(biomasseEntree=300000, masseEntree_O2=180000, masseEntree_H2=32130,gaz_params=gaz_params, caract_syngas=caract_syngas)
->>>>>>> fa9ca5b (Algo V2)
+
+
 
 def bilan_chaleur_gazeification():
 
@@ -363,36 +349,4 @@ def conso_elec_gazeification():
     energie_gazeification = 0
 
     return energie_gazeification
-<<<<<<< HEAD
 
-
-
-def emissions_gazeification(param_gazeification):
-    # Calcul des émissions totales pour le processus de gazeification
-    émissions = 0
-    return émissions
-
-<<<<<<< HEAD
-
-
-###############################################################
-# Stockage des paramètres avec les hypothèses sourcées : Calcul conso énergétique du processus
-###############################################################
-cara_pysico_chimique_methane = { #Source ?
-    T : 298.15,  # Température (K)
-    P : 1,        # Pression (bar)
-    PCI : 803.3,   # Pouvoir Calorifique Inférieur (kJ/mol)
-    PCS : 890.8,   # Pouvoir Calorifique Supérieur (kJ/mol)
-    # PCI : 50.07,   # Pouvoir Calorifique Inférieur (MJ/kg)
-    # PCS : 55.53,   # Pouvoir Calorifique Supérieur (MJ/kg)
-    # densite : , # Densité (kg/m3) à 298.15 K et 1 bar source ?
-    densite : 0.6709, # Densité (kg/m3) à 288.15 K et 1 bar 
-}
-
-##############################################################
-# Fonctions de calcul des émissions : Calcul conso énergétique du processus
-##############################################################
-=======
->>>>>>> 11174a8 (compression)
-=======
->>>>>>> 7205b38 (Algo V1)
