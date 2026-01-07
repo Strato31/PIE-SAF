@@ -60,5 +60,5 @@ Etapes a inclure :
 LA SUITE :
 - permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
 - créer format dictionnaire de données par projet
-- rendre globale les variables qui le sont
-- ...
+- rendre globales les variables qui le sont
+- faire un main fonctionnel

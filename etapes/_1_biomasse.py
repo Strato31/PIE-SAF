@@ -58,7 +58,7 @@ def masse_seche_sortie(biomasse):
 
 def emissions_culture_biomasse(param_biomasse, biomasse):
     """TEMPORAIRE
-    Calcule émissions dues à la culture de la biomasse.
+    Calcule les émissions dues à la culture de la biomasse.
     Hypothèse : émissions fixes par MJ de biomasse entrante.
 
     """
@@ -66,7 +66,7 @@ def emissions_culture_biomasse(param_biomasse, biomasse):
     # masse/4 la masse de carbone (C) dans le bois (en tonnes)
     # * (44/12) le stock de CO2 émis à l'abbattage
     # * (1 + 0.5) qui prend en compte déstockage sol
-    # * (1 - 0.25*(20-1)/(2*20)) moyenne pondérée sur l'horizon, hypothèse taux de substitution de 25% sur 20 ans (mélange de bois d'abattage feuillus et résineux)
+    # * (1 - 0.25*(20-1)/(2*20)) moyenne pondérée sur l'horizon, hypothèse taux de substitution de 25% sur 20 ans (correspond à un mélange de bois d'abattage feuillus et résineux)
     masse_bois_vert = sum(biom['masse'] for biom in biomasse if biom['type'] == "bois_vert")  # en tonnes
     emissions_recolte = masse_bois_vert / 4 * (44/12) * (1 + 0.5) * (1 - 0.25*(20-1)/(2*20))  # en tCO2e
 
@@ -78,7 +78,7 @@ def emissions_culture_biomasse(param_biomasse, biomasse):
 
 
 def emissions_transport_biomasse(param_biomasse, biomasse):
-    """Calcule émissions dues au transport de la biomasse.
+    """Calcule les émissions dues au transport de la biomasse.
     Hypothèse : émissions fixes par tonne de biomasse entrante.
 
     """

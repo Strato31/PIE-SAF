@@ -33,10 +33,10 @@ param_FT = {
 ##############################################################
 
 def emissions_FT(param_FT):
-    # Calcul de consommatoin relative CO2 (Mt/Twh)
+    # Calcul de consommation relative CO2 (Mt/Twh)
     conso_realtive_CO2 = param_FT['besoin_total_CO2'] / (param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] )  
 
-    # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableu de l'ADEME
+    # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableau de l'ADEME
     consommation_électrique = 3.3 + (conso_realtive_CO2 - 0.43)*(3.2-2.4)/(0.43-0.36)
 
     # Consommation totale pour prod E-CHO (GWh/an)
