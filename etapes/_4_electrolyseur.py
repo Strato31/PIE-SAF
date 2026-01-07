@@ -1,5 +1,21 @@
 """
-Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul de la consommation électrique.
+Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
+
+⚠⚠⚠⚠
+La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
+avec des  technologies de 2020 et  supposées être disponibles en 2030.
+
+Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
+et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
+"""
+
+### Coordination sur les unités utilisées :
+# Energie en kWh
+# Masse en Tonnes
+# Emissions en kgCO2eq/an
+# Chaleur en MJ
+###
+"""Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
 
 ⚠⚠⚠⚠
 La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
@@ -131,17 +147,9 @@ def consommation_electrolyseur(param_electrolyseur, besoin_H2_FT, besoin_O2_gazi
 
 if __name__ == "__main__":
     # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
-    besoin_H2_FT = 80  # tonnes
-    besoin_O2_gazif = 50  # tonnes
-    besoin_H2_gazif = 20  # tonnes
+    besoin_H2_FT = 800  # tonnes
+    besoin_O2_gazif = 500  # tonnes
+    besoin_H2_gazif = 200  # tonnes
 
-    consommation_elec = consommation_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
-    print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")
-
-
-
-"""
-Une fonction de calcul de l'énergie nécessaire à la compression a été faite dans la partie _7_compression.py
-Cette fonction est à utiliser après cette partie d'électrolyse et avant l'entrée de FT.
-
-"""
+#     consommation_elec = emissions_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
+#     print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")
