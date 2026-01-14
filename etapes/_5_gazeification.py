@@ -229,6 +229,12 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
         #Calcul des volumes des composés en Nm3
         vol_composes[compo] = masses_totales_composes.get(compo,0) *1000/conversionMasseMolaire(caract_syngas[compo]["M"], gaz_params)
 
+    vol_composes = {}
+
+    for compo in carbon_gases:
+        #Calcul des volumes des composés en Nm3
+        vol_composes[compo] = masses_totales_composes.get(compo,0) *1000/conversionMasseMolaire(caract_syngas[compo]["M"], gaz_params)
+
     # ------------------------------
     # Calcul H2 à injecter et nécessaire
     # ------------------------------
@@ -290,7 +296,7 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     print(f"H₂ dans syngaz                : {masseH2_syngaz} tonnes/an")
     print(f"H₂ à ajouter                  : {masseH2_necessaire} tonnes/an")
     print(f"O₂ nécessaire                 : {masseO2_necessaire} tonnes/an")
-    print(f"Masse déchets estimée         : {masse_dechets} tonnes/an")
+    print(f"Masse déchets                 : {masse_dechets} tonnes/an")
     print("================================================\n")
 
     return masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire,masse_dechets
