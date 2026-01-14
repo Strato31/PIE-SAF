@@ -37,17 +37,17 @@ et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce mo
 
 ⚠⚠⚠⚠
 La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
-avec des  technologies de 2020 et  supposées être disponibles en 2030.
+avec des technologies de 2020 et supposées être disponibles en 2030.
 
 Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
 et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
 """
 
 ### Coordination sur les unités utilisées :
-# Energie en kWh
+# Energie (électricité) en kWh
 # Masse en Tonnes
 # Emissions en kgCO2eq/an
-# Chaleur en MJ
+# Chaleur en MJ (Conversion : 1 kWh = 3.6 MJ)
 ###
 
 
@@ -147,7 +147,7 @@ def consommation_electrolyseur(param_electrolyseur, besoin_O2_gazif, besoin_H2_g
 
 
     # Vérification de la cohérence des besoins en H2 et O2
-    coherence_electrolyse(besoin_H2_gazif, besoin_O2_gazif)
+    # coherence_electrolyse(besoin_H2, besoin_O2_gazif) inutile car Maelys teste déjà
 
     # Calcul de la consommation électrique stackée de l'électroyseur
     conso_elec_stack = consom_elec_stack(param_electrolyseur_alcalin, param_electrolyseur)
@@ -163,11 +163,11 @@ def consommation_electrolyseur(param_electrolyseur, besoin_O2_gazif, besoin_H2_g
 # Fonction de test
 ##############
 
-# if __name__ == "__main__":
-#     # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
-#     besoin_H2_FT = 800  # kg
-#     besoin_O2_gazif = 500  # kg
-#     besoin_H2_gazif = 200  # kg
+if __name__ == "__main__":
+    # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
+    besoin_H2_FT = 80  # tonnes
+    besoin_O2_gazif = 50  # tonnes
+    besoin_H2_gazif = 20  # tonnes
 
     consommation_elec = consommation_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
     print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")
