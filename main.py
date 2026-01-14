@@ -29,18 +29,18 @@ def __main__():
     emissions_co2.append(emissions_gazif)
     print("---------------------------------------------------------------")
     print("Étape 3 : Fischer-Tropsch")
-    masse_kerosene, emissions_FT, besoin_H2_FT = ft.main_FT(ft.param_FT, ...)
+    consommation_totale_FT, emissions_FT, masse_kerosene = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
     emissions_co2.append(emissions_FT)
+    consos_energies.append(consommation_totale_FT )
     print("---------------------------------------------------------------")
     print("Étape 4 : Électrolyseur")
-    conso_elec_elec = elec.consommation_electrolyseur(elec.param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif, besoin_H2_gazif)
+    conso_elec_elec = elec.consommation_electrolyseur(elec.param_electrolyseur_PEM, besoin_O2_gazif, besoin_H2_gazif)
     # Prise en compte des pertes en lgne sur le réseau de distribution haute tension (valeur de RTE)
     conso_elec_elec *= (1/0.979)
     consos_energies.append(conso_elec_elec)
     print("---------------------------------------------------------------")
     print("Étape 5 : Compression")
     masse_CO_kg, masse_H2_kg, masse_CO2_kg, masse_O2_kg = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)[0:4]*1000
-
     "Calcul de la consommation électrique de compression de l'O2 entre l'électrolyseur et FT"
     conso_compression_O2 = comp.conso_compression(masse_O2_kg, "O2", 0.8, 1, 20, 288.15)
     "Calcul de la consommation électrique de compression du CO2 capté sortie du réactuer BioTJet et amené à EM-Lacq"
@@ -49,7 +49,6 @@ def __main__():
     conso_compression_syngas = comp.conso_compression_syngaz(masse_CO2_kg, masse_H2_kg, masse_CO_kg, 0.85, 1, 1.12, 323.15) #hypothèse flux total de gaz à ventiler
     conso_elec_compression = conso_compression_O2 + conso_compression_syngas + conso_compression_CO2
     consos_energies.append(conso_elec_compression)
-
     print("---------------------------------------------------------------")
     print("Étape 6 : Calcul des émissions totales et consommations énergétiques")
     emissions_2050, emissions_2023 = energie.emissions_energie_totale(consos_energies)
