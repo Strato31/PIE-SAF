@@ -33,6 +33,22 @@ et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce mo
 # Emissions en kgCO2eq/an
 # Chaleur en MJ (Conversion : 1 kWh = 3.6 MJ)
 ###
+"""Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
+
+⚠⚠⚠⚠
+La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
+avec des technologies de 2020 et supposées être disponibles en 2030.
+
+Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
+et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
+"""
+
+### Coordination sur les unités utilisées :
+# Energie (électricité) en kWh
+# Masse en Tonnes
+# Emissions en kgCO2eq/an
+# Chaleur en MJ (Conversion : 1 kWh = 3.6 MJ)
+###
 
 
 ###############################################################
@@ -131,7 +147,7 @@ def consommation_electrolyseur(param_electrolyseur, besoin_O2_gazif, besoin_H2_g
 
 
     # Vérification de la cohérence des besoins en H2 et O2
-    coherence_electrolyse(besoin_H2_gazif, besoin_O2_gazif)
+    # coherence_electrolyse(besoin_H2, besoin_O2_gazif) inutile car Maelys teste déjà
 
     # Calcul de la consommation électrique stackée de l'électroyseur
     conso_elec_stack = consom_elec_stack(param_electrolyseur_alcalin, param_electrolyseur)

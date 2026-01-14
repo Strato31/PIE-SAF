@@ -27,6 +27,7 @@ def __main__():
     conso_elec_gaz = gaz.conso_elec_gazeification() #Fonction pas implémentée
     consos_energies.append(conso_elec_gaz)
     emissions_co2.append(emissions_gazif)
+    print("Consommation électrique : ", conso_elec_gaz, " en kWh")
     print("---------------------------------------------------------------")
     print("Étape 3 : Fischer-Tropsch")
     consommation_totale_FT, emissions_FT, masse_kerosene = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
@@ -40,7 +41,10 @@ def __main__():
     consos_energies.append(conso_elec_elec)
     print("---------------------------------------------------------------")
     print("Étape 5 : Compression")
-    masse_CO_kg, masse_H2_kg, masse_CO2_kg, masse_O2_kg = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)[0:4]*1000
+    masse_CO_kg = CO_gazif * 1000  # Conversion en kg
+    masse_H2_kg = besoin_H2_gazif * 1000  # Conversion en kg
+    masse_CO2_kg = emissions_gazif * 1000
+    masse_O2_kg = besoin_O2_gazif * 1000  # Conversion en kg
     "Calcul de la consommation électrique de compression de l'O2 entre l'électrolyseur et FT"
     conso_compression_O2 = comp.conso_compression(masse_O2_kg, "O2", 0.8, 1, 20, 288.15)
     "Calcul de la consommation électrique de compression du CO2 capté sortie du réactuer BioTJet et amené à EM-Lacq"
@@ -59,6 +63,7 @@ def __main__():
     total_emissions_2023 = sum(emissions_2023)
     total_conso_energie = sum(consos_energies)
     total_conso_thermique = sum(consos_thermiques)
+    print(f" - Consommation d'énergie : {consos_energies}")
     print(f" - Consommation électrique totale : {total_conso_energie:.2f} kWh")
     print(f" - Consommation thermique totale : {total_conso_thermique:.2f} MJ")
     print(f" - Émissions totales en 2050 : {total_emissions_2050:.2f} gCO2e")

@@ -31,8 +31,8 @@ param_biomasse = {
 }
 
 biomasse_entree = [
-    {"type" : "bois_vert", "masse": 600000, "humidité": 0.10},  # 600 000 tonnes de biomasse ligneuse à 10% d'humidité
-    {"type" : "bois_vert", "masse": 400000, "humidité": 0.30},  # 400 000 tonnes de biomasse ligneuse à 30% d'humidité
+    {"type" : "bois_vert", "masse": 300000, "humidité": 0},  # 600 000 tonnes de biomasse ligneuse à 10% d'humidité
+    {"type" : "bois_vert", "masse": 0, "humidité": 0.30},  # 400 000 tonnes de biomasse ligneuse à 30% d'humidité
 ]
 
 ##############################################################
