@@ -27,6 +27,7 @@ def __main__():
     conso_elec_gaz = gaz.conso_elec_gazeification() #Fonction pas implémentée
     consos_energies.append(conso_elec_gaz)
     emissions_co2.append(emissions_gazif)
+    print("Conso elec : ", conso_elec_gaz)
     print("---------------------------------------------------------------")
     print("Étape 3 : Fischer-Tropsch")
     consommation_totale_FT, emissions_FT, masse_kerosene = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
@@ -62,6 +63,7 @@ def __main__():
     total_emissions_2023 = sum(emissions_2023)
     total_conso_energie = sum(consos_energies)
     total_conso_thermique = sum(consos_thermiques)
+    print(f" - Consommation d'énergie : {consos_energies}")
     print(f" - Consommation électrique totale : {total_conso_energie:.2f} kWh")
     print(f" - Consommation thermique totale : {total_conso_thermique:.2f} MJ")
     print(f" - Émissions totales en 2050 : {total_emissions_2050:.2f} gCO2e")
