@@ -27,7 +27,7 @@ def __main__():
     conso_elec_gaz = gaz.conso_elec_gazeification() #Fonction pas implémentée
     consos_energies.append(conso_elec_gaz)
     emissions_co2.append(emissions_gazif)
-    print("Conso elec : ", conso_elec_gaz)
+    print("Consommation électrique : ", conso_elec_gaz, " en kWh")
     print("---------------------------------------------------------------")
     print("Étape 3 : Fischer-Tropsch")
     consommation_totale_FT, emissions_FT, masse_kerosene = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
