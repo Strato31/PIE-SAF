@@ -23,7 +23,7 @@ def __main__():
     emissions_co2.append(total_emissions)
     print("---------------------------------------------------------------")
     print("Étape 2 : Gazeification")
-    besoin_H2_gazif, besoin_O2_gazif, conso_elec_gaz, emissions_gazif = gaz.gazeificationV2(masse_seche_biomasse, 180000, 32130, gaz.gaz_params, gaz.caract_syngas)
+    besoin_H2_gazif, besoin_O2_gazif, conso_elec_gaz, emissions_gazif = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)
     consos_energies.append(conso_elec_gaz)
     emissions_co2.append(emissions_gazif)
     print("---------------------------------------------------------------")
