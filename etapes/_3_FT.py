@@ -24,7 +24,10 @@ param_FT = {
     "masse_carbone_kerosene":  78880,
 
     # Masse de C dans du CO2 utilisé pour EM-Lacq
-    "masse_carbone_CO2_EMLacq":  33600
+    "masse_carbone_CO2_EMLacq":  33600,
+
+    # Masse de CO issue de la gazéification (t) calculée dans l'étape de gazéification du code
+    "MasseCO_gazif_init": 253942
 }
 
 
@@ -32,15 +35,15 @@ param_FT = {
 # Fonctions de calcul des émissions
 ##############################################################
 
-def emissions_FT(param_FT):
+def Fischer_Tropsch(param_FT, MasseCO_gazif): # Utilise la masse de CO issue de la gazéification
     # Calcul de consommatoin relative CO2 (Mt/Twh)
     conso_realtive_CO2 = param_FT['besoin_total_CO2'] / (param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] )  
 
     # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableu de l'ADEME
     consommation_électrique = 3.3 + (conso_realtive_CO2 - 0.43)*(3.2-2.4)/(0.43-0.36)
 
-    # Consommation totale pour prod E-CHO (GWh/an)
-    consommation_totale_FT = param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] * (consommation_électrique)/1000
+    # Consommation totale pour prod E-CHO (MWh/an)
+    consommation_totale_FT = param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] * (consommation_électrique)
 
     # Calcul des émissions liées au rendement carbone
     emmissions_rendement_carbone = (param_FT['masse_carbone_initiale'] 
@@ -48,7 +51,19 @@ def emissions_FT(param_FT):
     - param_FT['masse_carbone_CO2_EMLacq'])* (44/12) # Conversion C en CO2
     # le résultat est légèrement différent du excel car la masse de naphta est calculée via le rendement et non donnée directement
 
-    return consommation_totale_FT, emmissions_rendement_carbone
+    # on calcul avec le ration des masses de CO
+    consommation_totale_FT, emmissions_rendement_carbone = consommation_totale_FT * (MasseCO_gazif / param_FT['MasseCO_gazif_init']), emmissions_rendement_carbone * (MasseCO_gazif / param_FT['MasseCO_gazif_init'])
+
+    # on calcul la masse de kérosène produite
+    masse_kerosene_produite = param_FT['production_BioTJet'] * (MasseCO_gazif / param_FT['MasseCO_gazif_init'])
+
+    print("\n================ Résultats Fischer-Tropsch ================")
+    print(f"Consommation totale FT : {consommation_totale_FT:,.2f} MWh/an")
+    print(f"Émissions liées au rendement carbone : {emmissions_rendement_carbone:,.2f} tCO2/an")
+    print(f"Masse de kérosène produite : {masse_kerosene_produite:,.2f} tonnes/an")
+    print("==========================================================\n")
+
+    return consommation_totale_FT, emmissions_rendement_carbone, masse_kerosene_produite
 
 # print(emissions_FT(param_FT))
 
