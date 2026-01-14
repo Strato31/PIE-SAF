@@ -132,7 +132,7 @@ def consommation_electrolyseur(param_electrolyseur, besoin_H2_FT, besoin_O2_gazi
     besoin_H2 = besoin_H2_FT + besoin_H2_gazif 
 
     # Vérification de la cohérence des besoins en H2 et O2
-    coherence_electrolyse(besoin_H2, besoin_O2_gazif)
+    # coherence_electrolyse(besoin_H2, besoin_O2_gazif) inutile car Maelys teste déjà
 
     # Calcul de la consommation électrique stackée de l'électroyseur
     conso_elec_stack = consom_elec_stack(param_electrolyseur_alcalin, param_electrolyseur)
