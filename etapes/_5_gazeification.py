@@ -211,6 +211,7 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     for compo in carbon_gases:
          # Masse hors carbone = masseC * (nH*MH + nO*MO) / (nC*MC)
          masses_carbone[compo] = pourcentages_massiques[compo] * masse_C
+
          masses_hors_carbone[compo] = masses_carbone[compo] * (
              caract_syngas[compo]["nH"] * gaz_params["masseMolaireH"] +
              caract_syngas[compo]["nO"] * gaz_params["masseMolaireO"]
@@ -219,6 +220,12 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
          # Masse totale du composé = masse de carbone + masse hors carbone
          masses_totales_composes[compo] = masses_carbone[compo] + masses_hors_carbone[compo]
 
+
+    vol_composes = {}
+
+    for compo in carbon_gases:
+        #Calcul des volumes des composés en Nm3
+        vol_composes[compo] = masses_totales_composes.get(compo,0) *1000/conversionMasseMolaire(caract_syngas[compo]["M"], gaz_params)
 
     # ------------------------------
     # Calcul H2 à injecter et nécessaire
@@ -234,8 +241,14 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
         nH = caract_syngas[compo]["nH"]
         if nH > 0:
             masseH2_syngaz += masses_totales_composes[compo] * (nH * gaz_params["masseMolaireH"] / caract_syngas[compo]["M"])
+    
 
-    masseH2_necessaire = masseH2_syngaz / gaz_params["fractionH2"]
+    volH2total = 2*vol_composes["CO"]  # Pour entrer dans la synthèse FT, il faut un ratio H2/CO de 2
+    masseH2_totale = volH2total*conversionMasseMolaire(caract_syngas["H2"]["M"], gaz_params) /1000 # Pasage du volume en tonnes
+    masseH2_necessaire = masseH2_totale - masseH2_syngaz # Du H2 est contenu dans le syngaz, on ne le compte pas dans le H2 à produire
+
+    #Le code précédent remplace la version simplifiée si dessous avec une fraction H2 non sourcée de 75%
+    #masseH2_necessaire = masseH2_syngaz / gaz_params["fractionH2"] 
 
     # ------------------------------
     # Calcul O2 nécessaire
@@ -266,9 +279,9 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     print(f"CO produit                    : {masseCO_sortie} tonnes/an")
     print(f"CO₂ produit                   : {masseCO2_sortie} tonnes/an")
     print(f"H₂ dans syngaz                : {masseH2_syngaz} tonnes/an")
-    print(f"H₂ nécessaire                 : {masseH2_necessaire} tonnes/an")
+    print(f"H₂ à ajouter                  : {masseH2_necessaire} tonnes/an")
     print(f"O₂ nécessaire                 : {masseO2_necessaire} tonnes/an")
-    print(f"Masse déchets (CH4, autres)  : {masse_dechets} tonnes/an")
+    print(f"Masse déchets (CH4, autres)   : {masse_dechets} tonnes/an")
     print("================================================\n")
 
     return masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire,masse_dechets
