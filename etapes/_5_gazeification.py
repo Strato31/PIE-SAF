@@ -31,15 +31,10 @@ gaz_params = {
     "T" : 273, # Température du syngas en K (0°C)??
     "R" : 8.314,  # constante des gaz parfait J/mol·K 
 
-<<<<<<< HEAD
-    "filtres_amine" : 4, # Quantité unitaire élec. pour chauffage et désorption filtres amine GJ/t
-
-=======
     "R" : 8.314,  # constante des gaz parfait J/mol·K 
 
     "filtres_amine" : 4, # Quantité unitaire élec. pour chauffage et désorption filtres amine GJ/t
 
->>>>>>> 1241c01 (conso élec gazif)
     "fondtionnement_interne" : 2 # Pourcentage de l'énergie des entrants utilisé pour le fonctionnement interne de la gazéification (%)
     }
 
@@ -221,7 +216,6 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     for compo in carbon_gases:
          
          masses_carbone[compo] = pourcentages_massiques[compo] * masse_C
-         # Masse hors carbone = masseC * (nH*MH + nO*MO) / (nC*MC)
          masses_hors_carbone[compo] = masses_carbone[compo] * (
              caract_syngas[compo]["nH"] * gaz_params["masseMolaireH"] +
              caract_syngas[compo]["nO"] * gaz_params["masseMolaireO"]
@@ -230,6 +224,12 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
          # Masse totale du composé = masse de carbone + masse hors carbone
          masses_totales_composes[compo] = masses_carbone[compo] + masses_hors_carbone[compo]
     
+    vol_composes = {}
+
+    for compo in carbon_gases:
+        #Calcul des volumes des composés en Nm3
+        vol_composes[compo] = masses_totales_composes.get(compo,0) *1000/conversionMasseMolaire(caract_syngas[compo]["M"], gaz_params)
+
     vol_composes = {}
 
     for compo in carbon_gases:
