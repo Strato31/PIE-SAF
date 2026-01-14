@@ -40,7 +40,10 @@ def __main__():
     consos_energies.append(conso_elec_elec)
     print("---------------------------------------------------------------")
     print("Étape 5 : Compression")
-    masse_CO_kg, masse_H2_kg, masse_CO2_kg, masse_O2_kg = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)[0:4]*1000
+    masse_CO_kg = CO_gazif * 1000  # Conversion en kg
+    masse_H2_kg = besoin_H2_gazif * 1000  # Conversion en kg
+    masse_CO2_kg = emissions_gazif * 1000
+    masse_O2_kg = besoin_O2_gazif * 1000  # Conversion en kg
     "Calcul de la consommation électrique de compression de l'O2 entre l'électrolyseur et FT"
     conso_compression_O2 = comp.conso_compression(masse_O2_kg, "O2", 0.8, 1, 20, 288.15)
     "Calcul de la consommation électrique de compression du CO2 capté sortie du réactuer BioTJet et amené à EM-Lacq"
