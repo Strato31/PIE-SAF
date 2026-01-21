@@ -60,10 +60,17 @@ def masse_seche_sortie(biomasse):
     
     Arguments
     ----------
+<<<<<<< HEAD
         biomasse : liste de dictionnaires avec 'type', 'masse' (t) et 'humidité' (fraction) pour chaque élément de biomasse
         
     Returns
     -------
+=======
+        biomasse : liste de dictionnaires avec 'type',  'masse' (t) et 'humidité' (fraction) pour chaque élément de biomasse
+        
+    Returns
+    ------- 
+>>>>>>> 77f1c67 (nettoyage code biomasse et implémentation calcul sens inverse dans le main pour la biomasse)
         biomasse_seche : masse totale de biomasse sèche (t)
     """
 
