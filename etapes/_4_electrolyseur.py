@@ -4,7 +4,7 @@ Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de ca
 
 ⚠⚠⚠⚠
 La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin  
-avec des  technologies de 2020 et  supposées être disponibles en 2030. 
+avec des  technologies de 2020 et supposées être disponibles en 2030. 
 
 D'autres technologies existent comment l'électrolyse PEM (Proton Exchange Membrane), SOEC (Solide Oxide 
 Electrolysis Cell) et AEM (Anion Exchange Membrane) mais ne sont pas encore matures ou avec assez
@@ -57,7 +57,8 @@ param_electrolyseur_PEM = {
 }
 
 # Pour ajouter une nouvelle technologie d'électrolyseur, il suffit de créer un nouveau dictionnaire
-# avec les paramètres correspondants et de l'utiliser dans les fonctions ci-dessous.
+# avec les paramètres correspondants (faire une copie des précédents, changer les valeurs et adapter 
+# le nom) et de l'utiliser dans les fonctions ci-dessous.
 
 
 
