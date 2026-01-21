@@ -23,8 +23,8 @@ carac_pysico_chimiques = { #Source ? Nasa Glem coef ?
     "H2" : {
         "T" : 298.15,  # Température (K)
         "P" : 1,        # Pression (bar) à T=298.15 K
-        "PCI" : 242.7,   # Pouvoir Calorifique Inférieur (kJ/mol) à T=298.15 K
-        "PCS" : 285.8,   # Pouvoir Calorifique Supérieur (kJ/mol) à T=298.15 K
+        "PCI" : 120.39,   # Pouvoir Calorifique Inférieur (MJ/kg) à T=298.15 K
+        "PCS" : 141.77,   # Pouvoir Calorifique Supérieur (MJ/kg) à T=298.15 K
         "densite" : 0.0852, # Densité (kg/m3) à 288.15 K et 1 bar 
         "masse_molaire" : 2.01588, # Masse molaire (g/mol)
         "Cp" : 14.2666, # Capacité calorifique à pression contante (kJ/kg.K) à 288.15 K

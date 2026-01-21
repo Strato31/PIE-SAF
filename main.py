@@ -24,7 +24,10 @@ def __main__():
     print("---------------------------------------------------------------")
     print("Étape 2 : Gazeification")
     CO_gazif, besoin_H2_gazif, emissions_gazif, besoin_O2_gazif,dechets_gazif = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)
-    conso_elec_gaz = gaz.conso_elec_gazeification() #Fonction pas implémentée
+    emissions_gazif = 123200
+    besoin_H2_gazif = 42840
+    masse_seche_biomasse = 300000
+    conso_elec_gaz = gaz.conso_elec_gazeification(emissions_gazif, besoin_H2_gazif, masse_seche_biomasse, gaz.gaz_params) # consommation électrique de la gazéification
     consos_energies.append(conso_elec_gaz)
     emissions_co2.append(emissions_gazif)
     print("Consommation électrique : ", conso_elec_gaz, " en kWh")
@@ -43,17 +46,14 @@ def __main__():
     print("Étape 5 : Compression")
     masse_CO_kg = CO_gazif * 1000  # Conversion en kg
     masse_H2_kg = besoin_H2_gazif * 1000  # Conversion en kg
-    masse_CO2_kg = emissions_gazif * 1000
+    masse_CO2_kg = emissions_gazif * 1000 # Conversion en kg
     masse_CO2_kg_entree = masse_seche_biomasse * gaz.gaz_params['taux_carbone'] * 1000  # Conversion en kg
     masse_O2_kg = besoin_O2_gazif * 1000  # Conversion en kg
-    masse_CO2_kg_entree = 153853000
-    masse_H2_kg = 32130000
-    masse_CO_kg = 176142000
     "Calcul de la consommation électrique de compression de l'O2 entre l'électrolyseur et FT"
     conso_compression_O2 = comp.conso_compression(masse_O2_kg, "O2", 0.8, 1, 20, 288.15)
     "Calcul de la consommation électrique de compression du CO2 capté sortie du réactuer BioTJet et amené à EM-Lacq"
     conso_compression_CO2 = comp.conso_compression(masse_CO2_kg, "CO2", 0.8, 1, 20, 288.15)
-    "Calcul de la consommation électrique de compression du syngas entre la gazéification et FT"
+    "Calcul de la consommation électrique de compression du syngas entre la gazéification et FT : consommation des ventilateurs de gazéification + compression du syngas"
     conso_compression_syngas = comp.conso_compression_syngaz(masse_CO2_kg_entree, masse_H2_kg, masse_CO_kg, 0.85, 1, 1.12, 323.15) #hypothèse flux total de gaz à ventiler
     conso_elec_compression = conso_compression_O2 + conso_compression_syngas + conso_compression_CO2
     consos_energies.append(conso_elec_compression)
