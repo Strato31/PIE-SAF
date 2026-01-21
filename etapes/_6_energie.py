@@ -45,7 +45,7 @@ France (le solaire et surtout la biomasse sont moins décarbonées. Donc pas d�
 '''
 
 facteur_emission_2023 = {
-    "cosommation" : 34.3, # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
+    "consommation" : 34.3, # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
     "production" : 32.4 # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
 }
 
@@ -64,7 +64,7 @@ def emissions_energetique_processus(conso_energie):
 
     # Calcul des émissions totales pour le processus de gazeification
     emissions_2050 = conso_energie * emission_mix
-    emissions_2023 = conso_energie * facteur_emission_2023['cosommation']
+    emissions_2023 = conso_energie * facteur_emission_2023['consommation']
     return emissions_2050, emissions_2023
 
 # Calculs des émissions de CO2 à partir d'une liste de consomation
