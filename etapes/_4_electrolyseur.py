@@ -1,46 +1,14 @@
 """
-Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
+Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul de la consommation 
+électrique.
 
 ⚠⚠⚠⚠
-La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
-avec des  technologies de 2020 et  supposées être disponibles en 2030.
+La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin  
+avec des  technologies de 2020 et  supposées être disponibles en 2030. 
 
-Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
-et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
-"""
-
-### Coordination sur les unités utilisées :
-# Energie en kWh
-# Masse en Tonnes
-# Emissions en kgCO2eq/an
-# Chaleur en MJ
-###
-
-"""
-Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
-
-⚠⚠⚠⚠
-La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
-avec des technologies de 2020 et supposées être disponibles en 2030.
-
-Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
-et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
-"""
-
-### Coordination sur les unités utilisées :
-# Energie (électricité) en kWh
-# Masse en Tonnes
-# Emissions en kgCO2eq/an
-# Chaleur en MJ (Conversion : 1 kWh = 3.6 MJ)
-###
-"""Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
-
-⚠⚠⚠⚠
-La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
-avec des technologies de 2020 et supposées être disponibles en 2030.
-
-Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
-et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
+D'autres technologies existent comment l'électrolyse PEM (Proton Exchange Membrane), SOEC (Solide Oxide 
+Electrolysis Cell) et AEM (Anion Exchange Membrane) mais ne sont pas encore matures ou avec assez
+de données donc nous ne les avons pas intégrées dans ce modèle. 
 """
 
 ### Coordination sur les unités utilisées :
@@ -56,12 +24,12 @@ et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce mo
 ###############################################################
 
 """
-Remarques sur les hypothèses : 
-- L'énergie « stackée » Estack est l'énergie électrique totale en kWh / kgH2 (comprend l'électrolyse, 
-    mais aussi le fonctionnement global de l'unité de production) nécessaire à la fabrication la 
-    distribution de l'H2, sans prise en compte de la perte en ligne amont.
-- Nous n'utiliserons que la valeur stackée de l'électrolyse alcaline car c'est la technologie choisie 
-    par E-CHO
+Remarques : 
+- L'énergie « stackée » Estack est l'énergie électrique totale en kWh / kgH2 nécessaire à la fabrication la 
+    distribution de l'H2, sans prise en compte de la perte en ligne amont (comprend l'électrolyse, 
+    mais aussi le fonctionnement global de l'unité de production).
+- Nous n'utilisons actuellement que la valeur stackée de l'électrolyse alcaline car c'est la technologie 
+    choisie par E-CHO
 
 """
 
@@ -79,12 +47,15 @@ param_electrolyseur_alcalin = {
 
 
 # Electrolyse PEM (Proton Exchange Membrane):
-# (cette technologie pose des problèmes de fiabilité)
+# (cette technologie pose des problèmes de fiabilité pour le moment)
 
 param_electrolyseur_PEM = {
     "efficacité_electrolyseur": 0.75,           # Efficacité de l'électrolyseur PEM
     "pertes" : 0.979                            # Pertes en ligne : sur le réseau de distribution (idem alcalin)
 }
+
+# Pour ajouter une nouvelle technologie d'électrolyseur, il suffit de créer un nouveau dictionnaire
+# avec les paramètres correspondants et de l'utiliser dans les fonctions ci-dessous.
 
 
 
@@ -105,9 +76,12 @@ def consom_elec_stack(param_electrolyseur_ref, param_electrolyseur_cible):
     
     return consommation_stack_cible
 
+
+
 ##############################################################
 # Vérification de la cohérence de la production de H2 et 02
 ##############################################################
+
 """
 La réaction d'électrolyse de l'eau est la suivante :
 2 H2O(l) (+ élec) → 2 H2(g) + O2(g)
@@ -125,7 +99,13 @@ def coherence_electrolyse(besoin_H2, besoin_O2):
         raise ValueError("Incohérence dans les besoins d'H2 et d'O2 pour l'électrolyse.")
     else:
         return True
-    
+
+"""
+Cette étape est finalement faite dans la partie gazéification. On conserve la fonction au cas où l'étude
+d'autres procédés demandent cette vérification.
+
+"""
+
 
 
 ##############################################################
@@ -136,7 +116,8 @@ def coherence_electrolyse(besoin_H2, besoin_O2):
 ENTREES : 
 - Quantité de H² à produire : donnée par la gazéification et Fischer-Tropsch  (en tonnes)
 - Quantité de O² à produire : donnée par la gazéification (en tonnes)
-- Paramètres de l'électrolyseur (efficacité, consommation électricité, émissions électricité) : param_electrolyseur
+- Paramètres de l'électrolyseur (efficacité, consommation électricité, émissions électricité) : 
+    param_electrolyseur
 
 SORTIES :
 - Consommation électrique de l'électrolyseur (en kWh)
@@ -147,7 +128,7 @@ def consommation_electrolyseur(param_electrolyseur, besoin_O2_gazif, besoin_H2_g
 
 
     # Vérification de la cohérence des besoins en H2 et O2
-    # coherence_electrolyse(besoin_H2, besoin_O2_gazif) inutile car Maelys teste déjà
+    # coherence_electrolyse(besoin_H2, besoin_O2_gazif) inutile car déjà testé dans la gazéification.
 
     # Calcul de la consommation électrique stackée de l'électroyseur
     conso_elec_stack = consom_elec_stack(param_electrolyseur_alcalin, param_electrolyseur)
