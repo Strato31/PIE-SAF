@@ -10,40 +10,6 @@ et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce mo
 """
 
 ### Coordination sur les unités utilisées :
-# Energie en kWh
-# Masse en Tonnes
-# Emissions en kgCO2eq/an
-# Chaleur en MJ
-###
-
-"""
-Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
-
-⚠⚠⚠⚠
-La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
-avec des technologies de 2020 et supposées être disponibles en 2030.
-
-Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
-et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
-"""
-
-### Coordination sur les unités utilisées :
-# Energie (électricité) en kWh
-# Masse en Tonnes
-# Emissions en kgCO2eq/an
-# Chaleur en MJ (Conversion : 1 kWh = 3.6 MJ)
-###
-"""Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de calcul des émissions.
-
-⚠⚠⚠⚠
-La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin ou PEM 
-avec des technologies de 2020 et supposées être disponibles en 2030.
-
-Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
-et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
-"""
-
-### Coordination sur les unités utilisées :
 # Energie (électricité) en kWh
 # Masse en Tonnes
 # Emissions en kgCO2eq/an
