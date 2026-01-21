@@ -1,3 +1,6 @@
+from etapes import _1_biomasse as biomasse
+from etapes import _7_compression as comp
+
 """
 Paramètres et hypothèses sourcées pour la gazeification, puis fonctions de calcul des émissions."""
 
@@ -28,13 +31,15 @@ gaz_params = {
     "P" : 101325 , # Pression du syngas en Pa = 1atm
     "T" : 273, # Température du syngas en K (0°C)??
 
-    "R" : 8.314  # constante des gaz parfait J/mol·K 
+    "R" : 8.314,  # constante des gaz parfait J/mol·K 
 
+    "filtres_amine" : 4, # Quantité unitaire élec. pour chauffage et désorption filtres amine GJ/t
+
+    "fondtionnement_interne" : 2 # Pourcentage de l'énergie des entrants utilisé pour le fonctionnement interne de la gazéification (%)
     }
 
 
 caract_syngas = {
-
     
     # Caractéristiques des différents composants du syngas (source : Galtié)
         
@@ -283,9 +288,16 @@ def bilan_chaleur_gazeification():
     return chaleur
 
 
-def conso_elec_gazeification():
-
-    energie_gazeification = 0
-
+def conso_elec_gazeification(masse_CO2, masse_H2, masse_seche_biomasse, gaz_params):
+    """
+    Calcul de la consommation électrique de gazéification.
+    Consommation liée aux entrants de la gazéification : biomasse et H2.
+    Consommation liée au chauffage et à la désorption des filtres amines pour le captage du CO2.
+    """
+    energie_entrants_H2 = masse_H2 * comp.carac_pysico_chimiques["H2"]["PCI"] / 3600 * 10e6# en kWh
+    energie_entrants_bois = masse_seche_biomasse * biomasse.param_biomasse['PCI_biomasse'] # en kWh
+    energie_entrants = (energie_entrants_H2 + energie_entrants_bois)*gaz_params['fondtionnement_interne']/100 # en kWh
+    energie_desorption_filtres_amines = masse_CO2 * gaz_params["filtres_amine"] / 3600 * 10e6 # en kWh
+    energie_gazeification = energie_desorption_filtres_amines + energie_entrants # en kWh
     return energie_gazeification
 
