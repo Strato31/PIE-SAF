@@ -39,8 +39,7 @@ def __main__():
         print("-"*60,"\n")
         print("Étape 1 : Biomasse")
         consos_energies, consos_thermiques, emissions_co2 = [], [], []
-        conso_elec, conso_chaleur, total_emissions, masse_seche_biomasse = biomasse.main_biomasse(biomasse.param_biomasse, biomasse_liste, sens_physique)
-        consos_energies.append(conso_elec)
+        conso_chaleur, total_emissions, masse_seche_biomasse = biomasse.main_biomasse(biomasse.param_biomasse, biomasse_entree, sens_physique)
         consos_thermiques.append(conso_chaleur)
         emissions_co2.append(total_emissions)
         print("-"*60)
