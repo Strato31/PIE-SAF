@@ -42,8 +42,8 @@ et hydraulique, site "Electricity Maps" pour biomasse
 - Hypothèse que tous les pays européens auront une électricité décarbonée au même niveau que la 
 France (le solaire et surtout la biomasse sont moins décarbonées. Donc pas d’effet des importations 
 éventuelles. Approximation jugée acceptable pour nos besoins
-
 '''
+
 facteur_emission_2023 = {
     "consommation" : 34.3, # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
     "production" : 32.4 # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
