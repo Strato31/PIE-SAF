@@ -6,10 +6,11 @@ Paramètres et hypothèses sourcées pour l'électrolyseur, puis fonctions de ca
 La méthode appliquée permet de calculer les performances d'un électrolyseur Alcalin  
 avec des  technologies de 2020 et supposées être disponibles en 2030. 
 
-D'autres technologies existent comment l'électrolyse PEM (Proton Exchange Membrane), SOEC (Solide Oxide 
-Electrolysis Cell) et AEM (Anion Exchange Membrane) mais ne sont pas encore matures ou avec assez
-de données donc nous ne les avons pas intégrées dans ce modèle. 
+Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide Electrolysis Cell
+et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
 """
+
+
 
 ### Coordination sur les unités utilisées :
 # Energie (électricité) en kWh
