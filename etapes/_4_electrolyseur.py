@@ -9,8 +9,6 @@ Deux autres méthodes d'électrolyse sont en cours d'étude (SOEC = Solide Oxide
 et AEM = Anion Exchange Membrane) mais ne sont pas encore intégrées dans ce modèle.
 """
 
-
-
 ### Coordination sur les unités utilisées :
 # Energie (électricité) en kWh
 # Masse en Tonnes
