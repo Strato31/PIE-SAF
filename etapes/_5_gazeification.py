@@ -31,6 +31,8 @@ gaz_params = {
     "T" : 273, # Température du syngas en K (0°C)??
     "R" : 8.314,  # constante des gaz parfait J/mol·K 
 
+    "R" : 8.314,  # constante des gaz parfait J/mol·K 
+
     "filtres_amine" : 4, # Quantité unitaire élec. pour chauffage et désorption filtres amine GJ/t
 
     "fondtionnement_interne" : 2 # Pourcentage de l'énergie des entrants utilisé pour le fonctionnement interne de la gazéification (%)
