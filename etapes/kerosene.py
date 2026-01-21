@@ -28,7 +28,7 @@ def emissions_transport_kerosene(param_kerosene, production_kerosene):
         float: Émissions liées au transport du kérosène (tCO2e/an).
     """
     emissions_transport = (production_kerosene *
-                           param_kerosene['distance_transport_kerosene'] *
+                           param_kerosene['distance_transport_kerosene'] * 2 *
                            param_kerosene['emissions_transport_kerosene']/1000)  # Conversion kgCO2e en tCO2e
     
     return emissions_transport # en tCO2e/an
