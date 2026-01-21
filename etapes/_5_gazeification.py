@@ -229,12 +229,6 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
         #Calcul des volumes des composés en Nm3
         vol_composes[compo] = masses_totales_composes.get(compo,0) *1000/conversionMasseMolaire(caract_syngas[compo]["M"], gaz_params)
 
-    vol_composes = {}
-
-    for compo in carbon_gases:
-        #Calcul des volumes des composés en Nm3
-        vol_composes[compo] = masses_totales_composes.get(compo,0) *1000/conversionMasseMolaire(caract_syngas[compo]["M"], gaz_params)
-
     # ------------------------------
     # Calcul H2 à injecter et nécessaire
     # ------------------------------
@@ -328,7 +322,8 @@ def conso_elec_gazeification(masse_CO2, masse_H2, masse_seche_biomasse, gaz_para
 #Inversion du code pour retrouver la biomasse nécessaire à une quantité de syngas donnée
 ################################################################
 
-def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
+#def Inv_gazeificationV2(masseCO_sortie,masseCO2_sortie,masse_dechets, gaz_params, caract_syngas):
+def Inv_gazeificationV2(masseCO_sortie,masseCO2_sortie, gaz_params, caract_syngas):
 
     # Normalisation des fractions 
     total_fraction = sum(gas["fraction"] for gas in caract_syngas.values())
@@ -441,5 +436,4 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
 
     return biomasseEntree, masseH2_necessaire, masseO2_necessaire
 
-#Inv_gazeificationV1(253942.40023691423, 134374.76863848377, gaz_params, caract_syngas)
-Inv_gazeificationV1(253942.40023691423, gaz_params, caract_syngas)
+#Inv_gazeificationV2(253942.40023691423,134374.76863848377, gaz_params, caract_syngas)
