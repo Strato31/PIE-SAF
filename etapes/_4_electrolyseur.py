@@ -98,14 +98,16 @@ def consom_elec_stack(param_electrolyseur_ref, param_electrolyseur_cible):
 """
 La réaction d'électrolyse de l'eau est la suivante :
 2 H2O(l) (+ élec) → 2 H2(g) + O2(g)
-On doit alors s'assurer que la production d'oxygène est bien la moitié de la production d'hydrogène 
-(environ).
+On doit alors s'assurer que la production d'oxygène est bien la moitié de la production d'hydrogène (environ).
+Selon les masses molaires : 
+M_H2 = 2 g/mol et M_O2 = 32 g/mol)
+La production d'un kg de H2 génère systématiquement environ 8 kg d'O2.
 
 """
 
 def coherence_electrolyse(besoin_H2, besoin_O2):
     # Calcul de la production d'oxygène théorique
-    besoin_O2_theorique = besoin_H2 / 2  # en kg
+    besoin_O2_theorique = besoin_H2 * 8  # en kg
 
     # Vérification de la cohérence
     if abs(besoin_O2 - besoin_O2_theorique) > 0.01 * besoin_O2_theorique:
