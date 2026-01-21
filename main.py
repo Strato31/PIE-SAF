@@ -105,14 +105,14 @@ def __main__():
         consommation_totale_FT, emissions_FT, masse_kerosene = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
         emissions_co2.append(emissions_FT)
         consos_energies.append(consommation_totale_FT )
-        masseCO_sortie = ... # À implémenter
 
         print("-"*60)
         print("Étape 2 : Gazeification (TODO)")
-        masse_seche_biomasse, besoin_H2_gazif, besoin_O2_gazif = gaz.Inv_gazeificationV2(masseCO_sortie, gaz.gaz_params, gaz.caract_syngas)
+        CO_gazif, besoin_H2_gazif, emissions_gazif, besoin_O2_gazif,dechets_gazif = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)
         conso_elec_gaz = gaz.conso_elec_gazeification() #Fonction pas implémentée
         consos_energies.append(conso_elec_gaz)
         emissions_co2.append(emissions_gazif)
+        masse_seche_biomasse = ... # À calculer en fonction de la production de e-bio-SAF
         print("Consommation électrique : ", conso_elec_gaz, " en kWh")
 
 
