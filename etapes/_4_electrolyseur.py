@@ -57,8 +57,7 @@ param_electrolyseur_PEM = {
 }
 
 # Pour ajouter une nouvelle technologie d'électrolyseur, il suffit de créer un nouveau dictionnaire
-# avec les paramètres correspondants (faire une copie des précédents, changer les valeurs et adapter 
-# le nom) et de l'utiliser dans les fonctions ci-dessous.
+# avec les paramètres correspondants et de l'utiliser dans les fonctions ci-dessous.
 
 
 
@@ -117,7 +116,7 @@ def coherence_electrolyse(besoin_H2, besoin_O2):
 
 """
 Cette étape est finalement faite dans la partie gazéification. On conserve la fonction au cas où l'étude
-d'autres procédés sans la gazéification demande cette vérification.
+d'autres procédés demandent cette vérification.
 
 """
 
