@@ -36,10 +36,16 @@ param_FT = {
 ##############################################################
 
 def Fischer_Tropsch(param_FT, MasseCO_gazif): # Utilise la masse de CO issue de la gazéification
+
+    # Cette fonction calcule la consommation électrique totale et les émissions de CO2 liées à l'étape FT
+    # L'étape FT n'est pas modélisée, c'est une extrapolation à partir du tableau ADEME
+    # On calcule d'abord un premier ratio qu'on obtient à partir des donnée prévisionneles de Elyse
+    # puis on se sert d'une règle de trois pour obtenir les résultats pour notre cas
+
     # Calcul de consommatoin relative CO2 (Mt/Twh)
     conso_realtive_CO2 = param_FT['besoin_total_CO2'] / (param_FT['production_BioTJet'] * param_FT['PCI_kerosene'] )  
 
-    # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableu de l'ADEME
+    # consommation électrique (Twhélec/TWh) calculée avec interpolation linéaire sur tableau de l'ADEME
     consommation_électrique = 3.3 + (conso_realtive_CO2 - 0.43)*(3.2-2.4)/(0.43-0.36)
 
     # Consommation totale pour prod E-CHO (MWh/an)

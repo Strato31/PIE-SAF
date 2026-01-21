@@ -16,8 +16,9 @@ Les entrées/sorties peuvent être résumées comme suit :
 - Sorties : élec, chaleur, CO2, quantités CO et H2 dans le syngas, déchets
 
 **FT**
-- Entrées : quantités CO et H2 dans le syngas
-- Sorties :  élec, chaleur, H2 à produire par électrolyseur, kérosène produit, autres produits liquides
+# Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés.
+- Entrées : quantités CO dans le syngas
+- Sorties :  élec, émissions CO2, kérosène produit
 
 **ELECTROLYSE**
 - Entrées : eau, quantité H2 à produire
