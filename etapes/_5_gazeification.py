@@ -322,8 +322,7 @@ def conso_elec_gazeification(masse_CO2, masse_H2, masse_seche_biomasse, gaz_para
 #Inversion du code pour retrouver la biomasse nécessaire à une quantité de syngas donnée
 ################################################################
 
-#def Inv_gazeificationV2(masseCO_sortie,masseCO2_sortie,masse_dechets, gaz_params, caract_syngas):
-def Inv_gazeificationV2(masseCO_sortie,masseCO2_sortie, gaz_params, caract_syngas):
+def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
 
     # Normalisation des fractions 
     total_fraction = sum(gas["fraction"] for gas in caract_syngas.values())
@@ -356,13 +355,14 @@ def Inv_gazeificationV2(masseCO_sortie,masseCO2_sortie, gaz_params, caract_synga
         for gas in caract_syngas
     }
 
-    #masses_totales_composes = {"CO": masseCO_sortie, "CO2": masseCO2_sortie, "dechets": masse_dechets}
-    masses_totales_composes = {"CO": masseCO_sortie, "CO2": masseCO2_sortie}
+    masseCO2_sortie = masseCO_sortie*pourcentages_massiques["CO2"]  * caract_syngas["CO2"]["M"] / (pourcentages_massiques["CO"]  * caract_syngas["CO"]["M"])
 
+    masses_totales_composes = {"CO": masseCO_sortie, "CO2": masseCO2_sortie}
 
     for gas in caract_syngas:
         if gas not in masses_totales_composes:
-            masses_totales_composes[gas] = (pourcentages_massiques[gas] / (pourcentages_massiques["CO"] + pourcentages_massiques["CO2"])) * (masseCO_sortie + masseCO2_sortie)
+            masses_totales_composes[gas] = masseCO_sortie*pourcentages_massiques[gas]  * caract_syngas[gas]["M"] / (pourcentages_massiques["CO"]  * caract_syngas["CO"]["M"])
+            #masses_totales_composes[gas] = (pourcentages_massiques[gas] / (pourcentages_massiques["CO"] + pourcentages_massiques["CO2"])) * (masseCO_sortie + masseCO2_sortie)
             #La masse des autres composés est estimée proportionnellement à leur pourcentage massique par rapport à la somme CO + CO2
     # ------------------------------
     # Séparation gaz carbonés
@@ -422,10 +422,10 @@ def Inv_gazeificationV2(masseCO_sortie,masseCO2_sortie, gaz_params, caract_synga
     #Estimation masse déchets (méthane, autres hydrocarbures)
     masse_dechets = masses_totales_composes.get("CH4", 0) + masses_totales_composes.get("C2H2", 0) + masses_totales_composes.get("C3H6", 0) + masses_totales_composes.get("C20", 0)
 
-    print("\n========== RÉSULTATS GAZÉIFICATION INVERSE V2 ==========")
+    print("\n========== RÉSULTATS GAZÉIFICATION INVERSE V1 ==========")
     print(f"CO FT                         : {masseCO_sortie} tonnes/an")
-    print(f"CO₂ FT                        : {masseCO2_sortie} tonnes/an")
     print("------------------------------------------------")
+    print(f"CO₂ émis                      : {masseCO2_sortie} tonnes/an")
     print(f"Biomasse sèche en entrée      : {biomasseEntree} tonnes/an")
     print(f"O₂ nécessaire                 : {masseO2_necessaire} tonnes/an")
     print(f"H₂ dans syngaz                : {masseH2_syngaz} tonnes/an")
@@ -435,4 +435,5 @@ def Inv_gazeificationV2(masseCO_sortie,masseCO2_sortie, gaz_params, caract_synga
 
     return biomasseEntree, masseH2_necessaire, masseO2_necessaire
 
-#Inv_gazeificationV2(253942.40023691423,134374.76863848377, gaz_params, caract_syngas)
+#Inv_gazeificationV1(253942.40023691423, 134374.76863848377, gaz_params, caract_syngas)
+Inv_gazeificationV1(253942.40023691423, gaz_params, caract_syngas)
