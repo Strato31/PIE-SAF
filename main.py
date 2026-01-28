@@ -57,6 +57,9 @@ def __main__():
     conso_compression_syngas = comp.conso_compression_syngaz(masse_CO2_kg_entree, masse_H2_kg, masse_CO_kg, 0.85, 1, 1.12, 323.15) #hypothèse flux total de gaz à ventiler
     conso_elec_compression = conso_compression_O2 + conso_compression_syngas + conso_compression_CO2
     consos_energies.append(conso_elec_compression)
+    print("Consommation électrique de compression de l'O2 : ", conso_compression_O2, " kWh")
+    print("Consommation électrique de compression du CO2 : ", conso_compression_CO2, " kWh")
+    print("Consommation électrique de compression du syngaz : ", conso_compression_syngas, " kWh")
     print('Consommation électrique totale de compression : ', conso_elec_compression, ' kWh')
     print("---------------------------------------------------------------")
     print("Étape 6 : Calcul des émissions totales et consommations énergétiques")

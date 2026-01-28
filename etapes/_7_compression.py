@@ -1,9 +1,25 @@
 """
+Partie 7 : Compression des gaz
+
+Contient :
+    - Paramètres physico-chimiques des gaz
+    - Fonctions de calcul de la consommation électrique de compression des gaz :
+        - param_temp_variable : Obtention des paramètres physico-chimiques en fonction de la température
+        - calcul_echauffement_isenthropique : Calcul de l'échauffement isenthropique
+        - compression_isentropique : Calcul de la température après compression isentropique
+        - conso_compression : Calcul de la consommation électrique de compression d'un gaz unique
+        - conso_compression_syngaz : Calcul de la consommation électrique de compression du syngas (CO2, H2, CO)
+
+Description :
 Calcul des émissions liées à la compression les différents gaz impliqués dans le procédé E-CHO.
+
 Hypothèses :
     - gaz parfaits
     - pas d'ajustement polynomiale fait -> à réflaichir utltérieurement et revoir les sources
     - compression isentropique avec rendement constant
+    - Pression constante P1=1bar
+    - Température initiale T1=15°C=288.15K
+    - Utilisation du référentielle SHE/Turbomeca pour l'02
 """
 
 ###############################################################
@@ -87,16 +103,23 @@ carac_pysico_chimiques = { #Source ? Nasa Glem coef ?
 ##############################################################
 # Fonctions de calcul des émissions : Calcul conso énergétique du processus
 ##############################################################
-"""
-Hypothèses :
-    - Pression constante P1=1bar
-    - Température initiale T1=15°C=288.15K
-    - Utilisation du référentielle SHE/Turbomeca pour l'02
-"""
 
 # Fonction pour obtenir les paramètres physico-chimiques en fonction de la température
-def param_temp_variable(T, gaz):
-    """Renvoie les paramètres physico-chimiques, Cp et gamma en fonction de la température T (K)."""
+def param_temp_variable(T: float, gaz: str) -> tuple:
+    """Renvoie les paramètres physico-chimiques, Cp et gamma en fonction de la température T (K).
+    
+    Arguments
+    ----------
+        T : Température (K).
+        gaz : Gaz comprimé (ex: "CO2", "H2", "O2", etc.) 
+
+    Returns
+    ----------
+        Cp_g : Capacité calorifique à pression contante (kJ/kg.K).
+        gamma : Coefficient adiabatique du gaz.
+        Rs : Constante spécifique des gaz parfaits (kJ/kg.K).
+    """
+
     if gaz == "CH4":
         Cp_mol = 34.942-0.039957*T+0.00019184*T**2-0.00000015303*T**3+3.9321e-11*T**4 # source ? en J/mol.K
     elif gaz == "H2":
@@ -120,15 +143,39 @@ def param_temp_variable(T, gaz):
 
 # Ces calculs ne sont utiles que dans le cas où E-CHO/BioTJet serait reconverti et fabriquerait du e-kérosène, le carbone venant de captation de CO2 : pas pris en compte pour l'instant
 
-def calcul_echauffement_isenthropique(T0, P0 , P1, gamma):
-    """Calcul de l'échauffement isenthropique pour une compression isenthropique à T0(K) de P1 à P2."""
-    Tit1 = T0 * (P1 / P0)**((gamma - 1) / gamma) # itération initiale
+def calcul_echauffement_isenthropique(T0 : float, P0 : float, P1 : float, gamma : float) -> float:
+    """Calcul de l'échauffement isenthropique pour une compression isenthropique à T0(K) de P1 à P2.
+    
+    Arguments
+    ----------
+        T0 : Température initiale (K).
+        P0 : Pression initiale (bar).
+        P1 : Pression finale (bar).
+        gamma : Coefficient adiabatique du gaz. 
+    
+    Returns
+    -----------
+        Ț1 : Température après compression isentropique (K).
+    """
+    Tit1 = T0 * (P1 / P0)**((gamma - 1) / gamma)
     return Tit1
 
-# Calcul approché de l'échauffement isentropique par itération, sur la température, jusqu'à convergence
-def compression_isentropique(gaz, P1_bar, P2_bar, T0_K):
+def compression_isentropique(gaz : str, P1_bar : float, P2_bar : float, T0_K : float) -> float:
     """Renvoie la temperature de la compression isentropique pour passer 
-    de la pression P1 (en bar) à la pression P2 (en bar)."""
+    de la pression P1 (en bar) à la pression P2 (en bar).
+    
+    Arguments
+    ----------
+        gaz : Gaz comprimé(ex: "CO2", "H2", "O2", etc.)
+        P1_bar : Pression initiale (bar).
+        P2_bar : Pression finale (bar).
+        T0_K : Température initiale (K).
+    
+    Returns
+    -------
+        T1_K : température après compression isentropique (K)
+    """
+
     # Calcul de l'échauffement à l'état initial
     gamma = param_temp_variable(T0_K, gaz)[1]
     T1_K = calcul_echauffement_isenthropique(T0_K, P1_bar, P2_bar, gamma)
@@ -140,26 +187,52 @@ def compression_isentropique(gaz, P1_bar, P2_bar, T0_K):
 
     return T1_K
 
-# Calcul de la consommation électrique de la compression d'un gaz
-def conso_compression(masse_gaz_kg, gaz, rendement, P1_bar, P2_bar, T0_K):
+def conso_compression(masse_gaz_kg: float, gaz: str, rendement: float, P1_bar: float, P2_bar: float, T0_K: float) -> float:
     """Renvoie la consommation électrique (en MWh) pour comprimer une masse de gaz (en kg) 
-    de la pression P1 (en bar) à la pression P2 (en bar) à la température initiale T0_K."""
+    de la pression P1 (en bar) à la pression P2 (en bar) à la température initiale T0_K.
+    Arguments
+    ----------
+        masse_gaz_kg : Masse de gaz à comprimer (kg).
+        gaz : Gaz comprimé (ex: "CO2", "H2", "O2", etc.)
+        rendement : Rendement de la compression (entre 0 et 1).
+        P1_bar : Pression initiale (bar).
+        P2_bar : Pression finale (bar).
+        T0_K : Température initiale (K).    
+
+    Returns
+    -------
+        conso_elec_kWh : Consommation électrique de la compression du gaz (kWh).
+    """
 
     T1_K = compression_isentropique(gaz, P1_bar, P2_bar, T0_K)
     Tmoy = (T0_K + T1_K) / 2
     
     Cpmoy = param_temp_variable(Tmoy, gaz)[0] # en kJ/(kg.K)
     echauffement_reel = (T1_K - T0_K) / rendement
-    conso_elec_MWh = echauffement_reel * Cpmoy * masse_gaz_kg / 3600 # en MWh
-    return conso_elec_MWh
+    conso_elec_kWh = echauffement_reel * Cpmoy * masse_gaz_kg / 3600 * 1000# en kWh
+    return conso_elec_kWh
 
-# Calcul de la consommation électrique de la compression du syngas (CO2, H2, CO)
-def conso_compression_syngaz(masse_C02_kg, masse_H2_kg, masse_C0_kg, rendement, P1_bar, P2_bar, T0_K):
+def conso_compression_syngaz(masse_C02_kg: float, masse_H2_kg: float, masse_C0_kg: float, rendement: float, P1_bar: float, P2_bar: float, T0_K: float) -> float:
     """Renvoie la consommation électrique (en MWh) pour comprimer le syngas (en kg), calcul spécifique 
     car il prend en compte les trois gaz. procédure de calcul de l'échauffement du mélange : calcul de 
     l'échauffement de chacun des gaz, puis calcul de la T° moyenne et du Cp moyen pondéré par 
-    la composition, enfin calcul de la puissance moyenne absorbée. """
+    la composition, enfin calcul de la puissance moyenne absorbée. 
     
+    Arguments
+    ----------
+        masse_C02_kg : Masse de CO2 à comprimer (kg).
+        masse_H2_kg : Masse de H2 à comprimer (kg).
+        masse_C0_kg : Masse de CO à comprimer (kg).
+        rendement : Rendement de la compression (entre 0 et 1).
+        P1_bar : Pression initiale (bar).
+        P2_bar : Pression finale (bar).
+        T0_K : Température initiale (K).
+    
+    Returns
+    -------
+        conso_elec_kWh : Consommation électrique de la compression du syngas (kWh).
+    """
+
     # Calcul de l'échauffement isentropique de chaque gaz
     T1_K_CO2 = compression_isentropique("CO2", P1_bar, P2_bar, T0_K)
     T1_K_H2 = compression_isentropique("H2", P1_bar, P2_bar, T0_K)
@@ -174,8 +247,8 @@ def conso_compression_syngaz(masse_C02_kg, masse_H2_kg, masse_C0_kg, rendement, 
                          masse_H2_kg * (T1_K_H2 - T0_K) + 
                          masse_C0_kg * (T1_K_CO - T0_K)) / (rendement * (masse_C02_kg + masse_H2_kg + masse_C0_kg))
     
-    conso_elec_MWh = echauffement_reel * Cpmoy * (masse_C02_kg + masse_H2_kg + masse_C0_kg) / 3600 # en MWh
-    return conso_elec_MWh
+    conso_elec_kWh = echauffement_reel * Cpmoy * (masse_C02_kg + masse_H2_kg + masse_C0_kg) / 3600 * 1000 # en kWh
+    return conso_elec_kWh
 
 # Manque la Consommation d'énergie pour produire à la SOBEGI la vapeur nécessaire pour la réaction RWGS d'EM-Lacq 
 # et Consommation électrique pour capter le C02 par DAC	à coder si besoin plus tardxs
