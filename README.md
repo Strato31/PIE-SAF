@@ -55,9 +55,28 @@ Etapes a inclure :
 - electrolyseur (très long oscour) (H2)
 
 
-
 LA SUITE :
 - permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
 - créer format dictionnaire de données par projet
 - rendre globales les variables qui le sont
 - faire un main fonctionnel
+
+------------------------------------------
+
+Détails des étapes :
+
+**Partie 7 : Compression des gaz**
+La partie compression des gaz s'organise en deux parties : une partie de donné physico chimique et une partie du calcul de l'énergie consommée.
+
+La partie zone de donnée :
+un dictionnaire *carac_physico_chimiques* regroupant les informations physico-chimique par gaz. 
+Les données du dictionnaires sont tirés de celles de l'excel des shifters, en considérant les gaz parfaits et aux conditions de référence 288,15K et 1 bar.
+
+La partie calcul des émissions : 
+*param_temp_variable* : calcul les caractéristiques physico-chimique des gaz en fonction de la température 
+*calcul_echauffement_isenthropique* : ces calculs ne sont utiles que dans le cas où E-CHO/BioTJet serait reconverti et fabriquerait du e-kérosène, le carbone venant de captation de CO2 : pas pris en compte pour l'instant
+*compression_isentropique* : Renvoie la temperature de la compression isentropique pour passer de la pression P1 (en bar) à la pression P2 (en bar).
+*conso_compression* : Renvoie la consommation électrique (en MWh) pour comprimer une masse de gaz (en kg) de la pression P1 (en bar) à la pression P2 (en bar) à la température initiale T0_K.
+*conso_compression_syngaz* : Renvoie la consommation électrique (en MWh) pour comprimer le syngas (en kg), calcul spécifique car il prend en compte les trois gaz. procédure de calcul de l'échauffement du mélange : calcul de l'échauffement de chacun des gaz, puis calcul de la T° moyenne et du Cp moyen pondéré par la composition, enfin calcul de la puissance moyenne absorbée. 
+
+Le processus de calcul suit les étapes détaillées dans le document technique, dans un premier temps on calcul de manière itérative l'échauffement thermique lié à la compression puis l'échauffement réel et enfin l
