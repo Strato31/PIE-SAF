@@ -104,8 +104,7 @@ def __main__():
         print("Étape 1 : Fischer-Tropsch (TODO)")
         consommation_totale_FT, emissions_FT, masseCO_sortie = ft.Inv_Fischer_Tropsch(ft.param_FT, kerosene_produit)
         emissions_co2.append(emissions_FT)
-        consos_energies.append(consommation_totale_FT )
-        masseCO_sortie = ... # À implémenter
+        consos_energies.append(consommation_totale_FT)
 
         print("-"*60)
         print("Étape 2 : Gazeification (TODO)")
