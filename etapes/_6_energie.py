@@ -29,7 +29,7 @@ France (le solaire et surtout la biomasse sont moins décarbonées. Donc pas d�
 éventuelles. Approximation jugée acceptable pour nos besoins
 """
 
-# Facteur d'émission de chaque filière énergétique en kgCO2eq/MWh
+# Facteur d'émission de chaque filière énergétique en gCO2eq/kWh
 facteur_emission = {
     "nucleaire" : 5,   # moyenne ADEME / EDF
     "eolien" : 15,
@@ -47,7 +47,7 @@ param_mix_2050 = {
     "biomasse" : 0.03,      # Part du la biomasse dans le mix énergétique 
 }
 
-
+# La différence entre les deux vient de la prise en compte des importations dans le mix de consommation
 facteur_emission_2023 = {
     "consommation" : 34.3, # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
     "production" : 32.4 # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
@@ -60,47 +60,94 @@ importations rendues nécessaires du fait de la faible disponibilité du parc nu
 # Fonctions de calcul des émissions
 ##############################################################
 
-#Calcul des émission en CO2 (en gCO2eq) pour une consomation énergétique (en kWh) d'un processus 
-def emissions_energetique_processus(conso_energie): 
-    emission_mix=0
-    for energie in facteur_emission : 
-        emission_mix += param_mix_2050[energie] * facteur_emission[energie]
+def emissions_energetique_processus(conso_energie):
+    """
+    Calcule les émissions de CO2 (en gCO2eq) liées à une consommation énergétique donnée (en kWh),
+    en utilisant un mix énergétique prévisionnel pour 2050 et le mix actuel pour 2023.
+
+    Arguments
+    ----------
+        conso_energie : Consommation énergétique en kWh
+    
+    Returns
+    -------
+        emissions_2050 : Émissions de CO2 en 2050 en gCO2eq
+        emissions_2023 : Émissions de CO2 en 2023 en gCO2eq
+    """
+    # Calcul du facteur d'émission mixte pour 2050
+    emission_mix = 0 # initialisation
+    for energie in facteur_emission :
+        emission_mix += param_mix_2050[energie] * facteur_emission[energie] # on pondère chaque facteur d'émission par la part de cette énergie dans le mix
 
     # Calcul des émissions totales pour le processus de gazeification
-    emissions_2050 = conso_energie * emission_mix
-    emissions_2023 = conso_energie * facteur_emission_2023['consommation']
+    emissions_2050 = conso_energie * emission_mix # calcul des émissions pour 2050
+    emissions_2023 = conso_energie * facteur_emission_2023['consommation'] # choix d'utiliser le mix de consommation pour 2023
+    
     return emissions_2050, emissions_2023
 
-# Calculs des émissions de CO2 à partir d'une liste de consomation
+
 def emissions_energie_totale(consos_energies):
-    emissions_tot_2050 = 0
-    emissions_tot_2023 = 0
+    """
+    Agrège les émissions de CO2 (en gCO2eq) liées à une liste de consommations énergétiques (en kWh),
+    en distinguant les émissions pour 2050 et pour 2023.
+
+    Arguments
+    ----------
+        consos_energies : Liste de consommations énergétiques en kWh
+    
+    Returns
+    -------
+        emissions_2050 : Liste des émissions de CO2 en 2050 en gCO2eq pour chaque consommation, et la somme totale en dernier élément
+        emissions_2023 : Liste des émissions de CO2 en 2023 en gCO2eq pour chaque consommation, et la somme totale en dernier élément
+    """
+    # Initialisation des totaux et des listes d'émissions par processus
+    emissions_totales_2050 = 0
+    emissions_totales_2023 = 0
     emissions_2050 = []
     emissions_2023 = []
 
+    # On parcourt chaque consommation énergétique pour calculer les émissions associées
     for conso in consos_energies :
-        emissions_processus_2050, emissions_processus_2023 = emissions_energetique_processus (conso)
-        emissions_2050.append(emissions_processus_2050)
-        emissions_2023.append(emissions_processus_2023)
-        emissions_tot_2050 += emissions_processus_2050
-        emissions_tot_2023 += emissions_processus_2023
+        emissions_processus_2050, emissions_processus_2023 = emissions_energetique_processus (conso) # calcul des émissions pour cette consommation
+        emissions_2050.append(emissions_processus_2050) # ajout à la liste d'émissions 2050
+        emissions_2023.append(emissions_processus_2023) # ajout à la liste d'émissions 2023
+        emissions_totales_2050 += emissions_processus_2050 # ajout au total 2050
+        emissions_totales_2023 += emissions_processus_2023 # ajout au total 2023
     
-    emissions_2050.append(emissions_tot_2050)
-    emissions_2023.append(emissions_tot_2023)
+    emissions_2050.append(emissions_totales_2050) # ajout du total en dernier élément de la liste 2050
+    emissions_2023.append(emissions_totales_2023) # ajout du total en dernier élément de la liste 2023
+
     return emissions_2050, emissions_2023
 
-# Calcul des émissions liées à la production de chaleur (en gCO2eq) pour une consomation thermique (en MJ) d'un processus
 '''
-hypothèse : on considère que la chaleur résiduelle générée par le procédé Fischer-Tropsch est réinjectée dans la phase de torréfaction et est suffisante pour l'assurer 							
-Source de cette chaleur : injection d'eau dans le réacteur Fischer-Tropsch pour refroidir le catalyseur et le conserver dans la bonne plage de température							
-d’où génération de vapeur d'eau (680 kt/an) dont la chaleur va être utilisée pour apporter des calories aux phases de torréfaction et de création de syngaz							
+Hypothèse : on considère que la chaleur résiduelle générée par le procédé Fischer-Tropsch est réinjectée 
+dans la phase de torréfaction et est suffisante pour l'assurer.
+Source de cette chaleur : injection d'eau dans le réacteur Fischer-Tropsch pour refroidir le catalyseur et le 
+conserver dans la bonne plage de température, d’où génération de vapeur d'eau (680 kt/an) dont la chaleur va 
+être utilisée pour apporter des calories aux phases de torréfaction et de création de syngaz.
+
+En pratique, on vérifie que la consommation thermique totale des processus est inférieure ou égale à la chaleur récupérable,
+ce qui permet de valider cette hypothèse et d'éviter de calculer des émissions liées à une consommation thermique supplémentaire.
 '''
 def verif_hypothèse(consos_thermiques):
-    # on vérifie que la consommation thermique totale est inférieure à la chaleur récupérable
+    """
+    Vérifie l'hypothèse selon laquelle la consommation thermique totale des processus est inférieure ou égale à la chaleur récupérable.
+
+    Arguments
+    ----------
+        consos_thermiques : Liste de consommations thermiques en kWh (>=0 pour consommation, <0 pour production)
+    
+    Returns
+    -------
+        booléen : True si l'hypothèse est vérifiée (consommation totale <= 0), False sinon
+    """
+    # inititalisation de la consommation thermique totale
     conso_therm_totale = 0
 
-    for conso_therm in consos_thermiques :
-        conso_therm_totale += conso_therm # La consommation thermique est positive pour les étapes qui consomment de l'énergie et négative si elle en produit.
+    for conso_therm in consos_thermiques : # on parcourt chaque consommation thermique
+        conso_therm_totale += conso_therm # on additionne les consommations thermiques
+    
+    # On vérifie qu'au total, la consommation thermique totale est inférieure ou égale à 0
     if conso_therm_totale <= 0:
         return True
     else:
