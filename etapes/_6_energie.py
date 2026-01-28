@@ -16,6 +16,18 @@ Hypothèses sur un mix énergétique pour 2050 :
 ###############################################################
 # Stockage des paramètres avec les hypothèses sourcées        #
 ###############################################################
+"""
+Valeurs 2050 calculées à partir :
+- Du mix prévisionnel production suite aux annonces du Président Macron en 2023 sur la construction de 14 EPR2 
+(hypothèse moyenne) et du développement des parcs photovoltaïque et éolien maritime et terrestre. 
+- Hypothèse réacteurs SMR non pris en compte. Calendrier de fermeture des tranches existantes sur base 
+durée de vie de 60 ans. Centrales fossiles fermées. 
+- Facteurs d’émission par type de production : base ADEME V23.2 pour nucléaire, éolien, photovoltaïque 
+et hydraulique, site "Electricity Maps" pour biomasse
+- Hypothèse que tous les pays européens auront une électricité décarbonée au même niveau que la 
+France (le solaire et surtout la biomasse sont moins décarbonées. Donc pas d’effet des importations 
+éventuelles. Approximation jugée acceptable pour nos besoins
+"""
 
 # Facteur d'émission de chaque filière énergétique en kgCO2eq/MWh
 facteur_emission = {
@@ -28,27 +40,13 @@ facteur_emission = {
 
 # Mix énergétique prévisionnel en 2050 (part de chaque filière dans la production électrique)
 param_mix_2050 = {
-    "nucleaire": 0.38,    # Part du nucléaire dans le mix énergétique 
-    "eolien": 0.304,      # Part de l'éolien dans le mix énergétique 
-    "solaire" : 0.198,    # Part du solaire dans le mix énergétique 
+    "nucleaire": 0.38,      # Part du nucléaire dans le mix énergétique 
+    "eolien": 0.304,        # Part de l'éolien dans le mix énergétique 
+    "solaire" : 0.198,      # Part du solaire dans le mix énergétique 
     "hydraulique" : 0.082,  # Part de l'hydraulique dans le mix énergétique 
-    "biomasse" : 0.03,     # Part du la biomasse dans le mix énergétique 
+    "biomasse" : 0.03,      # Part du la biomasse dans le mix énergétique 
 }
 
-
-
-'''
-Valeurs 2050 calculées à partir :
-- Du mix prévisionnel production suite aux annonces du Président Macron en 2023 sur la construction de 14 EPR2 
-(hypothèse moyenne) et du développement des parcs photovoltaïque et éolien maritime et terrestre. 
-- Hypothèse réacteurs SMR non pris en compte. Calendrier de fermeture des tranches existantes sur base 
-durée de vie de 60 ans. Centrales fossiles fermées. 
-- Facteurs d’émission par type de production : base ADEME V23.2 pour nucléaire, éolien, photovoltaïque 
-et hydraulique, site "Electricity Maps" pour biomasse
-- Hypothèse que tous les pays européens auront une électricité décarbonée au même niveau que la 
-France (le solaire et surtout la biomasse sont moins décarbonées. Donc pas d’effet des importations 
-éventuelles. Approximation jugée acceptable pour nos besoins
-'''
 
 facteur_emission_2023 = {
     "consommation" : 34.3, # gCO2eq/kWh pour le mix électrique français en 2023 selon RTE
