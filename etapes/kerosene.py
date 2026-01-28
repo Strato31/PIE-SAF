@@ -1,4 +1,6 @@
 """
+POUR L'INSTANT : PAS UTILISÉ !
+
 Paramètres et hypothèses sourcées pour le transport, puis fonctions de calcul des émissions."""
 
 ###############################################################
@@ -20,12 +22,14 @@ param_kerosene = {
 def emissions_transport_kerosene(param_kerosene, production_kerosene):
     """Calcule les émissions liées au transport du kérosène jusqu'à l'aéroport.
 
-    Args:
+    Arguments
+    ----------
         param_kerosene (dict): Dictionnaire contenant les paramètres liés au transport du kérosène.
         production_kerosene (float): Quantité de kérosène produite (t/an).
 
-    Returns:
-        float: Émissions liées au transport du kérosène (tCO2e/an).
+    Returns
+    -------
+        emissions_transport (float): Émissions liées au transport du kérosène (tCO2e/an).
     """
     emissions_transport = (production_kerosene *
                            param_kerosene['distance_transport_kerosene'] * 2 *

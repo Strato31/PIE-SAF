@@ -1,5 +1,14 @@
+"""
+PARTIE 3 : Fischer-Tropsch
+
+Contient :
+- param_FT : les paramètres et fonctions de calcul des émissions liées à l'étape Fischer-Tropsch.
+TODO
+"""
+
+
 ###############################################################
-# Stockage des paramètres avec les hypothèses sourcées
+# Stockage des paramètres avec les hypothèses sourcées        #
 ###############################################################
 
 
