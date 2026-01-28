@@ -71,7 +71,26 @@ def Fischer_Tropsch(param_FT, MasseCO_gazif): # Utilise la masse de CO issue de 
 
     return consommation_totale_FT, emmissions_rendement_carbone, masse_kerosene_produite
 
-# print(emissions_FT(param_FT))
+##############################################################
+# Inversion de la fonction FT pour obtenir la masse de CO nécessaire
+##############################################################
+def Inv_Fischer_Tropsch(param_FT, masse_kerosene_voulue):
+    """
+    Arguments :
+       - masse de kérosène voulue (t)
+    
+    Sorties :
+       - masse de CO nécessaire (t)
+       - émissions CO2 liées à l'étape FT (tCO2e)
+       - consommation électrique totale de l'étape FT (MWh)"""
+    
+    # on se sert d'une règle de trois pour obtenir la masse de CO nécessaire
+    MasseCO_necessaire = (masse_kerosene_voulue / param_FT['production_BioTJet']) * param_FT['MasseCO_gazif_init']
+
+    # on calcule les émissions et la consommation électrique associée grace à la fonction Fischer_Tropsch
+    consommation_totale_FT, emmissions_rendement_carbone, _ = Fischer_Tropsch(param_FT, MasseCO_necessaire)
+    
+    return consommation_totale_FT, emmissions_rendement_carbone, MasseCO_necessaire
 
 def main_FT():
     """
