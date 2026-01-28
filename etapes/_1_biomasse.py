@@ -70,7 +70,6 @@ def masse_seche_sortie(biomasse):
         
     Returns
     ------- 
->>>>>>> 77f1c67 (nettoyage code biomasse et implémentation calcul sens inverse dans le main pour la biomasse)
         biomasse_seche : masse totale de biomasse sèche (t)
     """
 
