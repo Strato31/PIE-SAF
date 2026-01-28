@@ -60,10 +60,10 @@ def masse_seche_sortie(biomasse):
     
     Arguments
     ----------
-        biomasse : liste de dictionnaires avec 'type',  'masse' (t) et 'humidité' (fraction) pour chaque élément de biomasse
+        biomasse : liste de dictionnaires avec 'type', 'masse' (t) et 'humidité' (fraction) pour chaque élément de biomasse
         
     Returns
-    ------- 
+    -------
         biomasse_seche : masse totale de biomasse sèche (t)
     """
 

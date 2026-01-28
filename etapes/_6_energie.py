@@ -1,19 +1,32 @@
 """
-Paramètres et hypothèses sourcées pour le calcul des émissions lié à la consommation énergétique et thermique, puis fonctions de calcul des émissions.
+PARTIE X : Energie
 
-Hypothèses sur un mix énergétique pour 2050 :				
-    le plus pertinent est de calculer les émissions sur la base du mix électrique cible français en 2050, hypothèse nucléaire "moyenne" (14 EPR2)					
-    la production des pays voisins sera entièrement renouvelable. Elle aura une empreinte légèrement plus élevée car le nucléaire a l'empreinte la plus basse.					
-    mais on va négliger cet effet. En plus, l'empreinte carbone du solaire aura probablement baissé à cette échéance (amélioration des rendements), ce qui renforce cette simplification					
-    les émissions seront sous-estimées à la mise en service, mais devraient être représentatives dès 2035					
-    source : base ADEME V23.2 pour nucléaire, éolien, photovoltaïque et hydraulique. Site "Electricity Maps" pour biomasse		
+Paramètres et hypothèses sourcées pour le calcul des émissions liées à la consommation énergétique et thermique,
+puis les fonctions de calcul de ces émissions.
+
+Hypothèses sur un mix énergétique pour 2050 :
+    le plus pertinent est de calculer les émissions sur la base du mix électrique cible français en 2050, hypothèse nucléaire "moyenne" (14 EPR2)
+    la production des pays voisins sera entièrement renouvelable. Elle aura une empreinte légèrement plus élevée car le nucléaire a l'empreinte la plus basse.
+    mais on va négliger cet effet. En plus, l'empreinte carbone du solaire aura probablement baissé à cette échéance (amélioration des rendements), ce qui renforce cette simplification
+    les émissions seront sous-estimées à la mise en service, mais devraient être représentatives dès 2035
+    source : base ADEME V23.2 pour nucléaire, éolien, photovoltaïque et hydraulique. Site "Electricity Maps" pour biomasse.
 
 """
 
 ###############################################################
-# Stockage des paramètres avec les hypothèses sourcées
-###############################################################		
+# Stockage des paramètres avec les hypothèses sourcées        #
+###############################################################
 
+# Facteur d'émission de chaque filière énergétique en kgCO2eq/MWh
+facteur_emission = {
+    "nucleaire" : 5,   # moyenne ADEME / EDF
+    "eolien" : 15,
+    "solaire" : 32,    # ADEME "Europe"
+    "hydraulique" : 6, 
+    "biomasse" : 230,  # Electricity Maps
+}
+
+# Mix énergétique prévisionnel en 2050 (part de chaque filière dans la production électrique)
 param_mix_2050 = {
     "nucleaire": 0.38,    # Part du nucléaire dans le mix énergétique 
     "eolien": 0.304,      # Part de l'éolien dans le mix énergétique 
@@ -22,14 +35,7 @@ param_mix_2050 = {
     "biomasse" : 0.03,     # Part du la biomasse dans le mix énergétique 
 }
 
-# Facteur d'émission de chaque filière en gCO2eq/kWh
-facteur_emission = {
-    "nucleaire" : 5,   # moyenne ADEME / EDF
-    "eolien" : 15,
-    "solaire" : 32,    # ADEME "Europe"
-    "hydraulique" : 6, 
-    "biomasse" : 230,  # Electricity Maps
-}
+
 
 '''
 Valeurs 2050 calculées à partir :
