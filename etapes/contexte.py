@@ -1,4 +1,10 @@
-"""Hypothèses de contexte pour les calculs des émissions liées à la biomasse.
+"""
+PARTIE : Contexte
+
+Contient les hypothèses de contexte pour les calculs des émissions liées à la biomasse.
+Pour l'instant, seul le mix énergétique est pris en compte dans les calculs d'émissions, et ce fichier n'est pas utilisé.
+A terme, on envisage d'inclure un paramètre de contexte plus complet, incluant divers facteurs influençant les émissions de CO2.
+
 Facteurs importants :
 - Mix énergétique du pays de production
 - Infrastructures disponibles
@@ -11,16 +17,16 @@ Facteurs importants :
 - Durabilité des sources de biomasse
 - Impacts indirects (changement d'affectation des sols, biodiversité, etc.)
 """
-# Exemple de paramètre de contexte
+# Exemple de paramètre de contexte (non utilisé dans le reste du code)
 contexte = {
-    "mix_énergétique": "éolien_majoritaire",  # Mix énergétique du pays de production
-    "infrastructures": "modernes",            # Infrastructures disponibles
-    "réglementations": "strictes",            # Réglementations environnementales
-    "pratiques_agricoles": "durables",        # Pratiques agricoles et forestières
-    "conditions_climatiques": "tempérées",     # Conditions climatiques locales
-    "distance_marchés": 500,                  # Distance aux marchés principaux (km)
-    "technologies_conversion": "FT_modernes", # Technologies de conversion utilisées
-    "échelle_production": "grande",          # Échelle de production (petite, moyenne, grande)
-    "durabilité_sources": "certifiées",       # Durabilité des sources de biomasse
-    "impacts_indirects": "minimisés"               # Impacts indirects (changement d'affectation des sols, biodiversité, etc.)
+    "mix_énergétique": "éolien_majoritaire",    # Mix énergétique du pays de production
+    "infrastructures": "modernes",              # Infrastructures disponibles
+    "réglementations": "strictes",              # Réglementations environnementales
+    "pratiques_agricoles": "durables",          # Pratiques agricoles et forestières
+    "conditions_climatiques": "tempérées",      # Conditions climatiques locales
+    "distance_marchés": 500,                    # Distance aux marchés principaux (km)
+    "technologies_conversion": "FT_modernes",   # Technologies de conversion utilisées
+    "échelle_production": "grande",             # Échelle de production (petite, moyenne, grande)
+    "durabilité_sources": "certifiées",         # Durabilité des sources de biomasse
+    "impacts_indirects": "minimisés"            # Impacts indirects (changement d'affectation des sols, biodiversité, etc.)
 }   
