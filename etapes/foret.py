@@ -67,8 +67,8 @@ param_foret = {
 
 
  
-# fonction qui détermine la productivité et la mortalité de la forêt française, pour l'année spécifiée en entrée. Le paramètre béta quantifie 
-# l'impact du changement climatique sur l'état de la forêt 
+# fonction qui détermine la productivité et la mortalité de la forêt française, pour l'année spécifiée en entrée, en prenant
+# en compte le changement climatique. Le paramètre beta quantifie l'impact non-linéaire du changement climatique sur l'état de la forêt.
 
 #### Cette fonction marche pour 2030,2050 et 2100 (commentaire à supprimmer)
 def impact_changement_climatique_foret(année,beta):
@@ -135,7 +135,7 @@ def impact_bonne_pratique_capacité_sequestration(année, productivité):
                                                                                 
     productivité_bonne_pratique = productivité*coefficient_bonne_pratique_année
 
-    return productivité_bonne_pratique
+    return productivité_bonne_pratique # résultats en Mm3/an
 
 # fonction qui détermine la capacité de séquestration carbone de la forêt française en prenant en compte le changement climatique
 # (avec un impact linéaire ou non), l'amélioration des pratiques sylvicoles et la généralisation (en %) du procédé BioTjet 
@@ -158,7 +158,7 @@ def impact_total_sequestration(année,beta,généralisation):
     variation_sequestration_carbone = impact_recolte_capacité_sequestration(productivité_nette, récolte_totale)
 
     
-    return variation_sequestration_carbone, besoin_masse_bois_supplémentaire
+    return variation_sequestration_carbone, besoin_masse_bois_supplémentaire # en Mt de CO2 et en Mt de bois
 
 
 
