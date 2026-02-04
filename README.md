@@ -84,43 +84,12 @@ Pour prendre en main le code rapidement :
 
 - **Compression**
 
-________________________________________
-
-Etapes a inclure :
-- convoyage et broyage du bois
-- mix électrique (hypothèses)
-- origine du bois
-- données E-CHO
-- consommation énergétique production
-- oxygène
-- chaleur (pour l'instant ignorée)
-- consommation électrique fonctionnement
-- transport du bois
-- CO2
-- raffinage
-    - rendement carbone
-    - fonctionnement pompes à eau
-        - transfert de vapeur vers l'extérieur
-- electrolyseur (très long oscour) (H2)
-
-
-LA SUITE :
-- permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
-- créer format dictionnaire de données par projet
-- rendre globales les variables qui le sont
-- faire un main fonctionnel
-
-------------------------------------------
-
-## Détails des étapes :
-
----
-**Partie 7 : Compression des gaz**
-
-Le module de compression des gaz est organisé en deux parties principales :
+La partie `_7_compression.py` est organisé en deux parties principales :
 
 1. ***Gestion des données physico-chimiques**  
 2. ***Calcul de la consommation énergétique**
+
+Cette partie contient des fonctions permettant de calculer l'énergie nécessaire à la compression de gaz, elle ne nécessite pas d'adaption particulière pour pouvoir être réversible. Elle a été codée à partir de l'excel des shifters mais de manière à pouvoir calculer l'énergie nécessaire à la compression du CO2, du CO, de l'O2 et du syngas, ainsi s'il faut faire des calculs de compression avec d'autres gaz il y aura certainement des ajustements à faire.
 
 ***Partie données***
 
@@ -150,3 +119,30 @@ Plusieurs fonctions permettent de réaliser les calculs thermodynamiques et d’
 
 Le processus de calcul suit les étapes détaillées dans le document technique associé.
 La consommation finale d’énergie liée à la compression d’un gaz est obtenue via la fonction conso_compression. Pour le cas particulier du syngaz, il est nécessaire d’utiliser la fonction conso_compression_syngaz, car ce dernier étant composé de plusieurs gaz, il faut pondérer les échauffements de chacun d’eux par leur proportion massique.
+________________________________________
+
+Etapes a inclure :
+- convoyage et broyage du bois
+- mix électrique (hypothèses)
+- origine du bois
+- données E-CHO
+- consommation énergétique production
+- oxygène
+- chaleur (pour l'instant ignorée)
+- consommation électrique fonctionnement
+- transport du bois
+- CO2
+- raffinage
+    - rendement carbone
+    - fonctionnement pompes à eau
+        - transfert de vapeur vers l'extérieur
+- electrolyseur (très long oscour) (H2)
+
+
+LA SUITE :
+- permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
+- créer format dictionnaire de données par projet
+- rendre globales les variables qui le sont
+- faire un main fonctionnel
+
+------------------------------------------
