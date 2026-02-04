@@ -29,6 +29,10 @@ Cette étape n'est pas réellement modélisée, elle utilise une interpolation d
 **ENERGIES**
 - Entrées : consommations chaleur et élec
 - Sortie : émissions
+
+**COMPRESSION**
+- Entrées : masse CO2, quantités CO et H2 dans le syngas, masse 02
+- Sorties : élec
 ________________________________________
 
 UNITES : 
@@ -82,9 +86,29 @@ Pour prendre en main le code rapidement :
 
 - **Energies**
 
+La partie `_6_energie.py` a pour but de calculer les émissions de CO2 lié à la consommation électrique en fonction du mix énergétique. Cette partie est organisé en deux sous-partie : 
+
+1. ***Paramètres du mix énergétique**  
+2. ***Calcul des émissions**
+
+***Partie données***
+*facteur emission* : dictionnaire regroupant les facteurs d'émission de chaque filiaire de production d'énergie.
+
+*param_mix_2050* : répartition de la production de l'énergie en fonction des différentes filiaires de production pour 2050, cette répartition a été estimés par les shifters à partir des annonces du Président Macron en 2023 sur la construction de 14 EPR2 (hypothèse moyenne) et du développement des parcs photovoltaïque et éolien maritime et terrestre. 
+Cette répartition peut être adapté en fonction des scénarios prospectif pour 2050.
+
+*param_mix_2023* : facteur d'émission lié à la production et à la consommation d'électricité en France en 2023 d'après le rapport « bilan électrique RTE 2023 ».
+
+***Partie calcul***
+*emissions_energetique_processus* : Calcule les émissions de CO2 (en gCO2eq) liées à une consommation énergétique donnée pour un processus (en kWh), en utilisant un mix énergétique prévisionnel pour 2050 et le mix actuel pour 2023.
+
+*emissions_energie_totale* : Agrège les émissions de CO2 (en gCO2eq) liées à une liste de consommations énergétiques (en kWh),en distinguant les émissions pour 2050 et pour 2023.
+    
+*verif_hypothèse* : Vérifie l'hypothèse selon laquelle la consommation thermique totale des processus est inférieure ou égale à la chaleur récupérable.
+
 - **Compression**
 
-La partie `_7_compression.py` est organisé en deux parties principales :
+La partie `_7_compression.py` est organisé en deux sous-parties principales :
 
 1. ***Gestion des données physico-chimiques**  
 2. ***Calcul de la consommation énergétique**
@@ -95,8 +119,7 @@ Cette partie contient des fonctions permettant de calculer l'énergie nécessair
 
 Les propriétés physico-chimiques des gaz sont regroupées dans une structure de type dictionnaire :
 
-- `carac_physico_chimiques`  
-  Ce dictionnaire contient l’ensemble des caractéristiques physico-chimiques associées à chaque gaz.
+*carac_physico_chimiques* : Ce dictionnaire contient l’ensemble des caractéristiques physico-chimiques associées à chaque gaz.
 
 Les valeurs utilisées proviennent du fichier Excel des Shifters, en considérant :
 
