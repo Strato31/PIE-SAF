@@ -22,11 +22,11 @@ from etapes import _7_compression as comp
 ###################
 
 biomasse_entree = [
-    {"type" : "bois_vert", "masse": 300000, "humidité": 0},  # 600 000 tonnes de biomasse ligneuse à 10% d'humidité
-    {"type" : "bois_vert", "masse": 0, "humidité": 0.30},  # 400 000 tonnes de biomasse ligneuse à 30% d'humidité
+    {"type" : "bois_vert", "masse": 300000, "humidité": 0},  # 300 000 tonnes de biomasse ligneuse à 0% d'humidité
+    {"type" : "bois_vert", "masse": 0, "humidité": 0.30},  # 0 tonnes de biomasse ligneuse à 30% d'humidité
 ]
 
-kerosene_produit = 97209  # en tonnes de e-bio-SAF produites (nombre arbitraire pour tester le calcul inverse)
+kerosene_produit = 97209  # en tonnes de e-bio-SAF produites (actuellement, nombre arbitraire pour tester le calcul inverse)
 
 sens_physique = True  # True : calcul biomasse -> carburant, False : calcul sens inverse
 
@@ -37,12 +37,14 @@ def __main__():
         print("Le calcul se base sur les hypothèses sourcées dans chaque étape du processus.\n On prend en entrée les biomasses suivantes :")
         for b in biomasse_entree:
             print(f" - {b['masse']} t de biomasse de type {b['type']} à {b['humidité']*100}% d'humidité")
+        consos_energies, consos_thermiques, emissions_co2 = [], [], []
+        
         print("-"*60,"\n")
         print("Étape 1 : Biomasse")
-        consos_energies, consos_thermiques, emissions_co2 = [], [], []
         conso_chaleur, total_emissions, masse_seche_biomasse = biomasse.main_biomasse(biomasse.param_biomasse, biomasse_entree, sens_physique)
         consos_thermiques.append(conso_chaleur)
         emissions_co2.append(total_emissions)
+        
         print("-"*60)
         print("Étape 2 : Gazeification")
         CO_gazif, besoin_H2_gazif, emissions_gazif, besoin_O2_gazif,dechets_gazif = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)
@@ -50,17 +52,20 @@ def __main__():
         consos_energies.append(conso_elec_gaz)
         emissions_co2.append(emissions_gazif)
         print("Consommation électrique : ", conso_elec_gaz, " en kWh")
+        
         print("-"*60)
         print("Étape 3 : Fischer-Tropsch")
         consommation_totale_FT, emissions_FT, masse_kerosene = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
         emissions_co2.append(emissions_FT)
         consos_energies.append(consommation_totale_FT )
+        
         print("-"*60)
         print("Étape 4 : Électrolyseur")
         conso_elec_elec = elec.consommation_electrolyseur(elec.param_electrolyseur_PEM, besoin_O2_gazif, besoin_H2_gazif)
         # Prise en compte des pertes en lgne sur le réseau de distribution haute tension (valeur de RTE)
         conso_elec_elec *= (1/0.979)
         consos_energies.append(conso_elec_elec)
+        
         print("-"*60)
         print("Étape 5 : Compression")
         masse_CO_kg = CO_gazif * 1000  # Conversion en kg
@@ -75,20 +80,24 @@ def __main__():
         conso_compression_syngas = comp.conso_compression_syngaz(masse_CO2_kg, masse_H2_kg, masse_CO_kg, 0.85, 1, 1.12, 323.15) #hypothèse flux total de gaz à ventiler
         conso_elec_compression = conso_compression_O2 + conso_compression_syngas + conso_compression_CO2
         consos_energies.append(conso_elec_compression)
+        
         print("-"*60)
         print("Étape 6 : Calcul des émissions totales et consommations énergétiques")
         emissions_2050, emissions_2023 = energie.emissions_energie_totale(consos_energies)
         print(f"Hypothèse thermique : {energie.verif_hypothèse(consos_thermiques)}")
+        
         print("-"*60)
         print("Résultats finaux :")
-        total_emissions_2050 = sum(emissions_2050)
-        total_emissions_2023 = sum(emissions_2023)
+        total_emissions_2050 = emissions_2050[-1]
+        total_emissions_2023 = emissions_2023[-1]
         total_conso_energie = sum(consos_energies)
         total_conso_thermique = sum(consos_thermiques)
+        print("élec : ", consos_energies)
+        print("détail :", emissions_2023)
         print(f" - Consommation électrique totale : {total_conso_energie:.2f} kWh")
         print(f" - Consommation thermique totale : {total_conso_thermique:.2f} MJ")
-        print(f" - Émissions totales en 2050 : {total_emissions_2050:.2f} gCO2e")
-        print(f" - Émissions totales en 2023 : {total_emissions_2023:.2f} gCO2e")
+        print(f" - Émissions totales en 2050 : {total_emissions_2050/1000000:.2f} tCO2e")
+        print(f" - Émissions totales en 2023 : {total_emissions_2023/1000000:.2f} tCO2e")
         print(f" - Émissions totales par MJ de e-bio-SAF en 2023 : {total_emissions_2023 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
         print(f" - Émissions totales par MJ de e-bio-SAF en 2050 : {total_emissions_2050 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
         print("------------------------------FIN---------------------------------")
@@ -154,14 +163,14 @@ def __main__():
 
         print("-"*60)
         print("Résultats finaux :")
-        total_emissions_2050 = sum(emissions_2050)
-        total_emissions_2023 = sum(emissions_2023)
+        total_emissions_2050 = emissions_2050[-1]
+        total_emissions_2023 = emissions_2023[-1]
         total_conso_energie = sum(consos_energies)
         total_conso_thermique = sum(consos_thermiques)
         print(f" - Consommation électrique totale : {total_conso_energie:.2f} kWh")
         print(f" - Consommation thermique totale : {total_conso_thermique:.2f} MJ")
-        print(f" - Émissions totales en 2050 : {total_emissions_2050:.2f} gCO2e")
-        print(f" - Émissions totales en 2023 : {total_emissions_2023:.2f} gCO2e")        
+        print(f" - Émissions totales en 2050 : {total_emissions_2050/1000000:.2f} tCO2e")
+        print(f" - Émissions totales en 2023 : {total_emissions_2023/1000000:.2f} tCO2e")        
         print(f" - Émissions totales par MJ de e-bio-SAF en 2023 : {total_emissions_2023 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
         print(f" - Émissions totales par MJ de e-bio-SAF en 2050 : {total_emissions_2050 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
         print("------------------------------FIN---------------------------------")
