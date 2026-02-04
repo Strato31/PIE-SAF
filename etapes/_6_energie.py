@@ -1,8 +1,20 @@
 """
-PARTIE X : Energie
+PARTIE ? : Energie
 
 Paramètres et hypothèses sourcées pour le calcul des émissions liées à la consommation énergétique et thermique,
 puis les fonctions de calcul de ces émissions.
+
+Contient : 
+- paramètres : 
+    - facteur_emission : facteur d'émission de chaque filière énergétique en gCO2eq/kWh
+    - param_mix_2050 : mix énergétique prévisionnel en 2050 
+    - facteur_emission_2023 : mix énergétique actuel en 2023
+- fonctions de calcul des émissions :
+    - emissions_energetique_processus : calcule les émissions de CO2 (en gCO2eq) liées à une consommation énergétique donnée (en kWh),
+      en utilisant un mix énergétique prévisionnel pour 2050 et le mix actuel pour 2023.
+    - emissions_energie_totale : agrège les émissions de CO2 (en gCO2eq) liées à une liste de consommations énergétiques (en kWh),
+      en distinguant les émissions pour 2050 et pour 2023.
+    - verif_hypothèse : vérifie l'hypothèse selon laquelle la consommation thermique totale des processus est inférieure ou égale à la chaleur récupérable.
 
 Hypothèses sur un mix énergétique pour 2050 :
     le plus pertinent est de calculer les émissions sur la base du mix électrique cible français en 2050, hypothèse nucléaire "moyenne" (14 EPR2)
