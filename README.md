@@ -14,11 +14,11 @@ Les entrées/sorties peuvent être résumées comme suit :
 **GASIFICATION**
 Sens direct
 - Entrées : masse_biomasse_seche
-- Sorties : élec, masse de CO2, masses de CO dans le syngas, masses de O2 et H2 à injecter dans le syngas, déchets
+- Sorties : élec, masse de CO<sub>2</sub>, masses de CO dans le syngas, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
 
 Sens indirect : 
 - Entrées : quantités CO
-- Sorties : élec, CO2, masse_biomasse_seche, masses de O2 et H2 à injecter dans le syngas, déchets
+- Sorties : élec, CO<sub>2</sub>, masse_biomasse_seche, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
 
 NB : appel de dictionnaires de paramètres et d'hypothèses pour ces fonctions
 
@@ -92,6 +92,7 @@ Pour prendre en main le code rapidement :
 - La fonction `coherence_electrolyse` permet de vérifier que les valeurs de masse de O<sub>2</sub> et de H<sub>2</sub> demandées en entrée sont cohérentes avec les proportion voulues par la réaction d’électrolyse. Pour le moment, la gazéification s’occupe de cette étape de vérification. Par la suite, si on est amené à considérer d’autres procédés qui n’utilisent pas forcément la gazéification, cette fonction pourra être utile, il faudra alors juste dé-commenter la ligne correspondante dans la fonction centrale.
 
 **Gazéification**
+
 L'étape de gazéification '_5_gazefication.py' permet de réaliser un bilan de masses et d’énergies du procédé de gazéification de la biomasse, ainsi que d’estimer les besoins en O<sub>2</sub> et de H<sub>2</sub>, les émissions de CO<sub>2</sub>, et la consommation électrique associée.
 
 Les hypothèses sont contenues dans deux dictionnaires de paramètres définis localement :
@@ -105,10 +106,10 @@ La fonction conversionMasseMolaire permet de convertir la masse molaire de (g/mo
 
 La fonction 'gazeificationV2' est conçue pour réaliser un bilan des masses complet sur C, O et H dans le sens direct (biomasse à syngas) et la fonction 'Inv_gazeificationV1' pour le sens inverse (syngas à biomasse). Les masses sont toutes en tonnes. 
 
-La fonction 'conso_elec_gazeification' calcule la consommation électrique totale liée au fonctionnement interne du procédé, au chauffage et à la désorption des filtres amines (captage CO2) et aux énergies contenues dans les entrants (biomasse et H₂). Les consommations energétiques der compressions des gaz lors de la gazéification sont calculées dans un algorithme séparé. 
+La fonction 'conso_elec_gazeification' calcule la consommation électrique totale liée au fonctionnement interne du procédé, au chauffage et à la désorption des filtres amines (captage CO<sub>2</sub>) et aux énergies contenues dans les entrants (biomasse et H<sub>2</sub>). Les consommations energétiques der compressions des gaz lors de la gazéification sont calculées dans un algorithme séparé. 
 
 NB : 
-La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées. Les fonctions de conversions mutuelles entre le CO2 et C sont utilisées que dans cette fonction V1. 
+La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées. Les fonctions de conversions mutuelles entre le CO<sub>2</sub> et C sont utilisées que dans cette fonction V1. 
 
 - **Energies**
 
