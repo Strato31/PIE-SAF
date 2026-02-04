@@ -109,7 +109,7 @@ La fonction 'gazeificationV2' est conçue pour réaliser un bilan des masses com
 La fonction 'conso_elec_gazeification' calcule la consommation électrique totale liée au fonctionnement interne du procédé, au chauffage et à la désorption des filtres amines (captage CO<sub>2</sub>) et aux énergies contenues dans les entrants (biomasse et H<sub>2</sub>). Les consommations energétiques der compressions des gaz lors de la gazéification sont calculées dans un algorithme séparé. 
 
 NB : 
-La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées. Les fonctions de conversions mutuelles entre le CO<sub>2</sub> et C sont utilisées que dans cette fonction V1. 
+La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées.
 
 - **Energies**
 
