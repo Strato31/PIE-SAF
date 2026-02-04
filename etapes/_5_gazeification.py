@@ -435,6 +435,10 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
     print(f"Masse estimée déchets         : {masse_dechets} tonnes/an")
     print("------------------------------------------------")
 
+<<<<<<< Maelys
     return biomasseEntree, masseH2_necessaire, masseO2_necessaire,masseCO2_sortie
+=======
+    return biomasseEntree, masseH2_necessaire, masseO2_necessaire, masseCO2_sortie
+>>>>>>> main
 
 #Inv_gazeificationV1(283741, gaz_params, caract_syngas)

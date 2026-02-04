@@ -2,8 +2,8 @@
 PARTIE 1 : Biomasse
 
 Contient : 
- - Les paramètres liés à la biomasse
- - Les fonctions de calcul des émissions et consommations liées à la biomasse
+ - param_biomasse : les paramètres liés à la biomasse
+ - Les fonctions de calcul des émissions et consommations liées à la biomasse :
     - masse_seche_sortie : calcule la masse de biomasse sèche selon taux d'humidité initial
     - masse_humide_sortie : calcule les masses équivalentes de biomasses humides pour obtenir une masse sèche donnée
     - culture_biomasse : calcule les émissions liées à la culture de la biomasse 
@@ -60,10 +60,10 @@ def masse_seche_sortie(biomasse):
     
     Arguments
     ----------
-        biomasse : liste de dictionnaires avec 'type',  'masse' (t) et 'humidité' (fraction) pour chaque élément de biomasse
+        biomasse : liste de dictionnaires avec 'type', 'masse' (t) et 'humidité' (fraction) pour chaque élément de biomasse
         
     Returns
-    ------- 
+    -------
         biomasse_seche : masse totale de biomasse sèche (t)
     """
 
