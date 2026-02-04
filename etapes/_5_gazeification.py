@@ -78,12 +78,12 @@ def conversionMasseMolaire(Mcomposé,gaz_params):
     """
     Conversion de la masse molaire(g/mol) d'un composé gazeux en masse volumique (kg/m3)  (1kg/m3 = 1 g/L)
 
-    Arguments :
+    Arguments
     ----------
         Mcomposé:     Masse molaire du composé (g/mol)
         gaz_params:   Paramètres physiques du gaz
 
-    Returns :
+    Returns
     ----------
         masse_molaire : Masse volumique du composé (kg/m3)
     
@@ -108,14 +108,14 @@ def gazeificationV1(biomasseEntree,masseEntree_O2, masseEntree_H2, gaz_params):
     Fait le bilan des masses du procédé de gazéification.
     N'est pas utilisée dans le code principal, mais conservée pour référence.
 
-    Arguments :
+    Arguments
     -----------
         biomasseEntree : Masse de biomasse sèche en entrée (tonnes)
         masseEntree_O2 : Masse d'O2 en sortie de l'étape d'électrolyse (tonnes)
         masseEntree_H2 : Masse d'H2 en sortie de l'étape d'électrolyse (tonnes)
         gaz_params :     Paramètres de la gazéification
     
-    Returns :
+    Returns
     -----------
         masseCO_sortie :  Masse de CO en sortie de gazeification (tonnes)
         masseH2_sortie :  Masse de H2 en sortie de gazeification (tonnes)
@@ -162,13 +162,13 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     Deuxième version de la gazéification (plus complète) :
     Bilan complet de masse et de moles pour la gazeification avec bilans atomiques C, H, O.
 
-    Arguments :
+    Arguments
     -----------
         biomasseEntree :  Masse de biomasse sèche en entrée (tonnes)
         gaz_params :      Paramètres de la gazéification
         caract_syngas :   Caractéristiques du syngas produit (fractions massiques, nombres d'atomes, masses molaires)
 
-    Returns :
+    Returns
     -----------
         masseCO_sortie :      Masse de CO en sortie de gazeification (tonnes)
         masseH2_necessaire :  Masse de H2 nécessaire à injecter dans la gazéification (tonnes)
@@ -343,7 +343,7 @@ def conso_elec_gazeification(masse_CO2 : float, masse_H2 : float, masse_seche_bi
         energie_gazeification : consommation électrique totale de la gazéification sans 
         prendre en compte la compression du syngaz (cf étape 7 compression) (kWh)
     """
-    energie_entrants_H2 = masse_H2 * comp.carac_pysico_chimiques["H2"]["PCI"] / 3600 * 10e6                   # en kWh
+    energie_entrants_H2 = masse_H2 * comp.carac_physico_chimiques["H2"]["PCI"] / 3600 * 10e6                   # en kWh
     energie_entrants_bois = masse_seche_biomasse * biomasse.param_biomasse['PCI_biomasse']                    # en kWh
     energie_entrants = (energie_entrants_H2 + energie_entrants_bois)*gaz_params['fonctionnement_interne']/100 # en kWh
     energie_desorption_filtres_amines = masse_CO2 * gaz_params["filtres_amine"] / 3600 * 10e6                 # en kWh
@@ -358,13 +358,13 @@ def conso_elec_gazeification(masse_CO2 : float, masse_H2 : float, masse_seche_bi
 def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
     """Fonction d'inversion de la gazéification pour retrouver la biomasse nécessaire à une quantité de syngas donnée.
     
-    Arguments :
+    Arguments
     -----------
         masseCO_sortie :  Masse de CO en sortie de gazeification (tonnes)
         gaz_params :      Paramètres de la gazéification
         caract_syngas :   Caractéristiques du syngas produit (fractions massiques, nombres d'atomes, masses molaires)
         
-    Returns :
+    Returns
     -----------
         biomasse_entree :     Masse de biomasse sèche en entrée (tonnes)
         masseH2_necessaire :  Masse de H2 nécessaire à injecter dans la gazéification (tonnes)
