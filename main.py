@@ -8,6 +8,7 @@ from etapes import _7_compression as comp
 
 ## Variables d'entrée
 # TODO : ajouter des :.2f pour arrondir les affichages des flottants
+# TODO : harmoniser /an
 #biomasse_entree
 """Exemple : 
     biomasse_entree = [
@@ -27,7 +28,7 @@ biomasse_entree = [
 
 kerosene_produit = 97209  # en tonnes de e-bio-SAF produites (nombre arbitraire pour tester le calcul inverse)
 
-sens_physique = False  # True : calcul biomasse -> carburant, False : calcul sens inverse
+sens_physique = True  # True : calcul biomasse -> carburant, False : calcul sens inverse
 
 def __main__():
     if sens_physique == True:  # Cas calcul biomasse -> carburant
