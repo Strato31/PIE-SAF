@@ -1,5 +1,5 @@
 from etapes import _1_biomasse as biomasse
-from etapes import kerosene as transport
+from etapes import kerosene
 from etapes import _3_FT as ft
 from etapes import _4_electrolyseur as elec
 from etapes import _5_gazeification as gaz
@@ -27,7 +27,7 @@ biomasse_entree = [
 
 kerosene_produit = 100000  # en tonnes de e-bio-SAF produites (nombre arbitraire pour tester le calcul inverse)
 
-sens_physique = True  # True : calcul biomasse -> carburant, False : calcul inverse
+sens_physique = False  # True : calcul biomasse -> carburant, False : calcul sens inverse
 
 def __main__():
     if sens_physique == True:  # Cas calcul biomasse -> carburant
@@ -45,7 +45,7 @@ def __main__():
         print("-"*60)
         print("Étape 2 : Gazeification")
         CO_gazif, besoin_H2_gazif, emissions_gazif, besoin_O2_gazif,dechets_gazif = gaz.gazeificationV2(masse_seche_biomasse, gaz.gaz_params, gaz.caract_syngas)
-        conso_elec_gaz = gaz.conso_elec_gazeification() #Fonction pas implémentée
+        conso_elec_gaz = gaz.conso_elec_gazeification(emissions_gazif, besoin_H2_gazif, masse_seche_biomasse, gaz.gaz_params) #Fonction pas implémentée
         consos_energies.append(conso_elec_gaz)
         emissions_co2.append(emissions_gazif)
         print("Consommation électrique : ", conso_elec_gaz, " en kWh")
@@ -94,12 +94,13 @@ def __main__():
         print("------------------------------FIN---------------------------------")
 
     else: # Cas calcul carburant -> biomasse
-        # TODO : implémenter le calcul inverse
         print("Calcul des émissions et consommations du processus e-bio-SAF complet, en partant du carburant e-bio-SAF produit jusqu'à la biomasse.")
         print("-"*60)
         print("Le calcul se base sur les hypothèses sourcées dans chaque étape du processus.")
         print(f"\n On part de {kerosene_produit} t de e-bio-SAF produites.\n")
         
+        consos_energies, consos_thermiques, emissions_co2 = [], [], []
+
         print("-"*60)
         print("Étape 1 : Fischer-Tropsch (TODO)")
         consommation_totale_FT, emissions_FT, masseCO_sortie = ft.Inv_Fischer_Tropsch(ft.param_FT, kerosene_produit)
@@ -108,8 +109,8 @@ def __main__():
 
         print("-"*60)
         print("Étape 2 : Gazeification (TODO)")
-        masse_seche_biomasse, besoin_H2_gazif, besoin_O2_gazif = gaz.Inv_gazeificationV2(masseCO_sortie, gaz.gaz_params, gaz.caract_syngas)
-        conso_elec_gaz = gaz.conso_elec_gazeification() #Fonction pas implémentée
+        masse_seche_biomasse, besoin_H2_gazif, besoin_O2_gazif, emissions_gazif = gaz.Inv_gazeificationV1(masseCO_sortie, gaz.gaz_params, gaz.caract_syngas)
+        conso_elec_gaz = gaz.conso_elec_gazeification(emissions_gazif, besoin_H2_gazif, masse_seche_biomasse, gaz.gaz_params) #Fonction pas implémentée
         consos_energies.append(conso_elec_gaz)
         emissions_co2.append(emissions_gazif)
         print("Consommation électrique : ", conso_elec_gaz, " en kWh")
