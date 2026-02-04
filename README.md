@@ -12,8 +12,15 @@ Les entrées/sorties peuvent être résumées comme suit :
 - Sorties : élec, chaleur, masse_biomasse_seche
 
 **GASIFICATION**
-- Entrées : masse_biomasse_seche, oxygene
-- Sorties : élec, chaleur, CO2, quantités CO et H2 dans le syngas, déchets
+Sens direct
+- Entrées : masse_biomasse_seche
+- Sorties : élec, masse de CO2, masses de CO dans le syngas, masses de O2 et H2 à injecter dans le syngas, déchets
+
+Sens indirect : 
+- Entrées : quantités CO
+- Sorties : élec, CO2, masse_biomasse_seche, masses de O2 et H2 à injecter dans le syngas, déchets
+
+NB : appel de dictionnaires de paramètres et d'hypothèses pour ces fonctions
 
 **FT**
 Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés.
@@ -85,6 +92,23 @@ Pour prendre en main le code rapidement :
 - La fonction `coherence_electrolyse` permet de vérifier que les valeurs de masse de O<sub>2</sub> et de H<sub>2</sub> demandées en entrée sont cohérentes avec les proportion voulues par la réaction d’électrolyse. Pour le moment, la gazéification s’occupe de cette étape de vérification. Par la suite, si on est amené à considérer d’autres procédés qui n’utilisent pas forcément la gazéification, cette fonction pourra être utile, il faudra alors juste dé-commenter la ligne correspondante dans la fonction centrale.
 
 - **Gazéification**
+L'étape de gazéification '_5_gazefication.py' permet de réaliser un bilan de masses et d’énergies du procédé de gazéification de la biomasse, ainsi que d’estimer les besoins en O<sub>2</sub> et de H<sub>2</sub>, les émissions de CO<sub>2</sub>, et la consommation électrique associée.
+
+Les hypothèses sont contenues dans deux dictionnaires de paramètres définis localement :
+
+- 'gaz_params' : ce dictionnaire contient les hypothèses sourcées de composition de la biomasse et de fonctionnement du procédé ainsi que les constantes physiques du problème,
+- 'caract_syngas' : ce dictionnaire contient la composition du syngas estimée en sortie de gazéification.
+
+Les valeurs actuelles correspondent à ce jour aux hypothèses menant aux résultats les plus proches de la réalité. Si besoin, elles peuvent être modifiées par la suite. Si l'objectif est d'adapter le code à différentes essences de bois, les hypothèses à changer sont les farctions de O et de c dans la biomasse dans le dictionnaire 'gaz_params'. 
+
+La fonction conversionMasseMolaire permet de convertir la masse molaire de (g/mol) d'un composé gazeux en masse volumique (kg/m3). Elle est réalisé dans des conditions standards de pression (p = 1atm) et température (T = 273K). Cette fonction est utile pour la fonction 'gazeificationV2'.
+
+La fonction 'gazeificationV2' est conçue pour réaliser un bilan des masses complet sur C, O et H dans le sens direct (biomasse à syngas) et la fonction 'Inv_gazeificationV1' pour le sens inverse (syngas à biomasse). Les masses sont toutes en tonnes. 
+
+La fonction 'conso_elec_gazeification' calcule la consommation électrique totale liée au fonctionnement interne du procédé, au chauffage et à la désorption des filtres amines (captage CO2) et aux énergies contenues dans les entrants (biomasse et H₂). Les consommations energétiques der compressions des gaz lors de la gazéification sont calculées dans un algorithme séparé. 
+
+NB : 
+La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées. Les fonctions de conversions mutuelles entre le CO2 et C sont utilisées que dans cette fonction V1. 
 
 - **Energies**
 
