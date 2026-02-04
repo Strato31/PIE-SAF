@@ -28,7 +28,7 @@ biomasse_entree = [
 
 kerosene_produit = 97209  # en tonnes de e-bio-SAF produites (actuellement, nombre arbitraire pour tester le calcul inverse)
 
-sens_physique = False  # True : calcul biomasse -> carburant, False : calcul sens inverse
+sens_physique = True  # True : calcul biomasse -> carburant, False : calcul sens inverse
 
 def __main__():
     if sens_physique == True:  # Cas calcul biomasse -> carburant
@@ -55,7 +55,7 @@ def __main__():
         
         print("-"*60)
         print("Étape 3 : Fischer-Tropsch")
-        consommation_totale_FT, emissions_FT, masse_kerosene = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
+        consommation_totale_FT, emissions_FT, _ = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
         emissions_co2.append(emissions_FT)
         consos_energies.append(consommation_totale_FT )
         
