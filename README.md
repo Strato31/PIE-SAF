@@ -69,7 +69,7 @@ PIE-SAF/
 
 La partie `_4_electrolyseur.py` a pour but de donner la consommation électrique de la partie électrolyse.
 
-Cette étape n’a pas besoin d’être réversible. Peu importe si on part de la masse de kérosène à produire et on cherche la quantité de biomasse nécessaire, ou à l’inverse si on part de la quantité de biomasse qu’on a et on cherche combien de kérosène on peut produire, l’électrolyse n’est concernée que par les quantités de H2 et O2 à produire pour la gazéification et ses fonctions sont utilisables dans les deux sens du code. 
+Cette étape n’a pas besoin d’être réversible. Peu importe si on part de la masse de kérosène à produire et on cherche la quantité de biomasse nécessaire, ou à l’inverse si on part de la quantité de biomasse qu’on a et on cherche combien de kérosène on peut produire, l’électrolyse n’est concernée que par les quantités de H<sub>2</sub> et O<sub>2</sub> à produire pour la gazéification et ses fonctions sont utilisables dans les deux sens du code. 
 
 Le paramètre principal de l’étape électrolyseur est la valeur de l’énergie Estack pour la technologique considérée. Cette énergie “stackée” est l’énergie électrique totale nécessaire à la fabrication et à la distribution d’un kilogramme d’H<sub>2</sub> (valeur en kWh/kgH2). Cette énergie comprend l’électrolyse et le fonctionnement global de l’unité de production mais pas la perte en ligne amont qu’on devra ajouter. 
 
