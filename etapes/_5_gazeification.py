@@ -438,7 +438,7 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
     print(f"Masse estimée déchets         : {masse_dechets} tonnes/an")
     print("------------------------------------------------")
 
-    return biomasseEntree, masseH2_necessaire, masseO2_necessaire
+    return biomasseEntree, masseH2_necessaire, masseO2_necessaire, masseCO2_sortie
 
 #Inv_gazeificationV1(253942.40023691423, 134374.76863848377, gaz_params, caract_syngas)
 #Inv_gazeificationV1(253942.40023691423, gaz_params, caract_syngas)
