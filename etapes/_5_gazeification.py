@@ -1,5 +1,5 @@
-#from etapes import _1_biomasse as biomasse
-#from etapes import _7_compression as comp
+from etapes import _1_biomasse as biomasse
+from etapes import _7_compression as comp
 
 """
 Paramètres et hypothèses sourcées pour la gazeification, puis fonctions de calcul des émissions.
@@ -258,7 +258,7 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     masseH2_necessaire = masseH2_totale - masseH2_syngaz # Du H2 est contenu dans le syngaz, on ne le compte pas dans le H2 à produire
 
     # ------------------------------
-    # Calcul O2 nécessaire     ##### A VERIFIER 
+    # Calcul O2 nécessaire    
     # ------------------------------
     masseO_dans_syngaz = 0
     for compo in carbon_gases:
@@ -300,14 +300,7 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
 
     return masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire,masse_dechets
 
-gazeificationV2(biomasseEntree=300000, gaz_params=gaz_params, caract_syngas=caract_syngas)
-
-
-def bilan_chaleur_gazeification():
-
-    chaleur = 0
-
-    return chaleur
+#gazeificationV2(biomasseEntree=300000, gaz_params=gaz_params, caract_syngas=caract_syngas)
 
 
 def conso_elec_gazeification(masse_CO2, masse_H2, masse_seche_biomasse, gaz_params):
@@ -331,7 +324,6 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
 
     # Normalisation des fractions 
     total_fraction = sum(gas["fraction"] for gas in caract_syngas.values())
-
     caract_syngas_normalized = {
         gas_name: {
             **gas_data,
@@ -348,33 +340,39 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
     # Conversion fractions volumiques -> massiques
     # ------------------------------
 
+    # Calcul des masses volumiques pondérées par les fractions volumiques g/m3
     masses_vol_ponderees = {
         gas: conversionMasseMolaire(caract_syngas[gas]["M"], gaz_params) *
              caract_syngas_normalized[gas]["fraction"]
         for gas in caract_syngas
     }    
 
+    # Calcul des pourcentages massiques à partir des masses volumiques pondérées
     somme_masses_vol = sum(masses_vol_ponderees.values())
     pourcentages_massiques = {
         gas: masses_vol_ponderees[gas] / somme_masses_vol
         for gas in caract_syngas
     }
 
+    # ------------------------------
+    # Récupération CO2
+    # ------------------------------
     masseCO2_sortie = masseCO_sortie*pourcentages_massiques["CO2"]  * caract_syngas["CO2"]["M"] / (pourcentages_massiques["CO"]  * caract_syngas["CO"]["M"])
 
+    # ------------------------------
+    # Calcul des masses totales de chaque composé
+    # ------------------------------
     masses_totales_composes = {"CO": masseCO_sortie, "CO2": masseCO2_sortie}
 
     for gas in caract_syngas:
         if gas not in masses_totales_composes:
             masses_totales_composes[gas] = masseCO_sortie*pourcentages_massiques[gas]  * caract_syngas[gas]["M"] / (pourcentages_massiques["CO"]  * caract_syngas["CO"]["M"])
-            #masses_totales_composes[gas] = (pourcentages_massiques[gas] / (pourcentages_massiques["CO"] + pourcentages_massiques["CO2"])) * (masseCO_sortie + masseCO2_sortie)
-            #La masse des autres composés est estimée proportionnellement à leur pourcentage massique par rapport à la somme CO + CO2
+            #La masse des autres composés est estimée proportionnellement à leur pourcentage massique par rapport à la masse de CO 
+    
     # ------------------------------
     # Séparation gaz carbonés
     # ------------------------------
-
     carbon_gases = [k for k, v in caract_syngas_normalized.items() if v["nC"] > 0]
-
         
     # ------------------------------
     # Calcul C issu de la biomasse nécessaire   
@@ -391,9 +389,8 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
 
 
     # ------------------------------
-    # Calcul O2 nécessaire     ##### A VERIFIER 
+    # Calcul O2 nécessaire     
     # ------------------------------
-
 
     masseO_dans_syngaz = 0
     for compo in carbon_gases:
@@ -438,7 +435,6 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
     print(f"Masse estimée déchets         : {masse_dechets} tonnes/an")
     print("------------------------------------------------")
 
-    return biomasseEntree, masseH2_necessaire, masseO2_necessaire
+    return biomasseEntree, masseH2_necessaire, masseO2_necessaire,masseCO2_sortie
 
-#Inv_gazeificationV1(253942.40023691423, 134374.76863848377, gaz_params, caract_syngas)
-#Inv_gazeificationV1(253942.40023691423, gaz_params, caract_syngas)
+#Inv_gazeificationV1(283741, gaz_params, caract_syngas)
