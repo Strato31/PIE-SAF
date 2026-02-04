@@ -16,7 +16,9 @@ Les entrées/sorties peuvent être résumées comme suit :
 - Sorties : élec, chaleur, CO2, quantités CO et H2 dans le syngas, déchets
 
 **FT**
-# Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés.
+
+Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés.
+
 - Entrées : quantités CO dans le syngas
 - Sorties :  élec, émissions CO2, kérosène produit
 
@@ -35,6 +37,41 @@ UNITES :
 - électricité : kWh
 - énergie : MJ (positive si consommée, négative si produite)
 - --> Conversion : 1 kWh = 3.6 MJ
+
+
+## Structure du projet 
+
+```
+PIE-SAF/
+│├── README.md
+│├── etapes/                      # Dossier principal du code
+││   ├── _1_biomasse.py          
+││   ├── _3_FT.py
+││   ├── _4_electrolyseur.py
+││   ├── _5_gazefication.py
+││   ├── _6_energies.py
+││   ├── _7_compression.py
+││   ├── contexte.py
+││   ├── emissions_evites.py
+││   └── kerosene.py  
+│├── tests/   
+│├── init.py
+│└── main.py
+```
+
+### Description des étapes : 
+
+- **Biomasse**
+
+- **Fischer-Tropsch**
+
+- **Electrolyseur**
+
+- **Gazéification**
+
+- **Energies**
+
+- **Compression**
 
 ________________________________________
 
