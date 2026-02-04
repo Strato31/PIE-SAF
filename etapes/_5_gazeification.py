@@ -303,11 +303,23 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
 #gazeificationV2(biomasseEntree=300000, gaz_params=gaz_params, caract_syngas=caract_syngas)
 
 
-def conso_elec_gazeification(masse_CO2, masse_H2, masse_seche_biomasse, gaz_params):
+def conso_elec_gazeification(masse_CO2 : float, masse_H2 : float, masse_seche_biomasse : float, gaz_params : dict) -> float:
     """
-    Calcul de la consommation électrique de gazéification.
-    Consommation liée aux entrants de la gazéification : biomasse et H2.
-    Consommation liée au chauffage et à la désorption des filtres amines pour le captage du CO2.
+    Calcul de la consommation électrique de gazéification : 
+        - consommation liée aux entrants de la gazéification : biomasse et H2.
+        - consommation liée au chauffage et à la désorption des filtres amines pour le captage du CO2.
+
+    Arguments
+    ----------
+        masse_CO2 : Masse de CO2 en sortie de la gazéification, captée pour EM-Lacq (tonnes)
+        masse_H2 : Masse de H2 utilisée par la gazéification (tonnes)
+        masse_seche_biomasse : Masse de biomasse sèche utilisée par la gazéification (tonnes)
+        gaz_params : Paramètres de la gazéification
+    
+    Returns
+    -------
+        energie_gazeification : consommation électrique totale de la gazéification sans 
+        prendre en compte la compression du syngaz (étape 7 compression) (kWh)
     """
     energie_entrants_H2 = masse_H2 * comp.carac_pysico_chimiques["H2"]["PCI"] / 3600 * 10e6# en kWh
     energie_entrants_bois = masse_seche_biomasse * biomasse.param_biomasse['PCI_biomasse'] # en kWh
