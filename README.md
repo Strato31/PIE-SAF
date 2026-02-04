@@ -67,6 +67,17 @@ PIE-SAF/
 
 - **Electrolyseur**
 
+La partie `_4_electrolyseur.py` a pour but de donner la consommation électrique de la partie électrolyse.
+
+Cette étape n’a pas besoin d’être réversible. Peu importe si on part de la masse de kérosène à produire et on cherche la quantité de biomasse nécessaire, ou à l’inverse si on part de la quantité de biomasse qu’on a et on cherche combien de kérosène on peut produire, l’électrolyse n’est concernée que par les quantités de H2 et O2 à produire pour la gazéification et ses fonctions sont utilisables dans les deux sens du code. 
+
+Le paramètre principal de l’étape électrolyseur est la valeur de l’énergie Estack pour la technologique considérée. Cette énergie “stackée” est l’énergie électrique totale nécessaire à la fabrication et à la distribution d’un kilogramme d’H<sub>2</sub> (valeur en kWh/kgH2). Cette énergie comprend l’électrolyse et le fonctionnement global de l’unité de production mais pas la perte en ligne amont qu’on devra ajouter. 
+
+Pour prendre en main le code rapidement : 
+1. Si vous utilisez la technologie alcaline basse température : mettez à jour le dictionnaire des paramètres déjà existant si les valeurs ne sont plus correctes.
+2. Si vous utilisez une technologie d’électrolyse différente : copiez un dictionnaire déjà existant d’une autre technologie, adaptez le nom, mettez à jour les valeurs. Si la consommation électrique stackée n’est pas connue, laissez juste `None`. Une fonction `consom_elec_stack` a été créée pour fournir une valeur en normalisant à partir de la valeur de consommation stackée de la technologie de référence et des rendements respectifs.
+- La fonction `coherence_electrolyse` permet de vérifier que les valeurs de masse de O<sub>2</sub> et de H<sub>2</sub> demandées en entrée sont cohérentes avec les proportion voulues par la réaction d’électrolyse. Pour le moment, la gazéification s’occupe de cette étape de vérification. Par la suite, si on est amené à considérer d’autres procédés qui n’utilisent pas forcément la gazéification, cette fonction pourra être utile, il faudra alors juste dé-commenter la ligne correspondante dans la fonction centrale.
+
 - **Gazéification**
 
 - **Energies**
