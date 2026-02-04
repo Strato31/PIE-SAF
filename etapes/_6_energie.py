@@ -1,5 +1,5 @@
 """
-PARTIE ? : Energie
+PARTIE : Energie
 
 Paramètres et hypothèses sourcées pour le calcul des émissions liées à la consommation énergétique et thermique,
 puis les fonctions de calcul de ces émissions.
