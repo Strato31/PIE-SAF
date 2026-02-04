@@ -88,7 +88,7 @@ def masse_humide_sortie(biomasse_seche, humidites=[0.25, 0.40, 0.50, 0.60], verb
     
     Returns
     -------
-        masse_eq_bois_vert : liste des masses équivalentes de biomasse humide (t) pour chaque taux d'humidité simulé
+        masse_humide : la masse humide nécessaire pour un taux d'humidité de 25% (t)
     
     """
 
@@ -100,8 +100,8 @@ def masse_humide_sortie(biomasse_seche, humidites=[0.25, 0.40, 0.50, 0.60], verb
         print("Pour obtenir", biomasse_seche, "t de biomasse sèche, il faut :")
         for i, h in enumerate(humidites):
             print(f" - {masse_eq_bois_vert[i]:.0f} t de biomasse de type bois vert à {h*100:.0f}% d'humidité")
-
-    return masse_eq_bois_vert
+    masse_humide = biomasse_seche/(1-0.25)
+    return masse_humide # on renvoie la masse humide pour un taux d'humidité de 25% (hypothèse par défaut)
 
 
 def culture_biomasse(param_biomasse, biomasse):
@@ -231,7 +231,7 @@ def main_biomasse(param_biomasse, biomasse, sens_physique=True):
         print("Calcul des émissions et consommations liées à la biomasse en sortie du processus e-bio-SAF.\n")
         masse_humide = masse_humide_sortie(biomasse) # où biomasse est la masse sèche souhaitée
         
-        print("On suppose une biomasse humide de type bois vert à 25\% \d'humidité")
+        print("On suppose une biomasse humide de type bois vert à 25% d'humidité")
         biomasse_humide = [{"type": "bois_vert", "masse": masse_humide, "humidité": 0.25}]
         
         # On reprend les calculs d'émissions dans le sens physique avec la biomasse humide supposée.
@@ -240,11 +240,11 @@ def main_biomasse(param_biomasse, biomasse, sens_physique=True):
         conso_chaleur, masse_seche_biomasse = traitement_biomasse(param_biomasse, biomasse_humide)
         total_emissions_biomasse = emissions_culture + emissions_transport
 
-    print(f" - Masse de biomasse sèche : {masse_seche_biomasse} t")
-    print(f" - Émissions liées à la culture de la biomasse : {emissions_culture} tCO2e")
-    print(f" - Émissions liées au transport de la biomasse : {emissions_transport} tCO2e")
-    print(f" - Consommation thermique pour la torréfaction : {conso_chaleur} MJ")
-    print(f" - Émissions totales liées à la biomasse : {total_emissions_biomasse} tCO2e\n")
+    print(f"\n - Masse de biomasse sèche : {masse_seche_biomasse} t")
+    print(f" - Émissions liées à la culture de la biomasse : {emissions_culture:.2f} tCO2e")
+    print(f" - Émissions liées au transport de la biomasse : {emissions_transport:.2f} tCO2e")
+    print(f" - Consommation thermique pour la torréfaction : {conso_chaleur:.2f} MJ")
+    print(f" - Émissions totales liées à la biomasse : {total_emissions_biomasse:.2f} tCO2e\n")
 
     return conso_chaleur, total_emissions_biomasse, masse_seche_biomasse
 
