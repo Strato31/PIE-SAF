@@ -16,11 +16,13 @@ Les entrées/sorties peuvent être résumées comme suit :
 - Sorties : élec, chaleur, CO2, quantités CO et H2 dans le syngas, déchets
 
 **FT**
-
-Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés.
-
+Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés.
+Sens Physique :
 - Entrées : quantités CO dans le syngas
-- Sorties :  élec, émissions CO2, kérosène produit
+- Sorties :  connso élec, émissions CO2, kérosène produit
+Sens inverse :
+- Entrées : quantité de kérosène produit
+- Sorties :Masse de CO, Consommation élec, conso élec
 
 **ELECTROLYSE**
 - Entrées : eau, quantité H2 à produire
@@ -162,10 +164,9 @@ Etapes a inclure :
 - electrolyseur (très long oscour) (H2)
 
 
+
 LA SUITE :
 - permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
 - créer format dictionnaire de données par projet
 - rendre globales les variables qui le sont
 - faire un main fonctionnel
-
-------------------------------------------
