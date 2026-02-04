@@ -91,7 +91,7 @@ Pour prendre en main le code rapidement :
 2. Si vous utilisez une technologie d’électrolyse différente : copiez un dictionnaire déjà existant d’une autre technologie, adaptez le nom, mettez à jour les valeurs. Si la consommation électrique stackée n’est pas connue, laissez juste `None`. Une fonction `consom_elec_stack` a été créée pour fournir une valeur en normalisant à partir de la valeur de consommation stackée de la technologie de référence et des rendements respectifs.
 - La fonction `coherence_electrolyse` permet de vérifier que les valeurs de masse de O<sub>2</sub> et de H<sub>2</sub> demandées en entrée sont cohérentes avec les proportion voulues par la réaction d’électrolyse. Pour le moment, la gazéification s’occupe de cette étape de vérification. Par la suite, si on est amené à considérer d’autres procédés qui n’utilisent pas forcément la gazéification, cette fonction pourra être utile, il faudra alors juste dé-commenter la ligne correspondante dans la fonction centrale.
 
-- **Gazéification**
+**Gazéification**
 L'étape de gazéification '_5_gazefication.py' permet de réaliser un bilan de masses et d’énergies du procédé de gazéification de la biomasse, ainsi que d’estimer les besoins en O<sub>2</sub> et de H<sub>2</sub>, les émissions de CO<sub>2</sub>, et la consommation électrique associée.
 
 Les hypothèses sont contenues dans deux dictionnaires de paramètres définis localement :
