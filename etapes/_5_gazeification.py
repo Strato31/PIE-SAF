@@ -1,5 +1,5 @@
-from etapes import _1_biomasse as biomasse
-from etapes import _7_compression as comp
+#from etapes import _1_biomasse as biomasse
+#from etapes import _7_compression as comp
 
 """
 Paramètres et hypothèses sourcées pour la gazeification, puis fonctions de calcul des émissions.
@@ -45,13 +45,13 @@ caract_syngas = {
 
     #Pour chaque composé : fraction en masse (%), nombre d'atomes de C, H, O, masse molaire (g/mol)
 
-    "CO":   {"fraction": 0.85, "nC": 1,  "nH": 0, "nO": 1,  "M": 28.0},
-    "CO2":  {"fraction": 0.05, "nC": 1,  "nH": 0, "nO": 2,  "M": 44.0},
+    "CO":   {"fraction": 0.78, "nC": 1,  "nH": 0, "nO": 1,  "M": 28.0},
+    "CO2":  {"fraction": 0.1, "nC": 1,  "nH": 0, "nO": 2,  "M": 44.0},
     "CH4":  {"fraction": 0.01,  "nC": 1,  "nH": 4, "nO": 0,  "M": 16.0},
     "C2H2": {"fraction": 0.005,  "nC": 2,  "nH": 2, "nO": 0,  "M": 26.0},
     "C3H6": {"fraction": 0.005,  "nC": 3,  "nH": 6, "nO": 0,  "M": 42.0},
     "C20":  {"fraction": 0.000,  "nC": 1, "nH": 42, "nO": 0,  "M": 54.0},  
-    "H2":   {"fraction": 0.08, "nC": 0,  "nH": 2, "nO": 0,  "M": 2.0}
+    "H2":   {"fraction": 0.1, "nC": 0,  "nH": 2, "nO": 0,  "M": 2.0}
 }
 
 
@@ -254,11 +254,8 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     
 
     volH2total = 2*vol_composes["CO"]  # Pour entrer dans la synthèse FT, il faut un ratio H2/CO de 2
-    masseH2_totale = volH2total*conversionMasseMolaire(caract_syngas["H2"]["M"], gaz_params) /1000 # Pasage du volume en tonnes
+    masseH2_totale = volH2total*conversionMasseMolaire(caract_syngas["H2"]["M"], gaz_params) /1000 # Passage du volume en tonnes
     masseH2_necessaire = masseH2_totale - masseH2_syngaz # Du H2 est contenu dans le syngaz, on ne le compte pas dans le H2 à produire
-
-    #Le code précédent remplace la version simplifiée si dessous avec une fraction H2 non sourcée de 75%
-    #masseH2_necessaire = masseH2_syngaz / gaz_params["fractionH2"] 
 
     # ------------------------------
     # Calcul O2 nécessaire     ##### A VERIFIER 
