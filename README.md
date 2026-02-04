@@ -63,20 +63,41 @@ LA SUITE :
 
 ------------------------------------------
 
-Détails des étapes :
+## Détails des étapes :
 
+---
 **Partie 7 : Compression des gaz**
-La partie compression des gaz s'organise en deux parties : une partie de donné physico chimique et une partie du calcul de l'énergie consommée.
 
-La partie zone de donnée :
-un dictionnaire *carac_physico_chimiques* regroupant les informations physico-chimique par gaz. 
-Les données du dictionnaires sont tirés de celles de l'excel des shifters, en considérant les gaz parfaits et aux conditions de référence 288,15K et 1 bar.
+Le module de compression des gaz est organisé en deux parties principales :
 
-La partie calcul des émissions : 
-*param_temp_variable* : calcul les caractéristiques physico-chimique des gaz en fonction de la température 
-*calcul_echauffement_isenthropique* : ces calculs ne sont utiles que dans le cas où E-CHO/BioTJet serait reconverti et fabriquerait du e-kérosène, le carbone venant de captation de CO2 : pas pris en compte pour l'instant
-*compression_isentropique* : Renvoie la temperature de la compression isentropique pour passer de la pression P1 (en bar) à la pression P2 (en bar).
-*conso_compression* : Renvoie la consommation électrique (en MWh) pour comprimer une masse de gaz (en kg) de la pression P1 (en bar) à la pression P2 (en bar) à la température initiale T0_K.
-*conso_compression_syngaz* : Renvoie la consommation électrique (en MWh) pour comprimer le syngas (en kg), calcul spécifique car il prend en compte les trois gaz. procédure de calcul de l'échauffement du mélange : calcul de l'échauffement de chacun des gaz, puis calcul de la T° moyenne et du Cp moyen pondéré par la composition, enfin calcul de la puissance moyenne absorbée. 
+1. ***Gestion des données physico-chimiques**  
+2. ***Calcul de la consommation énergétique**
 
-Le processus de calcul suit les étapes détaillées dans le document technique, dans un premier temps on calcul de manière itérative l'échauffement thermique lié à la compression puis l'échauffement réel et enfin l
+***Partie données***
+
+Les propriétés physico-chimiques des gaz sont regroupées dans une structure de type dictionnaire :
+
+- `carac_physico_chimiques`  
+  Ce dictionnaire contient l’ensemble des caractéristiques physico-chimiques associées à chaque gaz.
+
+Les valeurs utilisées proviennent du fichier Excel des Shifters, en considérant :
+
+- un comportement de gaz parfait,
+- des conditions de référence de **288,15 K** et **1 bar**.
+
+***Partie calcul***
+
+Plusieurs fonctions permettent de réaliser les calculs thermodynamiques et d’estimer la consommation énergétique liée à la compression.
+
+*param_temp_variable* : Calcule les caractéristiques physico-chimiques des gaz en fonction de la température. Cette fonction implémente les équations des capacités calorifiques propres à chaque gaz. Elle calcule également : le coefficient adiabatique γ (gamma), la constante spécifique du gaz Rs, car ces paramètres dépendent de Cp et sont nécessaires aux calculs ultérieurs.
+
+*calcul_echauffement_isentropique* : Calcule l’échauffement isentropique lors d’une compression allant de la pression P1 à la pression P2, à partir d’une température initiale T0 (K). Cette fonction s’appuie sur l’application de la **loi de Laplace** pour les gaz parfaits.
+
+*compression_isentropique* : Renvoie la température finale obtenue après une compression isentropique permettant de passer de la pression P1 (bar) à la pression P2 (bar). Le calcul est réalisé de manière itérative afin de déterminer précisément l’échauffement lié à la compression du gaz.
+
+*conso_compression* : Calcule la consommation électrique (en **MWh**) nécessaire pour comprimer une masse de gaz donnée (en **kg**) de la pression P1 (bar) à la pression P2 (bar) à partir d’une température initiale T0_K. La consommation électrique est estimée à partir de l’échauffement réel. Les équations détaillées utilisées pour ce calcul sont documentées dans le fichier Excel de référence.
+
+*conso_compression_syngaz* : Calcule la consommation électrique (en **MWh**) nécessaire à la compression du syngaz. renvoie la consommation électrique (en MWh) nécessaire pour comprimer du syngaz (en kg). Il s’agit d’un calcul spécifique prenant en compte les trois gaz constituant le mélange. La procédure de calcul est la suivante : calcul de l’échauffement pour chacun des gaz, détermination de la température moyenne du mélange, calcul d’un Cp moyen pondéré par la composition et calcul de la puissance moyenne absorbée.
+
+Le processus de calcul suit les étapes détaillées dans le document technique associé.
+La consommation finale d’énergie liée à la compression d’un gaz est obtenue via la fonction conso_compression. Pour le cas particulier du syngaz, il est nécessaire d’utiliser la fonction conso_compression_syngaz, car ce dernier étant composé de plusieurs gaz, il faut pondérer les échauffements de chacun d’eux par leur proportion massique.
