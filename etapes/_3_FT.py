@@ -1,5 +1,5 @@
 """
-PARTIE 3 : Fischer-Tropsch
+PARTIE : Fischer-Tropsch
 
 Contient :
 - param_FT : les paramètre liées à l'étape Fischer-Tropsch.

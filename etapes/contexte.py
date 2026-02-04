@@ -1,5 +1,5 @@
 """
-PARTIE X : Contexte
+PARTIE : Contexte
 
 Contient les hypothèses de contexte pour les calculs des émissions liées à la biomasse.
 Pour l'instant, seul le mix énergétique est pris en compte dans les calculs d'émissions, et ce fichier n'est pas utilisé.

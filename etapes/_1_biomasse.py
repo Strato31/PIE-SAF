@@ -1,5 +1,5 @@
 """
-PARTIE 1 : Biomasse
+PARTIE : Biomasse
 
 Contient : 
  - param_biomasse : les paramètres liés à la biomasse
