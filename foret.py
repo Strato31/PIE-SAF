@@ -1,13 +1,13 @@
 """
-Docstring for etapes.foret
+TODO
 """
 ###############################################################
-# Stockage des paramètres avec les hypothèses sourcées
+# Stockage des paramètres avec les hypothèses sourcées        #
 ###############################################################
 
 param_foret = {
 
-    # hypothèses pour convertir des données forestières exprimée en Mm3/an (dans le rapport IGN 2024) en MtC/an puis en MtCO2/an 
+    # hypothèses pour convertir des données forestières exprimées en Mm3/an (dans le rapport IGN 2024) en MtC/an puis en MtCO2/an 
 
     "densité_bois_vert": 0.95, # (en t/m3) densité moyenne entre feuillus et résineux 
 
@@ -27,7 +27,7 @@ param_foret = {
 
     "récolte_totale_2005_2013": 47.2, # (en Mm3/an) récolte totale de bois moyenne entre 2005 et 2013
 
-    "récolte_totale_2014_2022": 53.1, # (en Mm3/an) récolte totale de bois moyenne entre 2005 et 2013
+    "récolte_totale_2014_2022": 53.1, # (en Mm3/an) récolte totale de bois moyenne entre 2014 et 2022
 
     "cible_production_SAF_2050": 3500, # (en kt/an) masse de e-bio kérosène cible en 2050 en France dans le cadre de ReFuel EU Aviation 
 
@@ -41,7 +41,7 @@ param_foret = {
 
     "T_2018": 1.65, # (en K) réchauffement moyen mesuré en 2018
 
-    "T_2025":1.85, # (en K) projection de réchauffement pour la trajectoire TRACC en 2030 en France
+    "T_2025":1.85, # (en K) projection de réchauffement pour la trajectoire TRACC en 2025 en France
 
     "T_2030":2.00, # (en K) projection de réchauffement pour la trajectoire TRACC en 2030 en France
 
@@ -50,10 +50,10 @@ param_foret = {
     "T_2100":4, # (en K) projection de réchauffement pour la trajectoire TRACC en 2100 en France
     
     "coefficient_bonne_pratique_2025":1.00, # (pas d'unité) coefficient multiplicatif de la productivité   
-                                             # lié à la généralisation des bonnes pratiques sylvicoles
+                                            # lié à la généralisation des bonnes pratiques sylvicoles
 
     "coefficient_bonne_pratique_2100":2.00, # (pas d'unité) coefficient multiplicatif de la productivité   
-                                             # lié à la généralisation des bonnes pratiques sylvicoles
+                                            # lié à la généralisation des bonnes pratiques sylvicoles
 
     "année_début_bonne_pratique":2025,  # année où l'on commence à améliorer les bonnes pratiques avec interpolation
                                         # linéaire jusqu'à l'année où l'on atteint le coefficient maximal de bonne pratique
@@ -65,16 +65,33 @@ param_foret = {
 }
 
 
-
-# FONCTIONS
-
+#################
+# FONCTIONS     #
+#################
 
  
-# fonction qui détermine la productivité et la mortalité de la forêt française, pour l'année spécifiée en entrée, en prenant
 # en compte le changement climatique. Le paramètre beta quantifie l'impact non-linéaire du changement climatique sur l'état de la forêt.
 
 #### Cette fonction marche pour 2030,2050 et 2100 (commentaire à supprimmer)
 def impact_changement_climatique_foret(année,beta):
+    """
+    Détermine la productivité et la mortalité de la forêt française, pour l'année spécifiée en entrée, en prenant
+    en compte le changement climatique. Fonctionne pour 2030, 2050 et 2100.
+
+    Arguments
+    ----------
+        - année : int, année pour laquelle on veut calculer la productivité et la mortalité de la forêt française
+        - beta : float, paramètre qui quantifie l'impact non-linéaire du changement climatique sur l'état de la forêt. 
+            beta = 1, impact linéaire du changement climatique sur la forêt
+            beta > 1, impact non-linéaire du changement climatique sur la forêt plus important que dans le cas linéaire
+            beta < 1, impact non-linéaire du changement climatique sur la forêt moins important que dans le cas linéaire
+    
+    Returns
+    ----------
+        - productivité : productivité de la forêt française pour l'année spécifiée en entrée, en Mm3/an
+        - mortalité : mortalité de la forêt française pour l'année spécifiée en entrée, en Mm3/an
+    
+    """
 
     # coefficient directeur de décroissance de la productivité de la forêt française entre 2005 et 2022 
     alpha_productivité = (param_foret["productivité_brute_2014_2022"]- param_foret["productivité_brute_2005_2013"]) \
@@ -91,17 +108,27 @@ def impact_changement_climatique_foret(année,beta):
     mortalité = param_foret["Mortalité_2005_2013"]+alpha_mortalité* \
     (param_foret["T_"+str(année)]-param_foret["T_2018"] \
      +param_foret["réchauffement_moyen_France_2014_2022"]-param_foret["réchauffement_moyen_France_2005_2013"])**(beta)
-
-
+    
 
     return  productivité, mortalité  # résultats en Mm3/an
 
-# fonction qui calcule la masse de biomasse nécessaire en fonction de la généralisation partielle 
-# ou totale du procédé BioTjet pour atteindre les objectifs de ReFuel-EU en 2050.
-# En cas de généralisation, en France, besoin de 3500 kt de SAF 
 
-#### Cette fonction marche ! (commentaire à effacer)
+
 def besoin_biomasse_generalisation(généralisation): # généralisation en %
+    """
+    Calcule la masse de biomasse nécessaire en fonction de la généralisation partielle ou totale du procédé BioTjet 
+    pour atteindre les objectifs de ReFuel-EU en 2050.
+
+    Arguments
+    ----------
+        - généralisation : pourcentage de généralisation du procédé BioTjet pour atteindre les objectifs de ReFuel-EU en 2050. 
+          Si généralisation = 0, alors le procédé BioTjet n'est pas du tout généralisé. Si généralisation = 100, alors le procédé
+          BioTjet est totalement généralisé pour atteindre les objectifs de ReFuel-EU en France en 2050.
+
+    Returns
+    ----------
+        - besoin_masse_bois_2050 : masse de bois nécessaire pour le niveau de généralisation choisi, en Mt.
+    """
     cible_production_SAF_France = 3500 
     cible_production_bioTjet = 87
     cible_recolte_bois = 600
@@ -110,12 +137,22 @@ def besoin_biomasse_generalisation(généralisation): # généralisation en %
 
     return besoin_masse_bois_2050 # en Mt de bois
 
-# fonction qui calcule la variation de la capacité totale de séquestration carbone de la forêt française (en MtCO2/an) 
-# en fonction de la généralisation partielle ou non du procédé BioTJet pour atteindre les objectifs de ReFuel-EU en 2050 
 
 
-#### Cette fonction marche ! (commentaire à effacer)
 def impact_recolte_capacité_sequestration(productivité_nette, récolte_totale): 
+    """
+    Calcule la variation de la capacité totale de séquestration carbone de la forêt française (en MtCO2/an) 
+    en fonction de la généralisation partielle ou non du procédé BioTJet pour atteindre les objectifs de ReFuel-EU en 2050.
+
+    Arguments
+    ----------
+        - productivité_nette : productivité nette de la forêt française en Mm3/an
+        - récolte_totale : récolte totale de bois en Mt
+
+    Returns
+    ----------
+        - variation_capacité_séquestration_totale_CO2 : variation de la capacité totale de séquestration carbone en MtCO2/an
+    """
     
     variation_stock_bois_aérien = productivité_nette - récolte_totale  # de la partie aérienne de l'arbre
     
@@ -124,13 +161,28 @@ def impact_recolte_capacité_sequestration(productivité_nette, récolte_totale)
     
     variation_capacité_séquestration_totale_CO2 = variation_capacité_séquestration_aerienne_CO2 * \
     param_foret["rapport_capacité_sequestration_sol_aerien"]   # en prenant en compte la partie du sol de l'arbre
+    
     return variation_capacité_séquestration_totale_CO2
 
-# fonction qui détermine la productivité de la forêt française et la mortalité, pour l'année spécifiée en entrée 
-# en fonction du coefficient coeff_bonne_pratique qui quantifie l'amélioration des pratiques sylvicoles 
 
-#### Cette fonction marche pour 2030,2050 et 2100 (commentaire à supprimmer)
 def impact_bonne_pratique_capacité_sequestration(année, productivité):
+    """
+    Calcule la productivité de la forêt française et la mortalité, pour l'année spécifiée en entrée 
+    en fonction du coefficient coeff_bonne_pratique qui quantifie l'amélioration des pratiques sylvicoles.
+
+    Fonctionne pour 2030, 2050 et 2100.
+
+    Arguments
+    ----------
+        - année : int, année pour laquelle on veut effectuer le calcul
+        - productivité : productivité de la forêt française pour l'année spécifiée en entrée, en Mm3/an, 
+          calculée sans prendre en compte l'amélioration des pratiques sylvicoles (par exemple, calculée avec 
+          la fonction impact_changement_climatique_foret)
+
+    Returns
+    ----------
+        - productivité_bonne_pratique : productivité de la forêt française pour l'année spécifiée en entrée, en Mm3/an, calculée en prenant en compte l'amélioration des pratiques
+    """
     
     coefficient_bonne_pratique_année = param_foret["coefficient_bonne_pratique_2025"]+(param_foret["coefficient_bonne_pratique_2100"] \
     -param_foret["coefficient_bonne_pratique_2025"])/((param_foret["année_bonne_pratique_max"] \
@@ -140,11 +192,30 @@ def impact_bonne_pratique_capacité_sequestration(année, productivité):
 
     return productivité_bonne_pratique # résultats en Mm3/an
 
-# fonction qui détermine la capacité de séquestration carbone de la forêt française en prenant en compte le changement climatique
-# (avec un impact linéaire ou non), l'amélioration des pratiques sylvicoles et la généralisation (en %) du procédé BioTjet 
-# pour atteindre les objectifs de ReFuel-EU en 2050. A mettre en regard des objectifs de séquestration
-# carbone de la SNBC 3 à horizon 2050.
+
+
 def impact_total_sequestration(année,beta,généralisation):
+    """
+    Calcule la capacité de séquestration carbone de la forêt française en prenant en compte le changement climatique 
+    (avec un impact linéaire ou non), l'amélioration des pratiques sylvicoles et la généralisation (en %) du procédé BioTjet pour 
+    atteindre les objectifs de ReFuel-EU en 2050. A mettre en regard des objectifs de séquestration carbone de la SNBC 3 à horizon 2050.
+
+    Arguments
+    ----------
+        - année : int, année pour laquelle on veut effectuer le calcul
+        - beta : float, paramètre qui quantifie l'impact non-linéaire du changement climatique sur l'état de la forêt.
+            beta = 1, impact linéaire du changement climatique sur la forêt
+            beta > 1, impact non-linéaire du changement climatique sur la forêt plus important que dans le cas linéaire
+            beta < 1, impact non-linéaire du changement climatique sur la forêt moins important que dans le cas linéaire
+        - généralisation : pourcentage de généralisation du procédé BioTjet pour atteindre les objectifs de ReFuel-EU en 2050.
+            généralisation = 0 , pas de généralisation
+            généralisation = 100 , généralisation totale du procédé BioTjet pour atteindre les objectifs de ReFuel-EU en 2050
+    
+    Returns
+    ----------
+        - variation_sequestration_carbone : variation de la capacité de séquestration carbone de la forêt française en MtCO2/an
+        - besoin_masse_bois_supplémentaire : masse de bois supplémentaire nécessaire pour le projet BioTjet en Mt
+    """
     variation_sequestration_carbone = 0
     besoin_masse_bois_supplémentaire = 0 
     
