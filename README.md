@@ -77,7 +77,7 @@ PIE-SAF/
     La partie biomasse rassemble tous les calculs sur la partie biomasse, avant sa gazeification.
     Elle fonctionne dans les deux sens : 
 
-    1. Sens physique (de la biomasse au kérosène)
+    **1. Sens physique (de la biomasse au kérosène)**
         En entrée, un dictionnaire des biomasses utilisées de la forme : 
         
         biomasse_entree = [
@@ -93,7 +93,7 @@ PIE-SAF/
                      - les émissions dues au transport de la biomasse humide jusqu'au lieu de torréfaction, puis jusqu'au gazeifieur
                      - l'énergie nécessaire à la torrefaction de la biomasse
     
-    2. Sens inverse (du kérosène à la biomasse)
+    **2. Sens inverse (du kérosène à la biomasse)**
         En entrée, une masse sèche (en t) de biomasse, qui doit arriver en entrée du gazeifieur.
 
         Ce module calcule :
