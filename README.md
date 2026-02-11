@@ -32,8 +32,8 @@ Sens inverse :
 - Sorties :Masse de CO, Consommation élec, conso élec
 
 **ELECTROLYSE**
-- Entrées : eau, quantité H2 à produire
-- Sorties : élec
+- Entrées : Quantité de H<sub>2</sub> à produire
+- Sorties : Consommation élec
 
 **ENERGIES**
 - Entrées : consommations chaleur et élec
