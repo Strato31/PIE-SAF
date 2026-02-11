@@ -15,7 +15,7 @@ Paramètres et hypothèses sourcées pour la gazeification, puis fonctions de ca
 """
 
 from etapes import _1_biomasse as biomasse
-from etapes import _7_compression as comp
+from etapes import _5_compression as comp
 
 
 ###############################################################

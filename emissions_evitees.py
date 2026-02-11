@@ -3,7 +3,7 @@ Partie présentant le calcul complet des émissions évitées par le projet BioT
 en suivant deux méthodes principales : 
 - La méthode RED II (directive européenne sur les énergies renouvelables)
 - La méthode ACV complète (Analyse du Cycle de Vie)
-Le projet Elyse raisonne suivant cette directive RED II. Le groupe local des Shifters de Pau raisonne  
+Le projet Elyse raisonne suivant cette directive RED II. Le groupe local des Shifters de Pau raisonne 
 en termes d'ACV. 
 
 """
@@ -23,17 +23,17 @@ Les paramètres utilisés sont :
 '''
 
 kerosene_fossile_ADEME = {
-    "PCI" : 43.105,                 # en MJ/kg
-    "emissions_amont" : 0.661,      # en kgCO2eq/kg
+    "PCI" : 43.105,                  # en MJ/kg
+    "emissions_amont" : 0.661,       # en kgCO2eq/kg
     "emissions_combustion" : 3.15,   # en kgCO2eq/kg
-    "emissions_totales" : 3.811     # en kgCO2eq/kg, somme des deux facteurs précédents
+    "emissions_totales" : 3.811      # en kgCO2eq/kg, somme des deux facteurs précédents
 }
 
 kerosene_fossile_REDII = {
     "PCI" : 44.0,                    # en MJ/kg
-    "emissions_amont" : 0.656,        # en kgCO2eq/kg, à calculer
-    "emissions_combustion" : 3.480,   # en kgCO2eq/kg, à calculer
-    "emissions_totales" : 4.136       # en kgCO2eq/kg, somme des deux facteurs précédents
+    "emissions_amont" : 0.656,       # en kgCO2eq/kg, à calculer
+    "emissions_combustion" : 3.480,  # en kgCO2eq/kg, à calculer
+    "emissions_totales" : 4.136      # en kgCO2eq/kg, somme des deux facteurs précédents
  }
 
 naphta_fossile_REDII = {
@@ -63,7 +63,7 @@ Valeurs des émissions évitées revendiquées par Elyse pour différents projet
 emissions_evitees_Elyse = {
     "siteECHO" : 622000,  # tCO2e/an, total revendiqué par Elyse pour le site ECHO (somme des deux projets ci-dessous)
     "BioTJet" : 348000,   # tCO2e/an, total revendiqué par Elyse pour le projet BioTJet
-    "eM-Lacq"  : 27000   # tCO2e/an, total revendiqué par Elyse pour le projet eM-Lacq
+    "eM-Lacq"  : 27000    # tCO2e/an, total revendiqué par Elyse pour le projet eM-Lacq
     }
 
 
@@ -71,7 +71,7 @@ emissions_evitees_Elyse = {
 Valeurs d'objectifs de production par année.
 '''
 objectifs_production_2025 = {
-    "bio_kerosene" : 87000, # en tonnes/an
+    "bio_kerosene" : 87000,  # en tonnes/an
     "naphta"       : 28000,  # en tonnes/an
 }
 
@@ -85,20 +85,34 @@ conversion_kwh_mj = 3.6  # 1 kWh = 3.6 MJ
 ######################################################################
 
 
-def calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene, production_naphta): # on suppose que les productions sont en tonnes/an
+def calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene, production_naphta): 
+    """
+    Cette fonction calcule les émissions évitées par le projet BioTJet d'E-CHO par rapport à des carburants fossiles, selon
+    deux méthodes principales : 
+    - La méthode RED II (directive européenne sur les énergies renouvelables)
+    - La méthode ACV complète (Analyse du Cycle de Vie)
+
+    On suppose que les productions sont en tonnes/an.
+
+    Arguments
+    ---------
+        - total_emissions_projet_tco2 : émissions totales du projet BioTJet, valeur finale de l'Excel du GL Pau (tCO2e/an)
+        - production_biokerosene : production de biokérosène (t/an)
+        - production_naphta : production de naphta (t/an)
+    """
  
     # Calcul des émissions fossiles de référence pour RED II :
-    emissions_fossiles_kerosene = kerosene_fossile_REDII["emissions_totales"]  * production_biokerosene   # en kgCO2eq/an (facteur 1000 pour la conversion tonnes -> kg)
-    emissions_fossiles = emissions_fossiles_kerosene + naphta_fossile_REDII["emissions_totales"] * production_naphta  # en kgCO2eq/an (facteur 1000 pour la conversion tonnes -> kg)
+    emissions_fossiles_kerosene = kerosene_fossile_REDII["emissions_totales"]  * production_biokerosene               # en tCO2eq/an
+    emissions_fossiles = emissions_fossiles_kerosene + naphta_fossile_REDII["emissions_totales"] * production_naphta  # en tCO2eq/an
 
 
     ## Premier modèle utilisé par Elyse sur la base de RED II :
     print("========================================================================")
     print("=== Résultats du calcul des émissions évitées revendiquées par Elyse ===")
-    print(f"Emissions évitées par an annoncées par Elyse pour le projet BioTJet : " f"{emissions_evitees_Elyse['BioTJet']:.2f} tCO2e/an")
-    print(f"Emissions fossiles de référence pour la quantité de biocarburant produite : " f"{emissions_fossiles:.2f} tCO2e/an")
+    print(f"Emissions évitées par an annoncées par Elyse pour le projet BioTJet : " f"{emissions_evitees_Elyse['BioTJet']:,.2f} tCO2e/an".replace(",", " "))
+    print(f"Emissions fossiles de référence pour la quantité de biocarburant produite : " f"{emissions_fossiles:,.2f} tCO2e/an".replace(",", " "))
     calcul_emissions = emissions_fossiles - emissions_evitees_Elyse['BioTJet']
-    print(f"Emissions totales par an du projet BioTJet suivant ces valeurs et la directive RED II :" f" {calcul_emissions:.2f} tCO2e/an")
+    print(f"Emissions totales par an du projet BioTJet suivant ces valeurs et la directive RED II :" f" {calcul_emissions:,.2f} tCO2e/an".replace(",", " "))
 
     # Pourcentage de réduction des émissions de GES par rapport au fossile :
     reduction_modele1 = (emissions_fossiles - calcul_emissions) / emissions_fossiles * 100   # en %
@@ -106,18 +120,18 @@ def calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene
 
     
     # Calcul des émissions fossiles de référence pour ADEME :
-    emissions_fossiles_kerosene = kerosene_fossile_ADEME["emissions_totales"]  * production_biokerosene   # en kgCO2eq/an (facteur 1000 pour la conversion tonnes -> kg)
-    emissions_fossiles = emissions_fossiles_kerosene + naphta_fossile_REDII["emissions_totales"] * production_naphta  # en kgCO2eq/an (facteur 1000 pour la conversion tonnes -> kg)
+    emissions_fossiles_kerosene = kerosene_fossile_ADEME["emissions_totales"]  * production_biokerosene   # en tCO2eq/an
+    emissions_fossiles = emissions_fossiles_kerosene + naphta_fossile_REDII["emissions_totales"] * production_naphta  # en tCO2eq/an
 
 
-    ## Second modèle promouvu par les Shifters de Pau : ACV complète
+    ## Second modèle promu par les Shifters de Pau : ACV complète
     print("\n======================================================================")
     print("=== Résultats du calcul des émissions évitées avec un ACV complète ===")
     ## Pourcentage de réduction des émissions de GES par rapport au fossile :
-    print(f"Emissions totales par an du projet BioTJet suivant notre calcul :" f" {total_emissions_projet_tco2:.2f} tCO2e/an")
-    print(f"Emissions fossiles de référence pour la quantité de biocarburant produite : " f"{emissions_fossiles:.2f} tCO2e/an")
+    print(f"Emissions totales par an du projet BioTJet suivant notre calcul :" f" {total_emissions_projet_tco2:,.2f} tCO2e/an".replace(",", " "))
+    print(f"Emissions fossiles de référence pour la quantité de biocarburant produite : " f"{emissions_fossiles:,.2f} tCO2e/an".replace(",", " "))
     emissions_evitees = emissions_fossiles - total_emissions_projet_tco2
-    print(f"Emissions évitées par an suivant notre calcul : {emissions_evitees:.2f} tCO2e/an")
+    print(f"Emissions évitées par an suivant notre calcul : {emissions_evitees:,.2f} tCO2e/an".replace(",", " "))
 
     # Pourcentage de réduction des émissions de GES par rapport au fossile :
     reduction_modele2 = (emissions_fossiles - total_emissions_projet_tco2) / emissions_fossiles * 100   # en %
@@ -126,15 +140,15 @@ def calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene
 
 
 ######################################################################
-## Fonction de test 
+## Fonction main                                                     #
 ######################################################################
 
-# def main():
-#     total_emissions_projet_tco2 = 138964 + 550000  # en tCO2e/an, valeur finale de l'Excel du GL Pau
-#     production_biokerosene = objectifs_production_2025["bio_kerosene"]  # en tonnes/an
-#     production_naphta = objectifs_production_2025["naphta"]  # en tonnes/an
+def main():
+    total_emissions_projet_tco2 = 138964 + 550000  # en tCO2e/an, valeur finale de l'Excel du GL Pau
+    production_biokerosene = objectifs_production_2025["bio_kerosene"]  # en tonnes/an
+    production_naphta = objectifs_production_2025["naphta"]  # en tonnes/an
 
-#     calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene, production_naphta)
+    calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene, production_naphta)
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

@@ -9,16 +9,12 @@ Pour faire le calcul dans le sens inverse (carburant -> biomasse), il suffit de 
 et de renseigner la quantité de e-bio-SAF produite dans la variable "kerosene_produit".
 """
 from etapes import _1_biomasse as biomasse
-from etapes import kerosene
 from etapes import _3_FT as ft
 from etapes import _4_electrolyseur as elec
-from etapes import _5_gazeification as gaz
+from etapes import _2_gazeification as gaz
 from etapes import _6_energie as energie
-from etapes import _7_compression as comp
-from etapes import emissions_evitees 
+from etapes import _5_compression as comp
 
-# TODO : ajouter des :.2f pour arrondir les affichages des flottants
-# TODO : harmoniser /an
 
 ######################
 # VARIABLES D'ENTRÉE #

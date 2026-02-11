@@ -8,7 +8,7 @@ Par exemple, l'hydrogène est une sortie pour FT car l'algorithme calcule la qua
 Les entrées/sorties peuvent être résumées comme suit :
 
 **BIOMASSE**
-- Entrées : type/masse/humidité des biomasses utilisées
+- Entrées : type/masse/humidité des biomasses utilisées (sens physique) ou masse_biomasse_seche (sens inverse)
 - Sorties : élec, chaleur, masse_biomasse_seche
 
 **GASIFICATION**
@@ -20,7 +20,6 @@ Sens indirect :
 - Entrées : quantités CO
 - Sorties : élec, CO<sub>2</sub>, masse_biomasse_seche, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
 
-NB : appel de dictionnaires de paramètres et d'hypothèses pour ces fonctions
 
 **FT**
 Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés.
@@ -56,25 +55,54 @@ UNITES :
 
 ```
 PIE-SAF/
-│├── README.md
-│├── etapes/                      # Dossier principal du code
-││   ├── _1_biomasse.py          
+
+│├── etapes/
+││   ├── _1_biomasse.py
+││   ├── _2_gazeification.py
 ││   ├── _3_FT.py
 ││   ├── _4_electrolyseur.py
-││   ├── _5_gazefication.py
+││   ├── _5_compression.py
 ││   ├── _6_energies.py
-││   ├── _7_compression.py
 ││   ├── contexte.py
-││   ├── emissions_evites.py
-││   └── kerosene.py  
-│├── tests/   
-│├── init.py
-│└── main.py
+│├─── emissions_evites.py
+│├─── foret.py  
+│├── main.py
+│└── README.md
 ```
 
 ### Description des étapes : 
 
 - **Biomasse**
+
+    La partie biomasse rassemble tous les calculs sur la partie biomasse, avant sa gazeification.
+    Elle fonctionne dans les deux sens : 
+
+    1. Sens physique (de la biomasse au kérosène)
+        En entrée, un dictionnaire des biomasses utilisées de la forme : 
+        
+        biomasse_entree = [
+            {"type" : "bois_vert", "masse": 300000, "humidité": 0},     # 300 000 tonnes de biomasse ligneuse à 0% d'humidité
+            {"type" : "bois_vert", "masse": 150000, "humidité": 0.30}   # 150 000 tonnes de biomasse ligneuse à 30% d'humidité
+        ]
+        Ce dictionnaire est à définir au début du fichier main. Autant d'entrées que souhaité peuvent être ajoutées. Actuellement,
+        seule la biomasse de type bois_vert est modélisée.
+
+        Ce module calcule : 
+                     - la masse sèche équivalente de biomasse qui arrivera en entrée de gazeification
+                     - les émissions dues à la culture de biomasse (type bois_vert) : le carbone relâché lors de la coupe
+                     - les émissions dues au transport de la biomasse humide jusqu'au lieu de torréfaction, puis jusqu'au gazeifieur
+                     - l'énergie nécessaire à la torrefaction de la biomasse
+    
+    2. Sens inverse (du kérosène à la biomasse)
+        En entrée, une masse sèche (en t) de biomasse, qui doit arriver en entrée du gazeifieur.
+
+        Ce module calcule :
+                     - les masses équivalentes de biomasse humide à prélever pour différents taux d'humidité (valeurs peuvent être changées)
+                     - conserve l'équivalent à 25% par défaut (peut être changé)
+                     - effectue alors les mêmes calculs que dans le sens physique avec cette biomasse à 25% d'humidité supposée.
+
+    La fonction Biomasse orchestre le tout, et est appelée dans main.py.
+
 
 - **Fischer-Tropsch**
 

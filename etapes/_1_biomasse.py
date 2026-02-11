@@ -10,7 +10,7 @@ Contient :
     - transport_biomasse : calcule les émissions liées au transport de la biomasse
     - traitement_biomasse : calcule les consommations énergétiques liées à la torréfaction
     - Biomasse : calcule et print les émissions totales et consommations énergétiques liées à la biomasse
-    
+
 
 Pistes d'amélioration / évolutions futures :
 - capacité calorifique propre à chaque type de biomasse voire chaque espèce d'arbre
