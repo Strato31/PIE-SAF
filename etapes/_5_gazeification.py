@@ -309,15 +309,15 @@ def gazeificationV2(biomasseEntree, gaz_params, caract_syngas):
     masse_dechets = masses_totales_composes.get("CH4", 0) + masses_totales_composes.get("C2H2", 0) + masses_totales_composes.get("C3H6", 0) + masses_totales_composes.get("C20", 0)
     
     print("\n========== RÉSULTATS GAZÉIFICATION V2 ==========")
-    print(f"Biomasse sèche en entrée      : {biomasseEntree} tonnes/an")
-    print(f"Carbone dans la biomasse      : {masse_C} tonnes/an")
+    print(f"Biomasse sèche en entrée      : {biomasseEntree:,.2f} t".replace(",", " "))
+    print(f"Carbone dans la biomasse      : {masse_C:,.2f} t".replace(",", " "))
     print("------------------------------------------------")
-    print(f"CO produit                    : {masseCO_sortie} tonnes/an")
-    print(f"CO₂ produit                   : {masseCO2_sortie} tonnes/an")
-    print(f"H₂ dans syngaz                : {masseH2_syngaz} tonnes/an")
-    print(f"H₂ à ajouter                  : {masseH2_necessaire} tonnes/an")
-    print(f"O₂ nécessaire                 : {masseO2_necessaire} tonnes/an")
-    print(f"Masse déchets estimée         : {masse_dechets} tonnes/an")
+    print(f"CO produit                    : {masseCO_sortie:,.2f} t".replace(",", " "))
+    print(f"CO₂ produit                   : {masseCO2_sortie:,.2f} t".replace(",", " "))
+    print(f"H₂ dans syngaz                : {masseH2_syngaz:,.2f} t".replace(",", " "))
+    print(f"H₂ à ajouter                  : {masseH2_necessaire:,.2f} t".replace(",", " "))
+    print(f"O₂ nécessaire                 : {masseO2_necessaire:,.2f} t".replace(",", " "))
+    print(f"Masse déchets estimée         : {masse_dechets:,.2f} t".replace(",", " "))
     print("================================================\n")
 
     return masseCO_sortie, masseH2_necessaire, masseCO2_sortie, masseO2_necessaire, masse_dechets
@@ -340,13 +340,13 @@ def conso_elec_gazeification(masse_CO2 : float, masse_H2 : float, masse_seche_bi
     
     Returns
     -------
-        energie_gazeification : consommation électrique totale de la gazéification sans 
+        energie_gazeification : consommation électrique totale de la gazéification sans \
         prendre en compte la compression du syngaz (cf étape 7 compression) (kWh)
     """
-    energie_entrants_H2 = masse_H2 * comp.carac_physico_chimiques["H2"]["PCI"] / 3600 * 10e6                   # en kWh
+    energie_entrants_H2 = masse_H2 * comp.carac_physico_chimiques["H2"]["PCI"] * 1000/3.6                         # en kWh
     energie_entrants_bois = masse_seche_biomasse * biomasse.param_biomasse['PCI_biomasse']                    # en kWh
     energie_entrants = (energie_entrants_H2 + energie_entrants_bois)*gaz_params['fonctionnement_interne']/100 # en kWh
-    energie_desorption_filtres_amines = masse_CO2 * gaz_params["filtres_amine"] / 3600 * 10e6                 # en kWh
+    energie_desorption_filtres_amines = masse_CO2 * gaz_params["filtres_amine"] * 1000/3.6                        # en kWh
     energie_gazeification = energie_desorption_filtres_amines + energie_entrants                              # en kWh
     
     return energie_gazeification
@@ -475,14 +475,14 @@ def Inv_gazeificationV1(masseCO_sortie, gaz_params, caract_syngas):
     masse_dechets = masses_totales_composes.get("CH4", 0) + masses_totales_composes.get("C2H2", 0) + masses_totales_composes.get("C3H6", 0) + masses_totales_composes.get("C20", 0)
 
     print("\n========== RÉSULTATS GAZÉIFICATION INVERSE V1 ==========")
-    print(f"CO FT                         : {masseCO_sortie} tonnes/an")
+    print(f"CO FT                         : {masseCO_sortie:,.2f} t".replace(",", " "))
     print("------------------------------------------------")
-    print(f"CO₂ émis                      : {masseCO2_sortie} tonnes/an")
-    print(f"Biomasse sèche en entrée      : {biomasse_entree} tonnes/an")
-    print(f"O₂ nécessaire                 : {masseO2_necessaire} tonnes/an")
-    print(f"H₂ dans syngaz                : {masseH2_syngaz} tonnes/an")
-    print(f"H₂ à ajouter                  : {masseH2_necessaire} tonnes/an")
-    print(f"Masse estimée déchets         : {masse_dechets} tonnes/an")
+    print(f"CO₂ émis                      : {masseCO2_sortie:,.2f} t".replace(",", " "))
+    print(f"Biomasse sèche en entrée      : {biomasse_entree:,.2f} t".replace(",", " "))
+    print(f"O₂ nécessaire                 : {masseO2_necessaire:,.2f} t".replace(",", " "))
+    print(f"H₂ dans syngaz                : {masseH2_syngaz:,.2f} t".replace(",", " "))
+    print(f"H₂ à ajouter                  : {masseH2_necessaire:,.2f} t".replace(",", " "))
+    print(f"Masse estimée déchets         : {masse_dechets:,.2f} t".replace(",", " "))
     print("------------------------------------------------")
 
     return biomasse_entree, masseH2_necessaire, masseO2_necessaire, masseCO2_sortie

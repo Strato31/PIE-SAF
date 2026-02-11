@@ -1,3 +1,6 @@
+"""
+Docstring for etapes.foret
+"""
 ###############################################################
 # Stockage des paramètres avec les hypothèses sourcées
 ###############################################################
