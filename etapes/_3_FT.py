@@ -64,7 +64,7 @@ def Fischer_Tropsch(param_FT, CO_gazif): # Utilise la masse de CO issue de la ga
 
    Returns :
    ----------
-       - consommation_totale_FT : consommation électrique totale de l'étape FT (MWh/an)
+       - consommation_totale_FT : consommation électrique totale de l'étape FT (kWh/an)
        - emissions_rendement_carbone : émissions CO2 liées à l'étape FT (tCO2e)
        - masse_kerosene_produite : masse de kérosène produite (t)
    """
@@ -87,15 +87,15 @@ def Fischer_Tropsch(param_FT, CO_gazif): # Utilise la masse de CO issue de la ga
 
    ## Calculs pour notre cas ##
    # on utilise le ratio des masses de CO par rapport à l'étude Elyse
-   consommation_totale_FT = consommation_totale_FT * (CO_gazif / param_FT['MasseCO_gazif_Elyse'])           # en MWh
+   consommation_totale_FT = consommation_totale_FT * (CO_gazif / param_FT['MasseCO_gazif_Elyse']) * 1000    # en kWh
    emissions_rendement_carbone = emissions_rendement_carbone * (CO_gazif / param_FT['MasseCO_gazif_Elyse']) # en tCO2e
    masse_kerosene_produite = param_FT['production_BioTJet'] * (CO_gazif / param_FT['MasseCO_gazif_Elyse'])  # en t
 
    # affichage des résultats
    print("\n================ Résultats Fischer-Tropsch ================")
-   print(f"Consommation électrique totale FT : {consommation_totale_FT:,.2f} MWh/an")
-   print(f"Émissions liées au rendement carbone : {emissions_rendement_carbone:,.2f} tCO2/an")
-   print(f"Masse de kérosène produite : {masse_kerosene_produite:,.2f} tonnes/an")
+   print(f"Consommation électrique totale FT : {consommation_totale_FT:,.2f} kWh".replace(",", " "))
+   print(f"Émissions liées au rendement carbone : {emissions_rendement_carbone:,.2f} tCO2e".replace(",", " "))
+   print(f"Masse de kérosène produite : {masse_kerosene_produite:,.2f} t".replace(",", " "))
    print("===========================================================\n")
 
    return consommation_totale_FT, emissions_rendement_carbone, masse_kerosene_produite
@@ -113,7 +113,7 @@ def Inv_Fischer_Tropsch(param_FT, masse_kerosene_voulue):
        - masse de kérosène à produire (t)
     
     Sorties :
-       - consommation électrique totale de l'étape FT (MWh)
+       - consommation électrique totale de l'étape FT (kWh)
        - émissions CO2 liées à l'étape FT (tCO2e)
        - masse de CO nécessaire (t)
    """
@@ -122,6 +122,7 @@ def Inv_Fischer_Tropsch(param_FT, masse_kerosene_voulue):
 
    # on calcule les émissions et la consommation électrique associée grace à la fonction Fischer_Tropsch()
    consommation_totale_FT, emissions_rendement_carbone, _ = Fischer_Tropsch(param_FT, CO_necessaire)
+
     
    return consommation_totale_FT, emissions_rendement_carbone, CO_necessaire
 
