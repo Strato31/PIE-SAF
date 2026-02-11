@@ -129,12 +129,12 @@ def calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene
 ## Fonction de test 
 ######################################################################
 
-def main():
-    total_emissions_projet_tco2 = 138964 + 550000  # en tCO2e/an, valeur finale de l'Excel du GL Pau
-    production_biokerosene = objectifs_production_2025["bio_kerosene"]  # en tonnes/an
-    production_naphta = objectifs_production_2025["naphta"]  # en tonnes/an
+# def main():
+#     total_emissions_projet_tco2 = 138964 + 550000  # en tCO2e/an, valeur finale de l'Excel du GL Pau
+#     production_biokerosene = objectifs_production_2025["bio_kerosene"]  # en tonnes/an
+#     production_naphta = objectifs_production_2025["naphta"]  # en tonnes/an
 
-    calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene, production_naphta)
+#     calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene, production_naphta)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

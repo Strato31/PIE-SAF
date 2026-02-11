@@ -5,6 +5,7 @@ from etapes import _4_electrolyseur as elec
 from etapes import _5_gazeification as gaz
 from etapes import _6_energie as energie
 from etapes import _7_compression as comp
+from etapes import emissions_evitees 
 
 ## Variables d'entrée
 # TODO : ajouter des :.2f pour arrondir les affichages des flottants
@@ -100,6 +101,7 @@ def __main__():
         print(f" - Émissions totales en 2023 : {total_emissions_2023/1000000:.2f} tCO2e")
         print(f" - Émissions totales par MJ de e-bio-SAF en 2023 : {total_emissions_2023 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
         print(f" - Émissions totales par MJ de e-bio-SAF en 2050 : {total_emissions_2050 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
+        emissions_evitees.calcul_emissions_evitees(total_emissions_2023/1000000, emissions_evitees.objectifs_production_2025["bio_kerosene"], emissions_evitees.objectifs_production_2025["naphta"])
         print("------------------------------FIN---------------------------------")
 
     else: # Cas calcul carburant -> biomasse
@@ -173,6 +175,7 @@ def __main__():
         print(f" - Émissions totales en 2023 : {total_emissions_2023/1000000:.2f} tCO2e")        
         print(f" - Émissions totales par MJ de e-bio-SAF en 2023 : {total_emissions_2023 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
         print(f" - Émissions totales par MJ de e-bio-SAF en 2050 : {total_emissions_2050 / (ft.param_FT['production_BioTJet'] * ft.param_FT['PCI_kerosene'] * 1000):.4f} gCO2e/MJ")
+        emissions_evitees.calcul_emissions_evitees(total_emissions_2023/1000000, emissions_evitees.objectifs_production_2025["bio_kerosene"], emissions_evitees.objectifs_production_2025["naphta"])
         print("------------------------------FIN---------------------------------")
     
     
