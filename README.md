@@ -5,51 +5,6 @@ ___________________________
 Diagramme présentant les données d'entrée et de sortie pour chaque module "étape" du code. En plus de ces données, les modules étape prendront également en entrée une série de variables et d'hypothèses qu'on ne détaille pas ici. Attention : ce ne sont pas les entrées et sorties physiques de ces étapes, mais bien les arguments et retours des fonctions qui composent chaque module. 
 Par exemple, l'hydrogène est une sortie pour FT car l'algorithme calcule la quantité d'hydrogène nécessaire à produire par l'électrolyseur.
 
-Les entrées/sorties peuvent être résumées comme suit :
-
-**BIOMASSE**
-- Entrées : type/masse/humidité des biomasses utilisées (sens physique) ou masse_biomasse_seche (sens inverse)
-- Sorties : élec, chaleur, masse_biomasse_seche
-
-**GASIFICATION**
-Sens direct
-- Entrées : masse_biomasse_seche
-- Sorties : élec, masse de CO<sub>2</sub>, masses de CO dans le syngas, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
-
-Sens indirect : 
-- Entrées : quantités CO
-- Sorties : élec, CO<sub>2</sub>, masse_biomasse_seche, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
-
-
-**FT**
-Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés.
-Sens Physique :
-- Entrées : quantités CO dans le syngas
-- Sorties :  connso élec, émissions CO2, kérosène produit
-Sens inverse :
-- Entrées : quantité de kérosène produit
-- Sorties :Masse de CO, Consommation élec, conso élec
-
-**ELECTROLYSE**
-- Entrées : Quantité de H<sub>2</sub> à produire
-- Sorties : Consommation élec
-
-**ENERGIES**
-- Entrées : consommations chaleur et élec
-- Sortie : émissions
-
-**COMPRESSION**
-- Entrées : masse CO2, quantités CO et H2 dans le syngas, masse 02
-- Sorties : élec
-________________________________________
-
-UNITES : 
-- emissions carbone : tCO2e
-- masse : en tonnes
-- électricité : kWh
-- énergie : MJ (positive si consommée, négative si produite)
-- --> Conversion : 1 kWh = 3.6 MJ
-
 
 ## Structure du projet 
 
@@ -231,35 +186,58 @@ La fonction principale de cette étape est la fonction `calcul_emissions_evitees
   - Pourcentage de réduction des émissions de GES par rapport au fossile selon les annonces d'Elyse. 
   - Les quatres mêmes données mais calculées avec la méthode ACV complète.
 
-
-
-
 ________________________________________
 
-Etapes a inclure :
-- convoyage et broyage du bois
-- mix électrique (hypothèses)
-- origine du bois
-- données E-CHO
-- consommation énergétique production
-- oxygène
-- chaleur (pour l'instant ignorée)
-- consommation électrique fonctionnement
-- transport du bois
-- CO2
-- raffinage
-    - rendement carbone
-    - fonctionnement pompes à eau
-        - transfert de vapeur vers l'extérieur
-- electrolyseur (très long oscour) (H2)
+Les entrées/sorties des étapes de code peuvent être résumées comme suit :
+
+**MAIN**
+- Entrées : type/masse/humidité des biomasses d'entrée (sens physique) ou masse de kérosène produite (sens inverse)
+- Sorties : print les résultats des émissions et consommations de chaque étape.
+
+**BIOMASSE**
+- Entrées : type/masse/humidité des biomasses utilisées (sens physique) ou masse_biomasse_seche (sens inverse)
+- Sorties : élec, chaleur, masse_biomasse_seche
+
+**GASIFICATION**
+Sens physique
+- Entrées : masse_biomasse_seche
+- Sorties : élec, masse de CO<sub>2</sub>, masses de CO dans le syngas, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
+
+Sens inverse : 
+- Entrées : quantités CO
+- Sorties : élec, CO<sub>2</sub>, masse_biomasse_seche, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
 
 
+**FT**
+Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés.
+Sens Physique :
+- Entrées : quantités CO dans le syngas
+- Sorties :  connso élec, émissions CO2, kérosène produit
+Sens inverse :
+- Entrées : quantité de kérosène produit
+- Sorties :Masse de CO, Consommation élec, conso élec
 
-LA SUITE :
-- permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
-- créer format dictionnaire de données par projet
-- rendre globale les variables qui le sont
-- ...
+**ELECTROLYSE**
+- Entrées : Quantité de H<sub>2</sub> à produire
+- Sorties : Consommation élec
+
+**ENERGIES**
+- Entrées : consommations chaleur et élec
+- Sortie : émissions
+
+**COMPRESSION**
+- Entrées : masse CO2, quantités CO et H2 dans le syngas, masse 02
+- Sorties : élec
+________________________________________
+
+UNITES : 
+- emissions carbone : tCO2e
+- masse : en tonnes
+- électricité : kWh
+- énergie : MJ (positive si consommée, négative si produite)
+- --> Conversion : 1 kWh = 3.6 MJ
+
+
 
 **Foret**
 
