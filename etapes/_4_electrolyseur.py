@@ -84,14 +84,14 @@ def consom_elec_stack(param_electrolyseur_ref, param_electrolyseur_cible):
     Calcul de la consommation électrique stackée de l'électrolyseur cible (PEM ou autre) à partir de la 
     référence (Alcalin) en ajustant (normalisation) avec les rendements respectifs.
 
-    Arguments :
+    Arguments
     -----------
-        - param_electrolyseur_ref : dictionnaire des paramètres de l'électrolyseur de référence (Alcalin)
-        - param_electrolyseur_cible : dictionnaire des paramètres de l'électrolyseur cible (PEM ou autre)
+        param_electrolyseur_ref : dictionnaire des paramètres de l'électrolyseur de référence (Alcalin)
+        param_electrolyseur_cible : dictionnaire des paramètres de l'électrolyseur cible (PEM ou autre)
 
-    Returns :
+    Returns
     ----------
-        - consommation_stack_cible : consommation électrique stackée de l'électrolyseur cible (kWh/tonnes H2)
+        consommation_stack_cible : consommation électrique stackée de l'électrolyseur cible (kWh/tonnes H2)
     """
     # Extraction des valeurs nécessaires
     consommation_stack_ref = param_electrolyseur_ref["consommation_electricite_stack"]
@@ -129,13 +129,13 @@ def coherence_electrolyse(besoin_H2, besoin_O2):
     """
     Vérifie la cohérence entre la production d'H2 et d'O2.
     
-    Arguments :
+    Arguments
     -----------
-        - besoin_H2 : quantité d'H2 à produire (t)
-        - besoin_O2 : quantité d'O2 à produire (t)
-    Returns :
+        besoin_H2 : quantité d'H2 à produire (t)
+        besoin_O2 : quantité d'O2 à produire (t)
+    Returns
     ----------
-        - True si cohérent, sinon lève une erreur.
+        True si cohérent, sinon lève une erreur.
     """
     # Calcul de la production d'oxygène théorique
     besoin_O2_theorique = besoin_H2 * 8  # en t
@@ -157,16 +157,15 @@ def coherence_electrolyse(besoin_H2, besoin_O2):
 
 def consommation_electrolyseur(param_electrolyseur, besoin_O2_gazif, besoin_H2_gazif):
     """
-    Arguments :
+    Arguments
     ----------- 
-    - Quantité de H² à produire : donnée par la gazéification et Fischer-Tropsch  (t)
-    - Quantité de O² à produire : donnée par la gazéification (t)
-    - Paramètres de l'électrolyseur (efficacité, consommation électricité, émissions électricité) : 
-        param_electrolyseur
+    param_electrolyseur : Paramètres de l'électrolyseur (efficacité, consommation électricité, émissions électricité)
+    besoin_O2_gazif : Quantité de O² à produire : donnée par la gazéification (t)
+    besoin_H2_gazif : Quantité de H² à produire : donnée par la gazéification et Fischer-Tropsch  (t)
 
-    Returns :
+    Returns
     ----------
-    - Consommation électrique de l'électrolyseur (en kWh)
+    consommation_electrique : Consommation électrique de l'électrolyseur (en kWh)
 
     """
 
@@ -185,16 +184,3 @@ def consommation_electrolyseur(param_electrolyseur, besoin_O2_gazif, besoin_H2_g
     return consommation_electricite
 
 
-
-##############
-# Fonction de test
-##############
-
-# if __name__ == "__main__":
-#     # Exemple d'utilisation de la fonction d'émissions pour un électrolyseur PEM
-#     besoin_H2_FT = 80  # tonnes
-#     besoin_O2_gazif = 50  # tonnes
-#     besoin_H2_gazif = 20  # tonnes
-
-#     consommation_elec = consommation_electrolyseur(param_electrolyseur_PEM, besoin_H2_FT, besoin_O2_gazif)
-#     print(f"Consommation électrique de l'électrolyseur PEM : {consommation_elec} kWh")

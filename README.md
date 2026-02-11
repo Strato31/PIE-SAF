@@ -109,7 +109,7 @@ La fonction 'gazeificationV2' est conçue pour réaliser un bilan des masses com
 La fonction 'conso_elec_gazeification' calcule la consommation électrique totale liée au fonctionnement interne du procédé, au chauffage et à la désorption des filtres amines (captage CO<sub>2</sub>) et aux énergies contenues dans les entrants (biomasse et H<sub>2</sub>). Les consommations energétiques der compressions des gaz lors de la gazéification sont calculées dans un algorithme séparé. 
 
 NB : 
-La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées. Les fonctions de conversions mutuelles entre le CO<sub>2</sub> et C sont utilisées que dans cette fonction V1. 
+La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées.
 
 - **Energies**
 
@@ -193,5 +193,34 @@ Etapes a inclure :
 LA SUITE :
 - permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
 - créer format dictionnaire de données par projet
-- rendre globales les variables qui le sont
-- faire un main fonctionnel
+- rendre globale les variables qui le sont
+- ...
+
+**Foret**
+
+La partie "foret.py" a pour but d'effectuer un travail prospectif consistant à estimer la capacité de séquestration carbone
+de la forêt française à différentes horizons (2030,2050,2100)
+
+la première partie du code comporte un dictionnaire où l'on trouve un certain nombre de données issues principalement de 
+l'inventaire forestier 2024 de l'IGN, mais aussi de Météo France pour la trajectoire TRACC... Ces valeurs pourraient être  
+amenées à être modifiées si des données plus récentes sont disponibles.
+
+Ensuite vient les fonctions
+
+La fonction "impact_changement_climatique_foret" détermine la productivité et la mortalité de la forêt française, pour l'année spécifiée en entrée. Le paramètre béta quantifie l'impact du changement climatique sur l'état de la forêt. Les résultats sont donnés en Mm3/an.
+
+La fonction  "besoin_biomasse_generalisation" calcule la masse de biomasse nécessaire en fonction de la généralisation partielle 
+ou totale du procédé BioTjet pour atteindre les objectifs de ReFuel-EU en 2050.
+En cas de généralisation, en France, besoin de 3500 kt de SAF. Les résultats sont en Mt de bois.
+
+La fonction "impact_recolte_capacité_sequestration" calcule la variation de la capacité totale de séquestration carbone de la forêt française (en MtCO2/an) en fonction de la généralisation partielle ou non du procédé BioTJet pour atteindre les objectifs de ReFuel-EU en 2050.
+
+La fonction "impact_bonne_pratique_capacité_sequestration" détermine la productivité de la forêt française et la mortalité, pour l'année spécifiée en entrée en fonction du coefficient coeff_bonne_pratique qui quantifie l'amélioration des pratiques sylvicoles. Les résultats sont donnés en Mm3/an.
+
+la fonction "impact_total_sequestration" détermine la capacité de séquestration carbone de la forêt française en prenant en compte le changement climatique (avec un impact linéaire ou non), l'amélioration des pratiques sylvicoles et la généralisation (en %) du procédé BioTjet 
+pour atteindre les objectifs de ReFuel-EU en 2050. A mettre en regard des objectifs de séquestration carbone de la SNBC 3 à horizon 2050.
+Cette fonction utilise la plupart des autres fonctions de ce fichier python. Les résultats sont en Mt de CO2. 
+
+
+
+

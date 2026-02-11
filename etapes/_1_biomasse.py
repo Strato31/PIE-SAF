@@ -122,12 +122,13 @@ def culture_biomasse(param_biomasse, biomasse):
 
     """
     # Calcul des émissions dues au carbone relâché lors de la coupe/récolte, net à horizon 20 ans
-    # masse/4 la masse de carbone (C) dans le bois (en tonnes)
+    # masse/2 la masse de carbone (C) dans le bois (en tonnes)
     # * (44/12) le stock de CO2 émis à l'abbattage
     # * (1 + 0.5) qui prend en compte déstockage sol
-    # * (1 - 0.25*(20-1)/(2*20)) moyenne pondérée sur l'horizon, hypothèse taux de substitution de 25% sur 20 ans (correspond à un mélange de bois d'abattage feuillus et résineux)
+    # * (1 - 0.25*(20-1)/(2*20)) moyenne pondérée sur l'horizon, hypothèse taux de substitution de 25% sur 20 ans 
+    # (correspond à un mélange de bois d'abattage feuillus et résineux)
     masse_bois_vert = sum(biom['masse'] for biom in biomasse if biom['type'] == "bois_vert")  # en tonnes
-    emissions_recolte_bois_vert = masse_bois_vert / 4 * (44/12) * (1 + 0.5) * (1 - 0.25*(20-1)/(2*20))  # en tCO2e
+    emissions_recolte_bois_vert = masse_bois_vert / 2 * (44/12) * (1 + 0.5) * (1 - 0.25*(20-1)/(2*20))  # en tCO2e
 
 
     # à terme, y ajouter émissions pour d'autres types de biomasse (agricole, résiduelle, etc.)
