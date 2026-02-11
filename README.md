@@ -1,4 +1,14 @@
 # PIE-SAF
+
+Ce projet a été réalisé dans le cadre d'un Projet Ingénierie-Entreprise, pour le groupe local de Pau des Shifters.
+Celui-ci contient le code permettant le calcul des émissions et consommations de chaque étape de la production de biocarburants en BioTJet.
+Il est possible de procéder dans deux sens : le sens physique, de la biomasse au kérosène ; et le sens inverse, en partant de la quantité de kérosène produite à la biomasse nécessaire.
+Le fichier etapes contient chacun des blocs de code correspondant à une étape.
+Le fichier foret.py traite de l'évolution de la capacité de séquestration des forêts françaises.
+Le fichier emissions_evitees.py compare les émissions évitées par le procédé modélisé selon plusieurs comptabilités : la méthode REDII et une ACV complète.
+
+
+
 <img width="1088" height="698" alt="image" src="https://github.com/user-attachments/assets/28f3b4d7-7b81-400b-ac4c-fe46b5fc0a16" />
 ___________________________
 
@@ -60,7 +70,7 @@ PIE-SAF/
 
 
 - **Fischer-Tropsch**
-
+A DECRIRE
 - **Electrolyseur**
 
 La partie `_4_electrolyseur.py` a pour but de donner la consommation électrique de la partie électrolyse.
