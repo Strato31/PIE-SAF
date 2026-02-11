@@ -94,7 +94,7 @@ PIE-SAF/
                      - l'énergie nécessaire à la torrefaction de la biomasse
     
     **2. Sens inverse (du kérosène à la biomasse)**
-        En entrée, une masse sèche (en t) de biomasse, qui doit arriver en entrée du gazeifieur.
+        En entrée, la masse sèche (en t) de biomasse, qui doit arriver en entrée du gazeifieur.
 
         Ce module calcule :
                      - les masses équivalentes de biomasse humide à prélever pour différents taux d'humidité (valeurs peuvent être changées)
