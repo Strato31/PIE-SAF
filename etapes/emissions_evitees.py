@@ -1,5 +1,5 @@
 """
-Partie présentant la calcul complet des émissions évitées par le projet BioTJet d'E-CHO par rapport à des carburants fossiles,
+Partie présentant le calcul complet des émissions évitées par le projet BioTJet d'E-CHO par rapport à des carburants fossiles,
 en suivant deux méthodes principales : 
 - La méthode RED II (directive européenne sur les énergies renouvelables)
 - La méthode ACV complète (Analyse du Cycle de Vie)
@@ -102,7 +102,7 @@ def calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene
 
     # Pourcentage de réduction des émissions de GES par rapport au fossile :
     reduction_modele1 = (emissions_fossiles - calcul_emissions) / emissions_fossiles * 100   # en %
-    print(f"Pourcentage de réduction des émissions de GES par rapport au fossile selon ce modèle: {reduction_modele1:.2f} %")
+    print(f"ourcentage de réduction des émissions de GES par rapport au fossile selon ce modèlPe: {reduction_modele1:.2f} %")
 
     
     # Calcul des émissions fossiles de référence pour ADEME :

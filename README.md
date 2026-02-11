@@ -169,6 +169,43 @@ Plusieurs fonctions permettent de réaliser les calculs thermodynamiques et d’
 
 Le processus de calcul suit les étapes détaillées dans le document technique associé.
 La consommation finale d’énergie liée à la compression d’un gaz est obtenue via la fonction conso_compression. Pour le cas particulier du syngaz, il est nécessaire d’utiliser la fonction conso_compression_syngaz, car ce dernier étant composé de plusieurs gaz, il faut pondérer les échauffements de chacun d’eux par leur proportion massique.
+
+- **Emissions évitées**
+
+Les émissions évitées correspondent à la différence de quantité de gaz à effet de serre rejetée dans l'atmosphère entre un scénario de référence (utilisation de kérosène fossile) et un scénario alternatif (utilisation de bio-kérosène). Dans notre cas, on regarde les émissions évitées en tCO<sub>2eq</sub> par an.
+
+Cette partie donne le calcul complet des émissions évitées par le projet BioTJet d'E-CHO par rapport à des carburants fossiles,
+en suivant deux méthodes principales : 
+- La méthode RED II : directive européenne sur les énergies renouvelables. Cette méthode est la méthode officielle à suivre, tous les projets de bio-carburant sont obligés de déclarer leurs émissions annuelles évitées suivant les hypothèses données par RED II. 
+- La méthode ACV complète (Analyse du Cycle de Vie) : analyse plus complète, prenant en compte toutes les étapes (certaines hypothèses de RED II sont très réductrices).
+Le projet Elyse raisonne suivant cette directive RED II. Le groupe local des Shifters de Pau raisonne en termes d'ACV. 
+
+Les paramètres nécessaires sont : 
+
+- Les données de PCI et d'émissions totales (en kgCO2eq/kg) pour le kérosène et le naphta fossiles. Ces données permettent de calculer les émissions fossiles de références. 
+On a plusieurs sources : l'ADEME ou les données directes de RED II en fonction de la méthode de calcul utilisée. 
+Ces données peuvent être utilisées directement ou mises à jour si on veut travailler avec d'autres sources. 
+
+- Les émissions évitées revendiquées par ELyse : le but est de comparer les émissions calculées par notre code (et donc suivant une méthoe d'analyse de cycle de vie) aux émissions déclarées officiellement par Elyse. 
+Les émissions utilisées actuellement sont celles de 2020, il est possible de les mettre à jour en fonction de l'année qu'on veut étudier. 
+
+- La fonction de calcul prend en entrée des masses de bio-kérosène et de naphta. On met en paramètres les objectifs de production d'Elyse pour 2025 pour avoir des valeurs dans les tests. Dans le code `main`, il faut utiliser les quantités de bio-kérosène calculées en amont dans les différentes étapes. 
+
+La fonction principale de cette étape est la fonction `calcul_emissions_evitees` . 
+- Entrées : 
+  - `total_emissions_projet_tco2` : émissions totales du projet en tCO2e/an
+  - `production_biokerosene` : production de bio-kérosène en tonnes/an
+  - `production_naphta` : production de naphta en tonnes/an
+- Sorties :
+  - Emissions évitées en tCO2e/an annoncées par Elyse pour le projet BioTJet (donc suivant la méthode RED II)
+  - Emissions fossiles de références pour la quantité de kérosène prise en entrée. 
+  - Emissions totales du projet BioJet calculées avec les valeurs précédentes. 
+  - Pourcentage de réduction des émissions de GES par rapport au fossile selon les annonces d'Elyse. 
+  - Les quatres mêmes données mais calculées avec la méthode ACV complète.
+
+
+
+
 ________________________________________
 
 Etapes a inclure :
