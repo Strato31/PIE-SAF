@@ -5,6 +5,7 @@ en suivant deux méthodes principales :
 - La méthode ACV complète (Analyse du Cycle de Vie)
 Le projet Elyse raisonne suivant cette directive RED II. Le groupe local des Shifters de Pau raisonne  
 en termes d'ACV. 
+
 """
 
 ### Kérosène fossile de référence
@@ -18,6 +19,7 @@ Les paramètres utilisés sont :
 - Le PCI : Pouvoir Calorifique Inférieur, en MJ/kg
 - Les émissions amont, en kgCO2eq/kg
 - Les émissions liées à la combustion, en kgCO2eq/kg
+
 '''
 
 kerosene_fossile_ADEME = {
