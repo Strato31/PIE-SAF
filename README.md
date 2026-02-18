@@ -35,7 +35,7 @@ PIE-SAF/
 │└── README.md
 ```
 
-### Description des étapes : 
+### Description des étapes :
 
 - **Biomasse**
 
