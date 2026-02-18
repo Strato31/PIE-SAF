@@ -1,19 +1,222 @@
 # PIE-SAF
+
+Ce projet a été réalisé dans le cadre d'un Projet Ingénierie-Entreprise, pour le groupe local de Pau des Shifters.
+Celui-ci contient le code permettant le calcul des émissions et consommations de chaque étape de la production de biocarburants en BioTJet.
+Il est possible de procéder dans deux sens : le sens physique, de la biomasse au kérosène ; et le sens inverse, en partant de la quantité de kérosène produite à la biomasse nécessaire.
+Le fichier etapes contient chacun des blocs de code correspondant à une étape.
+Le fichier foret.py traite de l'évolution de la capacité de séquestration des forêts françaises.
+Le fichier emissions_evitees.py compare les émissions évitées par le procédé modélisé selon plusieurs comptabilités : la méthode REDII et une ACV complète.
+
+
+
 <img width="1088" height="698" alt="image" src="https://github.com/user-attachments/assets/28f3b4d7-7b81-400b-ac4c-fe46b5fc0a16" />
 ___________________________
 
 Diagramme présentant les données d'entrée et de sortie pour chaque module "étape" du code. En plus de ces données, les modules étape prendront également en entrée une série de variables et d'hypothèses qu'on ne détaille pas ici. Attention : ce ne sont pas les entrées et sorties physiques de ces étapes, mais bien les arguments et retours des fonctions qui composent chaque module. 
 Par exemple, l'hydrogène est une sortie pour FT car l'algorithme calcule la quantité d'hydrogène nécessaire à produire par l'électrolyseur.
 
-Les entrées/sorties peuvent être résumées comme suit :
+
+## Structure du projet 
+
+```
+PIE-SAF/
+
+│├── etapes/
+││   ├── _1_biomasse.py
+││   ├── _2_gazeification.py
+││   ├── _3_FT.py
+││   ├── _4_electrolyseur.py
+││   ├── _5_compression.py
+││   ├── _6_energies.py
+││   ├── contexte.py
+│├─── emissions_evites.py
+│├─── foret.py  
+│├── main.py
+│└── README.md
+```
+
+### Description des étapes : 
+
+- **Biomasse**
+
+    La partie biomasse rassemble tous les calculs sur la partie biomasse, avant sa gazeification.
+    Elle fonctionne dans les deux sens : 
+
+    **1. Sens physique (de la biomasse au kérosène)**
+        En entrée, un dictionnaire des biomasses utilisées de la forme : 
+        
+        biomasse_entree = [
+            {"type" : "bois_vert", "masse": 300000, "humidité": 0},     # 300 000 tonnes de biomasse ligneuse à 0% d'humidité
+            {"type" : "bois_vert", "masse": 150000, "humidité": 0.30}   # 150 000 tonnes de biomasse ligneuse à 30% d'humidité
+        ]
+        Ce dictionnaire est à définir au début du fichier main. Autant d'entrées que souhaité peuvent être ajoutées. Actuellement,
+        seule la biomasse de type bois_vert est modélisée.
+
+        Ce module calcule : 
+                     - la masse sèche équivalente de biomasse qui arrivera en entrée de gazeification
+                     - les émissions dues à la culture de biomasse (type bois_vert) : le carbone relâché lors de la coupe
+                     - les émissions dues au transport de la biomasse humide jusqu'au lieu de torréfaction, puis jusqu'au gazeifieur
+                     - l'énergie nécessaire à la torrefaction de la biomasse
+    
+    **2. Sens inverse (du kérosène à la biomasse)**
+        En entrée, la masse sèche (en t) de biomasse, qui doit arriver en entrée du gazeifieur.
+
+        Ce module calcule :
+                     - les masses équivalentes de biomasse humide à prélever pour différents taux d'humidité (valeurs peuvent être changées)
+                     - conserve l'équivalent à 25% par défaut (peut être changé)
+                     - effectue alors les mêmes calculs que dans le sens physique avec cette biomasse à 25% d'humidité supposée.
+
+    La fonction Biomasse orchestre le tout, et est appelée dans main.py.
+
+
+- **Fischer-Tropsch**
+A DECRIRE
+- **Electrolyseur**
+
+La partie `_4_electrolyseur.py` a pour but de donner la consommation électrique de la partie électrolyse.
+
+Cette étape n’a pas besoin d’être réversible. Peu importe si on part de la masse de kérosène à produire et on cherche la quantité de biomasse nécessaire, ou à l’inverse si on part de la quantité de biomasse qu’on a et on cherche combien de kérosène on peut produire, l’électrolyse n’est concernée que par les quantités de H<sub>2</sub> et O<sub>2</sub> à produire pour la gazéification et ses fonctions sont utilisables dans les deux sens du code. 
+
+Le paramètre principal de l’étape électrolyseur est la valeur de l’énergie Estack pour la technologique considérée. Cette énergie “stackée” est l’énergie électrique totale nécessaire à la fabrication et à la distribution d’un kilogramme d’H<sub>2</sub> (valeur en kWh/kgH2). Cette énergie comprend l’électrolyse et le fonctionnement global de l’unité de production mais pas la perte en ligne amont qu’on devra ajouter. 
+
+Pour prendre en main le code rapidement : 
+1. Si vous utilisez la technologie alcaline basse température : mettez à jour le dictionnaire des paramètres déjà existant si les valeurs ne sont plus correctes.
+2. Si vous utilisez une technologie d’électrolyse différente : copiez un dictionnaire déjà existant d’une autre technologie, adaptez le nom, mettez à jour les valeurs. Si la consommation électrique stackée n’est pas connue, laissez juste `None`. Une fonction `consom_elec_stack` a été créée pour fournir une valeur en normalisant à partir de la valeur de consommation stackée de la technologie de référence et des rendements respectifs.
+- La fonction `coherence_electrolyse` permet de vérifier que les valeurs de masse de O<sub>2</sub> et de H<sub>2</sub> demandées en entrée sont cohérentes avec les proportion voulues par la réaction d’électrolyse. Pour le moment, la gazéification s’occupe de cette étape de vérification. Par la suite, si on est amené à considérer d’autres procédés qui n’utilisent pas forcément la gazéification, cette fonction pourra être utile, il faudra alors juste dé-commenter la ligne correspondante dans la fonction centrale.
+
+**Gazéification**
+
+L'étape de gazéification '_5_gazefication.py' permet de réaliser un bilan de masses et d’énergies du procédé de gazéification de la biomasse, ainsi que d’estimer les besoins en O<sub>2</sub> et de H<sub>2</sub>, les émissions de CO<sub>2</sub>, et la consommation électrique associée.
+
+Les hypothèses sont contenues dans deux dictionnaires de paramètres définis localement :
+
+- 'gaz_params' : ce dictionnaire contient les hypothèses sourcées de composition de la biomasse et de fonctionnement du procédé ainsi que les constantes physiques du problème,
+- 'caract_syngas' : ce dictionnaire contient la composition du syngas estimée en sortie de gazéification.
+
+Les valeurs actuelles correspondent à ce jour aux hypothèses menant aux résultats les plus proches de la réalité. Si besoin, elles peuvent être modifiées par la suite. Si l'objectif est d'adapter le code à différentes essences de bois, les hypothèses à changer sont les farctions de O et de c dans la biomasse dans le dictionnaire 'gaz_params'. 
+
+La fonction conversionMasseMolaire permet de convertir la masse molaire de (g/mol) d'un composé gazeux en masse volumique (kg/m3). Elle est réalisé dans des conditions standards de pression (p = 1atm) et température (T = 273K). Cette fonction est utile pour la fonction 'gazeificationV2'.
+
+La fonction 'gazeificationV2' est conçue pour réaliser un bilan des masses complet sur C, O et H dans le sens direct (biomasse à syngas) et la fonction 'Inv_gazeificationV1' pour le sens inverse (syngas à biomasse). Les masses sont toutes en tonnes. 
+
+La fonction 'conso_elec_gazeification' calcule la consommation électrique totale liée au fonctionnement interne du procédé, au chauffage et à la désorption des filtres amines (captage CO<sub>2</sub>) et aux énergies contenues dans les entrants (biomasse et H<sub>2</sub>). Les consommations energétiques der compressions des gaz lors de la gazéification sont calculées dans un algorithme séparé. 
+
+NB : 
+La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées.
+
+- **Energies**
+
+La partie `_6_energie.py` a pour but de calculer les émissions de CO2 lié à la consommation électrique en fonction du mix énergétique. Cette partie est organisé en deux sous-partie : 
+
+1. ***Paramètres du mix énergétique**  
+2. ***Calcul des émissions**
+
+***Partie données***
+*facteur emission* : dictionnaire regroupant les facteurs d'émission de chaque filiaire de production d'énergie.
+
+*param_mix_2050* : répartition de la production de l'énergie en fonction des différentes filiaires de production pour 2050, cette répartition a été estimés par les shifters à partir des annonces du Président Macron en 2023 sur la construction de 14 EPR2 (hypothèse moyenne) et du développement des parcs photovoltaïque et éolien maritime et terrestre. 
+Cette répartition peut être adapté en fonction des scénarios prospectif pour 2050.
+
+*param_mix_2023* : facteur d'émission lié à la production et à la consommation d'électricité en France en 2023 d'après le rapport « bilan électrique RTE 2023 ».
+
+***Partie calcul***
+*emissions_energetique_processus* : Calcule les émissions de CO2 (en gCO2eq) liées à une consommation énergétique donnée pour un processus (en kWh), en utilisant un mix énergétique prévisionnel pour 2050 et le mix actuel pour 2023.
+
+*emissions_energie_totale* : Agrège les émissions de CO2 (en gCO2eq) liées à une liste de consommations énergétiques (en kWh),en distinguant les émissions pour 2050 et pour 2023.
+    
+*verif_hypothèse* : Vérifie l'hypothèse selon laquelle la consommation thermique totale des processus est inférieure ou égale à la chaleur récupérable.
+
+- **Compression**
+
+La partie `_7_compression.py` est organisé en deux sous-parties principales :
+
+1. ***Gestion des données physico-chimiques**  
+2. ***Calcul de la consommation énergétique**
+
+Cette partie contient des fonctions permettant de calculer l'énergie nécessaire à la compression de gaz, elle ne nécessite pas d'adaption particulière pour pouvoir être réversible. Elle a été codée à partir de l'excel des shifters mais de manière à pouvoir calculer l'énergie nécessaire à la compression du CO2, du CO, de l'O2 et du syngas, ainsi s'il faut faire des calculs de compression avec d'autres gaz il y aura certainement des ajustements à faire.
+
+***Partie données***
+
+Les propriétés physico-chimiques des gaz sont regroupées dans une structure de type dictionnaire :
+
+*carac_physico_chimiques* : Ce dictionnaire contient l’ensemble des caractéristiques physico-chimiques associées à chaque gaz.
+
+Les valeurs utilisées proviennent du fichier Excel des Shifters, en considérant :
+
+- un comportement de gaz parfait,
+- des conditions de référence de **288,15 K** et **1 bar**.
+
+***Partie calcul***
+
+Plusieurs fonctions permettent de réaliser les calculs thermodynamiques et d’estimer la consommation énergétique liée à la compression.
+
+*param_temp_variable* : Calcule les caractéristiques physico-chimiques des gaz en fonction de la température. Cette fonction implémente les équations des capacités calorifiques propres à chaque gaz. Elle calcule également : le coefficient adiabatique γ (gamma), la constante spécifique du gaz Rs, car ces paramètres dépendent de Cp et sont nécessaires aux calculs ultérieurs.
+
+*calcul_echauffement_isentropique* : Calcule l’échauffement isentropique lors d’une compression allant de la pression P1 à la pression P2, à partir d’une température initiale T0 (K). Cette fonction s’appuie sur l’application de la **loi de Laplace** pour les gaz parfaits.
+
+*compression_isentropique* : Renvoie la température finale obtenue après une compression isentropique permettant de passer de la pression P1 (bar) à la pression P2 (bar). Le calcul est réalisé de manière itérative afin de déterminer précisément l’échauffement lié à la compression du gaz.
+
+*conso_compression* : Calcule la consommation électrique (en **MWh**) nécessaire pour comprimer une masse de gaz donnée (en **kg**) de la pression P1 (bar) à la pression P2 (bar) à partir d’une température initiale T0_K. La consommation électrique est estimée à partir de l’échauffement réel. Les équations détaillées utilisées pour ce calcul sont documentées dans le fichier Excel de référence.
+
+*conso_compression_syngaz* : Calcule la consommation électrique (en **MWh**) nécessaire à la compression du syngaz. renvoie la consommation électrique (en MWh) nécessaire pour comprimer du syngaz (en kg). Il s’agit d’un calcul spécifique prenant en compte les trois gaz constituant le mélange. La procédure de calcul est la suivante : calcul de l’échauffement pour chacun des gaz, détermination de la température moyenne du mélange, calcul d’un Cp moyen pondéré par la composition et calcul de la puissance moyenne absorbée.
+
+Le processus de calcul suit les étapes détaillées dans le document technique associé.
+La consommation finale d’énergie liée à la compression d’un gaz est obtenue via la fonction conso_compression. Pour le cas particulier du syngaz, il est nécessaire d’utiliser la fonction conso_compression_syngaz, car ce dernier étant composé de plusieurs gaz, il faut pondérer les échauffements de chacun d’eux par leur proportion massique.
+
+- **Emissions évitées**
+
+Les émissions évitées correspondent à la différence de quantité de gaz à effet de serre rejetée dans l'atmosphère entre un scénario de référence (utilisation de kérosène fossile) et un scénario alternatif (utilisation de bio-kérosène). Dans notre cas, on regarde les émissions évitées en tCO<sub>2eq</sub> par an.
+
+Cette partie donne le calcul complet des émissions évitées par le projet BioTJet d'E-CHO par rapport à des carburants fossiles,
+en suivant deux méthodes principales : 
+- La méthode RED II : directive européenne sur les énergies renouvelables. Cette méthode est la méthode officielle à suivre, tous les projets de bio-carburant sont obligés de déclarer leurs émissions annuelles évitées suivant les hypothèses données par RED II. 
+- La méthode ACV complète (Analyse du Cycle de Vie) : analyse plus complète, prenant en compte toutes les étapes (certaines hypothèses de RED II sont très réductrices).
+Le projet Elyse raisonne suivant cette directive RED II. Le groupe local des Shifters de Pau raisonne en termes d'ACV. 
+
+Les paramètres nécessaires sont : 
+
+- Les données de PCI et d'émissions totales (en kgCO2eq/kg) pour le kérosène et le naphta fossiles. Ces données permettent de calculer les émissions fossiles de références. 
+On a plusieurs sources : l'ADEME ou les données directes de RED II en fonction de la méthode de calcul utilisée. 
+Ces données peuvent être utilisées directement ou mises à jour si on veut travailler avec d'autres sources. 
+
+- Les émissions évitées revendiquées par ELyse : le but est de comparer les émissions calculées par notre code (et donc suivant une méthoe d'analyse de cycle de vie) aux émissions déclarées officiellement par Elyse. 
+Les émissions utilisées actuellement sont celles de 2020, il est possible de les mettre à jour en fonction de l'année qu'on veut étudier. 
+
+- La fonction de calcul prend en entrée des masses de bio-kérosène et de naphta. On met en paramètres les objectifs de production d'Elyse pour 2025 pour avoir des valeurs dans les tests. Dans le code `main`, il faut utiliser les quantités de bio-kérosène calculées en amont dans les différentes étapes. 
+
+La fonction principale de cette étape est la fonction `calcul_emissions_evitees` . 
+- Entrées : 
+  - `total_emissions_projet_tco2` : émissions totales du projet en tCO2e/an
+  - `production_biokerosene` : production de bio-kérosène en tonnes/an
+  - `production_naphta` : production de naphta en tonnes/an
+- Sorties :
+  - Emissions évitées en tCO2e/an annoncées par Elyse pour le projet BioTJet (donc suivant la méthode RED II)
+  - Emissions fossiles de références pour la quantité de kérosène prise en entrée. 
+  - Emissions totales du projet BioJet calculées avec les valeurs précédentes. 
+  - Pourcentage de réduction des émissions de GES par rapport au fossile selon les annonces d'Elyse. 
+  - Les quatres mêmes données mais calculées avec la méthode ACV complète.
+
+________________________________________
+
+Les entrées/sorties des étapes de code peuvent être résumées comme suit :
+
+**MAIN**
+- Entrées : type/masse/humidité des biomasses d'entrée (sens physique) ou masse de kérosène produite (sens inverse)
+- Sorties : print les résultats des émissions et consommations de chaque étape.
 
 **BIOMASSE**
-- Entrées : type/masse/humidité des biomasses utilisées
+- Entrées : type/masse/humidité des biomasses utilisées (sens physique) ou masse_biomasse_seche (sens inverse)
 - Sorties : élec, chaleur, masse_biomasse_seche
 
 **GASIFICATION**
-- Entrées : masse_biomasse_seche, oxygene
-- Sorties : élec, chaleur, CO2, quantités CO et H2 dans le syngas, déchets
+Sens physique
+- Entrées : masse_biomasse_seche
+- Sorties : élec, masse de CO<sub>2</sub>, masses de CO dans le syngas, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
+
+Sens inverse : 
+- Entrées : quantités CO
+- Sorties : élec, CO<sub>2</sub>, masse_biomasse_seche, masses de O<sub>2</sub> et H<sub>2</sub> à injecter dans le syngas, déchets
+
 
 **FT**
 Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés.
@@ -25,12 +228,16 @@ Cette étape n'est pas réellement modélisée, elle utilise une interpolation d
 - - Sorties :Masse de CO, Consommation élec, conso élec
 
 **ELECTROLYSE**
-- Entrées : eau, quantité H2 à produire
-- Sorties : élec
+- Entrées : Quantité de H<sub>2</sub> à produire
+- Sorties : Consommation élec
 
 **ENERGIES**
 - Entrées : consommations chaleur et élec
 - Sortie : émissions
+
+**COMPRESSION**
+- Entrées : masse CO2, quantités CO et H2 dans le syngas, masse 02
+- Sorties : élec
 ________________________________________
 
 UNITES : 
@@ -40,29 +247,33 @@ UNITES :
 - énergie : MJ (positive si consommée, négative si produite)
 - --> Conversion : 1 kWh = 3.6 MJ
 
-________________________________________
-
-Etapes a inclure :
-- convoyage et broyage du bois
-- mix électrique (hypothèses)
-- origine du bois
-- données E-CHO
-- consommation énergétique production
-- oxygène
-- chaleur (pour l'instant ignorée)
-- consommation électrique fonctionnement
-- transport du bois
-- CO2
-- raffinage
-    - rendement carbone
-    - fonctionnement pompes à eau
-        - transfert de vapeur vers l'extérieur
-- electrolyseur (très long oscour) (H2)
 
 
+**Foret**
 
-LA SUITE :
-- permettre de faire les calculs dans l'autre sens (biomasse->kérosène et kérosène->biomasse)
-- créer format dictionnaire de données par projet
-- rendre globales les variables qui le sont
-- faire un main fonctionnel
+La partie "foret.py" a pour but d'effectuer un travail prospectif consistant à estimer la capacité de séquestration carbone
+de la forêt française à différentes horizons (2030,2050,2100)
+
+la première partie du code comporte un dictionnaire où l'on trouve un certain nombre de données issues principalement de 
+l'inventaire forestier 2024 de l'IGN, mais aussi de Météo France pour la trajectoire TRACC... Ces valeurs pourraient être  
+amenées à être modifiées si des données plus récentes sont disponibles.
+
+Ensuite vient les fonctions
+
+La fonction "impact_changement_climatique_foret" détermine la productivité et la mortalité de la forêt française, pour l'année spécifiée en entrée. Le paramètre béta quantifie l'impact du changement climatique sur l'état de la forêt. Les résultats sont donnés en Mm3/an.
+
+La fonction  "besoin_biomasse_generalisation" calcule la masse de biomasse nécessaire en fonction de la généralisation partielle 
+ou totale du procédé BioTjet pour atteindre les objectifs de ReFuel-EU en 2050.
+En cas de généralisation, en France, besoin de 3500 kt de SAF. Les résultats sont en Mt de bois.
+
+La fonction "impact_recolte_capacité_sequestration" calcule la variation de la capacité totale de séquestration carbone de la forêt française (en MtCO2/an) en fonction de la généralisation partielle ou non du procédé BioTJet pour atteindre les objectifs de ReFuel-EU en 2050.
+
+La fonction "impact_bonne_pratique_capacité_sequestration" détermine la productivité de la forêt française et la mortalité, pour l'année spécifiée en entrée en fonction du coefficient coeff_bonne_pratique qui quantifie l'amélioration des pratiques sylvicoles. Les résultats sont donnés en Mm3/an.
+
+la fonction "impact_total_sequestration" détermine la capacité de séquestration carbone de la forêt française en prenant en compte le changement climatique (avec un impact linéaire ou non), l'amélioration des pratiques sylvicoles et la généralisation (en %) du procédé BioTjet 
+pour atteindre les objectifs de ReFuel-EU en 2050. A mettre en regard des objectifs de séquestration carbone de la SNBC 3 à horizon 2050.
+Cette fonction utilise la plupart des autres fonctions de ce fichier python. Les résultats sont en Mt de CO2. 
+
+
+
+

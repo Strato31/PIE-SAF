@@ -1,5 +1,5 @@
 """
-PARTIE ? : Energie
+PARTIE : Energie
 
 Paramètres et hypothèses sourcées pour le calcul des émissions liées à la consommation énergétique et thermique,
 puis les fonctions de calcul de ces émissions.
@@ -144,7 +144,7 @@ ce qui permet de valider cette hypothèse et d'éviter de calculer des émission
 def verif_hypothèse(consos_thermiques):
     """
     Vérifie l'hypothèse selon laquelle la consommation thermique totale des processus est inférieure ou égale à la chaleur récupérable.
-
+    Pas utilisé car production de chaleur non encore modélisée. 
     Arguments
     ----------
         consos_thermiques : Liste de consommations thermiques en kWh (>=0 pour consommation, <0 pour production)
