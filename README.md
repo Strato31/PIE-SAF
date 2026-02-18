@@ -246,7 +246,7 @@ UNITES :
 - électricité : kWh
 - énergie : MJ (positive si consommée, négative si produite)
 - --> Conversion : 1 kWh = 3.6 MJ
-
+________________________________________
 
 
 **Foret**
