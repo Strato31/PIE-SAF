@@ -220,12 +220,12 @@ Sens inverse :
 
 **FT**
 Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés.
-Sens Physique :
-- Entrées : quantités CO dans le syngas
-- Sorties :  connso élec, émissions CO2, kérosène produit
-Sens inverse :
-- Entrées : quantité de kérosène produit
-- Sorties :Masse de CO, Consommation élec, conso élec
+- Sens Physique :
+- - Entrées : quantités CO dans le syngas
+- - Sorties :  connso élec, émissions CO2, kérosène produit
+- Sens inverse :
+- - Entrées : quantité de kérosène produit
+- - Sorties :Masse de CO, Consommation élec, conso élec
 
 **ELECTROLYSE**
 - Entrées : Quantité de H<sub>2</sub> à produire
