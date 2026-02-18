@@ -70,7 +70,17 @@ PIE-SAF/
 
 
 - **Fischer-Tropsch**
-A DECRIRE
+Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés. On se sert des valeurs de consommations de CO2 et d'électricité du tableau 11 du rapport "electro-carburants 2050" de l'ADEME. L'interpolation est faite avec les valeurs des colonnes 
+
+- Sens Physique :
+- - Entrées : quantités CO dans le syngas
+- - Sorties :  Connsommation électrique, kérosène produit
+- Sens inverse :
+- - Entrées : quantité de kérosène produit
+- - Sorties :Masse de CO, Consommation électrique, conso élec
+
+- 'param_FT' : Ce dictionnaire contient ls données de ELyse et de l'ADEME qui sont nécesaires à l'interpolation. 
+
 - **Electrolyseur**
 
 La partie `_4_electrolyseur.py` a pour but de donner la consommation électrique de la partie électrolyse.
