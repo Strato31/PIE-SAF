@@ -73,8 +73,7 @@ def __main__():
         
         print("-"*60)
         print("Étape 3 : Fischer-Tropsch")
-        consommation_totale_FT, emissions_FT, _ = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
-        emissions_co2.append(emissions_FT)
+        consommation_totale_FT, _ = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
         consos_energies.append(consommation_totale_FT )
         
         print("-"*60)
@@ -121,7 +120,7 @@ def __main__():
 
         # consos_energies contient les consos élec pour [gazeification, FT, électrolyseur, compression]
         # consos_thermiques contient les consos thermiques pour [biomasse]
-        # emissions_co2 contient les émissions de CO2 pour [biomasse, gazeification, FT]
+        # emissions_co2 contient les émissions de CO2 pour [biomasse, gazeification]
 
 
     # Cas calcul sens inverse : carburant -> biomasse
@@ -136,8 +135,7 @@ def __main__():
 
         print("-"*60)
         print("Étape 1 : Fischer-Tropsch")
-        consommation_totale_FT, emissions_FT, masseCO_sortie = ft.Inv_Fischer_Tropsch(ft.param_FT, kerosene_produit)
-        emissions_co2.append(emissions_FT)
+        consommation_totale_FT, masseCO_sortie = ft.Inv_Fischer_Tropsch(ft.param_FT, kerosene_produit)
         consos_energies.append(consommation_totale_FT)
 
         print("-"*60)
@@ -200,7 +198,7 @@ def __main__():
 
         # consos_energies contient les consos élec pour [FT, gazeification, électrolyseur, compression]
         # consos_thermiques contient les consos thermiques pour [biomasse]
-        # emissions_co2 contient les émissions de CO2 pour [FT, gazeification, biomasse]
+        # emissions_co2 contient les émissions de CO2 pour [gazeification, biomasse]
     
     
     
