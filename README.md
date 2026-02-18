@@ -37,7 +37,7 @@ PIE-SAF/
 
 ### Description des étapes :
 
-- **Biomasse**
+**Biomasse**
 
     La partie biomasse rassemble tous les calculs sur la partie biomasse, avant sa gazeification.
     Elle fonctionne dans les deux sens : 
@@ -70,6 +70,7 @@ PIE-SAF/
 
 
 **Fischer-Tropsch**
+
 Cette étape n'est pas réellement modélisée, elle utilise une interpolation des données de l'ADEME pour d'autres procédés. Les prévisions d'ELYSE de production de kerosène et de demande en bois sont utilisées pour faire une règle de trois avec les scénari modélisés. On se sert des valeurs de consommations de CO2 et d'électricité du tableau 11 du rapport "electro-carburants 2050" de l'ADEME. L'interpolation est faite avec les valeurs des colonnes 
 
 - Sens Physique :
@@ -114,7 +115,7 @@ La fonction 'conso_elec_gazeification' calcule la consommation électrique total
 NB : 
 La fonction 'gazeificationV1' est une version obsolète, qui correspond à la première version de l'excel et avance des hypothèses peu sourcées.
 
-- **Energies**
+**Energies**
 
 La partie `_6_energie.py` a pour but de calculer les émissions de CO2 lié à la consommation électrique en fonction du mix énergétique. Cette partie est organisé en deux sous-partie : 
 
@@ -136,7 +137,7 @@ Cette répartition peut être adapté en fonction des scénarios prospectif pour
     
 *verif_hypothèse* : Vérifie l'hypothèse selon laquelle la consommation thermique totale des processus est inférieure ou égale à la chaleur récupérable.
 
-- **Compression**
+**Compression**
 
 La partie `_7_compression.py` est organisé en deux sous-parties principales :
 
@@ -173,7 +174,7 @@ Plusieurs fonctions permettent de réaliser les calculs thermodynamiques et d’
 Le processus de calcul suit les étapes détaillées dans le document technique associé.
 La consommation finale d’énergie liée à la compression d’un gaz est obtenue via la fonction conso_compression. Pour le cas particulier du syngaz, il est nécessaire d’utiliser la fonction conso_compression_syngaz, car ce dernier étant composé de plusieurs gaz, il faut pondérer les échauffements de chacun d’eux par leur proportion massique.
 
-- **Emissions évitées**
+**Emissions évitées**
 
 Les émissions évitées correspondent à la différence de quantité de gaz à effet de serre rejetée dans l'atmosphère entre un scénario de référence (utilisation de kérosène fossile) et un scénario alternatif (utilisation de bio-kérosène). Dans notre cas, on regarde les émissions évitées en tCO<sub>2eq</sub> par an.
 
