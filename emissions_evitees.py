@@ -116,7 +116,7 @@ def calcul_emissions_evitees(total_emissions_projet_tco2, production_biokerosene
 
     # Pourcentage de réduction des émissions de GES par rapport au fossile :
     reduction_modele1 = (emissions_fossiles - calcul_emissions) / emissions_fossiles * 100   # en %
-    print(f"ourcentage de réduction des émissions de GES par rapport au fossile selon ce modèlPe: {reduction_modele1:.2f} %")
+    print(f"Pourcentage de réduction des émissions de GES par rapport au fossile selon ce modèlPe: {reduction_modele1:.2f} %")
 
     
     # Calcul des émissions fossiles de référence pour ADEME :
