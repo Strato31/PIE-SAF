@@ -144,7 +144,7 @@ La partie `_7_compression.py` est organisé en deux sous-parties principales :
 1. ***Gestion des données physico-chimiques**  
 2. ***Calcul de la consommation énergétique**
 
-Cette partie contient des fonctions permettant de calculer l'énergie nécessaire à la compression de gaz, elle ne nécessite pas d'adaption particulière pour pouvoir être réversible. Elle a été codée à partir de l'excel des shifters mais de manière à pouvoir calculer l'énergie nécessaire à la compression du CO2, du CO, de l'O2 et du syngas, ainsi s'il faut faire des calculs de compression avec d'autres gaz il y aura certainement des ajustements à faire.
+Cette partie contient des fonctions permettant de calculer l'énergie nécessaire à la compression de gaz, elle ne nécessite pas d'adaption particulière pour pouvoir être réversible. Elle a été codée à partir de l'excel des shifters mais de manière à pouvoir calculer l'énergie nécessaire à la compression du CO2, du CO, de l'O2 et du mélage hydrogène-syngas, ainsi s'il faut faire des calculs de compression avec d'autres gaz il y aura certainement des ajustements à faire.
 
 ***Partie données***
 
