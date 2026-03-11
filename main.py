@@ -72,15 +72,16 @@ def __main__():
         emissions_co2.append(emissions_gazif)
         
         print("-"*60)
-        print("Étape 3 : Fischer-Tropsch")
-        consommation_totale_FT, _ = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
-        consos_energies.append(consommation_totale_FT )
-        
-        print("-"*60)
         print("Étape 4 : Électrolyseur")
         conso_elec_elec = elec.consommation_electrolyseur(elec.param_electrolyseur_PEM, besoin_O2_gazif, besoin_H2_gazif)
         print("Consommation électrique électrolyseur : ", f"{conso_elec_elec:,.2f}".replace(",", " "), " en kWh")
         consos_energies.append(conso_elec_elec)
+
+        print("-"*60)
+        print("Étape 3 : Fischer-Tropsch")
+        consommation_totale_FT, _ = ft.Fischer_Tropsch(ft.param_FT, CO_gazif)
+        consos_energies.append(consommation_totale_FT - conso_elec_elec )
+        print("Consommation électrique Fischer-Tropsch: ", f"{consommation_totale_FT - conso_elec_elec:,.2f}".replace(",", " "), " en kWh")
         
         print("-"*60)
         print("Étape 5 : Compression")
@@ -136,7 +137,6 @@ def __main__():
         print("-"*60)
         print("Étape 1 : Fischer-Tropsch")
         consommation_totale_FT, masseCO_sortie = ft.Inv_Fischer_Tropsch(ft.param_FT, kerosene_produit)
-        consos_energies.append(consommation_totale_FT)
 
         print("-"*60)
         print("Étape 2 : Gazeification")
@@ -150,6 +150,9 @@ def __main__():
         print("Étape 3 : Électrolyseur")
         conso_elec_elec = elec.consommation_electrolyseur(elec.param_electrolyseur_PEM, besoin_O2_gazif, besoin_H2_gazif)
         print(f"Consommation électrique électrolyseur : {conso_elec_elec:,.2f} kWh".replace(",", " "))
+        consos_energies.append(consommation_totale_FT-conso_elec_elec)
+        print(f"Consommation électrique FT déduite  : {consommation_totale_FT - conso_elec_elec:,.2f} kWh".replace(",", " "))
+
         consos_energies.append(conso_elec_elec)
 
         print("-"*60)

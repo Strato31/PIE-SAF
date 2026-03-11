@@ -92,7 +92,6 @@ def Fischer_Tropsch(param_FT, CO_gazif): # Utilise la masse de CO issue de la ga
 
    # affichage des résultats
    print("\n================ Résultats Fischer-Tropsch ================")
-   print(f"Consommation électrique totale FT : {consommation_totale_FT:,.2f} kWh".replace(",", " "))
    print(f"Masse de kérosène produite : {masse_kerosene_produite:,.2f} t".replace(",", " "))
    print("===========================================================\n")
 
